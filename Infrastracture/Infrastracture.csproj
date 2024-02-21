@@ -10,4 +10,11 @@
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ModelDto\" />
+    <Folder Include="Db\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Service\IService\" />
+  </ItemGroup>
+
 </Project>
