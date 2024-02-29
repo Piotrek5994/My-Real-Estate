@@ -5,6 +5,7 @@ using Infrastracture.Service.IService;
 using Infrastracture.Settings;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -19,8 +20,11 @@ namespace My_Real_Estate
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.Configure<MongoDbContext>(builder.Configuration.GetSection("MongoDb"));
-            builder.Services.AddSingleton<MongoDbSettings>();
+            builder.Services.Configure<MongoDbSettings>(
+            builder.Configuration.GetSection(nameof(MongoDbSettings)));
+
+            builder.Services.AddSingleton<MongoDbContext>(sp =>
+                new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));
 
 
             builder.Services.AddControllers();
