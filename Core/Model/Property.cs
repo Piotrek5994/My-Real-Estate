@@ -19,10 +19,5 @@ namespace Core.Model
         public DateTime? Rent_End { get; set; }
         public int State { get; set; }
         public int UserId { get; set; }
-        public User user { get; set; }
-        public Address address { get; set; }
-        public Property_Type? property_Type { get; set; }
-        public List<Photo>? photos { get; set; }
-        public List<Features>? features { get; set; }
     }
 }

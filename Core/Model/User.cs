@@ -16,9 +16,5 @@ namespace Core.Model
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Phone_Number { get; set; } = string.Empty;
-        public Address address{ get; set; }
-        public List<Property>? properties { get; set; }
-        public Avatar? avatar { get; set; }
-        public List<Payment>? payments { get; set; }
     }
 }

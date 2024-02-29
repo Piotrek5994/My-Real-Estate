@@ -11,6 +11,5 @@ namespace Core.Model
         public int Id { get; set; }
         public string AvatarScr {  get; set; } = string.Empty;
         public int UserId { get; set; } //FK
-        public User user { get; set; }
     }
 }

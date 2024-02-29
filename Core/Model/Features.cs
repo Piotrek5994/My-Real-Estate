@@ -11,6 +11,5 @@ namespace Core.Model
         public int Id { get; set; }
         public string Feature_Name { get; set; } = string.Empty;
         public int UserId { get; set; }
-        public Property property { get; set; }
     }
 }
