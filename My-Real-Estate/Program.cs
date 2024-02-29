@@ -19,13 +19,17 @@ namespace My_Real_Estate
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configure logging
+            builder.Logging.ClearProviders(); 
+            builder.Logging.AddConsole();
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
+
             // Add services to the container.
             builder.Services.Configure<MongoDbSettings>(
             builder.Configuration.GetSection(nameof(MongoDbSettings)));
 
             builder.Services.AddSingleton<MongoDbContext>(sp =>
                 new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));
-
 
             builder.Services.AddControllers();
             //Service 
