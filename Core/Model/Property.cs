@@ -17,8 +17,8 @@ namespace Core.Model
         public short? Number_of_people { get; set; }
         public DateTime? Rent_Start { get; set; }
         public DateTime? Rent_End { get; set; }
-        public string State { get; set; }
-        public string UserId { get; set; }
+        public string State { get; set; } = string.Empty;
+        public string UserId { get; set; } //FK
         public List<string>? Photos { get; set; }
         public List<string>? Features { get; set; }
     }

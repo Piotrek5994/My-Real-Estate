@@ -10,6 +10,6 @@ namespace Core.Model
     {
         public string Id { get; set; }
         public string PhotoSrc { get; set; } = string.Empty;
-        public string PropertyId { get; set; }
+        public string PropertyId { get; set; } //FK
     }
 }
