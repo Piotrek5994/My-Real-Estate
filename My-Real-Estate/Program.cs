@@ -1,5 +1,9 @@
-using Infrastracture.Db;
+using Core.IRepositories;
+using Infrastracture.Repositories;
+using Infrastracture.Service;
+using Infrastracture.Service.IService;
 using Infrastracture.Settings;
+using Infrastructure.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -18,8 +22,13 @@ namespace My_Real_Estate
             builder.Services.Configure<MongoDbContext>(builder.Configuration.GetSection("MongoDb"));
             builder.Services.AddSingleton<MongoDbSettings>();
 
+
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            //Service 
+            builder.Services.AddScoped<IAuthService,AuthService>();
+            //Repository
+            builder.Services.AddScoped<IAuthRepository,AuthRepository>();
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
