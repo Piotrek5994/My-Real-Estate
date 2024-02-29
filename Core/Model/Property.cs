@@ -8,15 +8,21 @@ namespace Core.Model
 {
     public class Property
     {
-        public int PropId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int Size { get; set; }
-        public int Number_of_rooms { get; set; }
-        //public List<> Room_photo { get; set; }
-        //public List<> Room_equipment { get; set; }
-        public int PropAddId { get; set; }
-        //public PropertyAddress propertyAddress { get; set; }
+        public short Number_of_rooms { get; set; }
+        public short? Number_of_people { get; set; }
+        public DateTime? Rent_Start { get; set; }
+        public DateTime? Rent_End { get; set; }
+        public int State { get; set; }
+        public int UserId { get; set; }
+        public User user { get; set; }
+        public Address address { get; set; }
+        public Property_Type? property_Type { get; set; }
+        public List<Photo>? photos { get; set; }
+        public List<Features>? features { get; set; }
     }
 }
