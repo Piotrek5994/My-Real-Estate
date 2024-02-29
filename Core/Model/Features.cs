@@ -8,8 +8,8 @@ namespace Core.Model
 {
     public class Features
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Feature_Name { get; set; } = string.Empty;
-        public Property property { get; set; }
+        public string UserId { get; set; }
     }
 }

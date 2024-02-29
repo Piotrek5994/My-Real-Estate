@@ -8,8 +8,8 @@ namespace Core.Model
 {
     public class Photo
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string PhotoSrc { get; set; } = string.Empty;
-        public Property property { get; set; }
+        public string PropertyId { get; set; }
     }
 }

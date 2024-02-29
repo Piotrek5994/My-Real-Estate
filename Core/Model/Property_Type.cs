@@ -8,8 +8,8 @@ namespace Core.Model
 {
     public class Property_Type
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Property_Type_Name { get; set; } = string.Empty;
-        public Property property { get; set; }
+        public string PropertyId { get; set; }
     }
 }

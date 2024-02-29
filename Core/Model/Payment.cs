@@ -8,7 +8,10 @@ namespace Core.Model
 {
     public class Payment
     {
-        public int Id { get; set; }
-        public User user { get; set; }
+        public string Id { get; set; }
+        public string Person_Renting { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime Date { get; set; }
+        public string UserId { get; set; }
     }
 }

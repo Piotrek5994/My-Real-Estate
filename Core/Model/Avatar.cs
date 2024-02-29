@@ -8,8 +8,8 @@ namespace Core.Model
 {
     public class Avatar
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AvatarScr {  get; set; } = string.Empty;
-        public User user { get; set; }
+        public string UserId { get; set; } //FK
     }
 }

@@ -8,7 +8,7 @@ namespace Core.Model
 {
     public class Address
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Country { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
         public string Zip_Code { get; set; } = string.Empty;
@@ -16,7 +16,7 @@ namespace Core.Model
         public string Street_Name { get; set; } = string.Empty;
         public string Street_Number { get; set; } = string.Empty;
         public int State { get; set; }
-        public Address address { get; set; }
-        public User user { get; set; }
+        public string AdressId { get; set; } //FK
+        public string UserId { get; set; } //FK
     }
 }
