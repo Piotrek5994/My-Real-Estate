@@ -1,24 +1,21 @@
-﻿using Infrastracture.Settings;
-using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Driver;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastracture.Settings;
 
-namespace Infrastracture.Db
+namespace Infrastructure.Db
 {
     public class MongoDbContext
     {
-        private readonly MongoDbSettings _mongoSettings;
+        private readonly IMongoDatabase _database;
 
         public MongoDbContext(IOptions<MongoDbSettings> mongoSettings)
         {
-            var mongoClient = new MongoClient(mongoSettings.Value.ConnectionUri);
-            var mongoDb = mongoClient.GetDatabase(mongoSettings.Value.DatabaseName);
-
+            var client = new MongoClient(mongoSettings.Value.ConnectionUri);
+            _database = client.GetDatabase(mongoSettings.Value.DatabaseName);
+        }
+        public IMongoCollection<T> GetCollection<T>(string name)
+        {
+            return _database.GetCollection<T>(name);
         }
     }
 }

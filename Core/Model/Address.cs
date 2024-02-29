@@ -16,7 +16,7 @@ namespace Core.Model
         public string Street_Name { get; set; } = string.Empty;
         public string Street_Number { get; set; } = string.Empty;
         public int State { get; set; }
-        public int AdressId { get; set; } //FK
-        public int UserId { get; set; } //FK
+        public Address address { get; set; }
+        public User user { get; set; }
     }
 }

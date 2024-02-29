@@ -10,6 +10,6 @@ namespace Core.Model
     {
         public int Id { get; set; }
         public string Property_Type_Name { get; set; } = string.Empty;
-        public int PropertyId { get; set; }
+        public Property property { get; set; }
     }
 }

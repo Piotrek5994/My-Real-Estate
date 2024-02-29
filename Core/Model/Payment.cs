@@ -9,6 +9,6 @@ namespace Core.Model
     public class Payment
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public User user { get; set; }
     }
 }
