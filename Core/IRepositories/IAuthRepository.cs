@@ -10,5 +10,6 @@ namespace Core.IRepositories
     public interface IAuthRepository
     {
         Task<string> CreateUser(CreateUser user);
+        Task<string> CreateAdmin(CreateUser user);
     }
 }

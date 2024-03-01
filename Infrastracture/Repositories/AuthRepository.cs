@@ -31,5 +31,20 @@ namespace Infrastracture.Repositories
                 return "faile";
             }
         }
+        public async Task<string> CreateAdmin(CreateUser user)
+        {
+            try
+            {
+                user.Role = "Admin";
+                var collection = _context.GetCollection<CreateUser>("User");
+                await collection.InsertOneAsync(user);
+                return user.Id;
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "Error creating user in MongoDB");
+                return "faile";
+            }
+        }
     }
 }

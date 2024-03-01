@@ -9,6 +9,6 @@ namespace Infrastracture.Service.IService
 {
     public interface IAuthService
     {
-        Task<string> RegisterUser(CreateUser user);
+        Task<string> Register(CreateUser user,string role);
     }
 }

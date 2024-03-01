@@ -14,18 +14,17 @@ namespace My_Real_Estate.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateUser user)
+        public async Task<IActionResult> Register([FromBody] CreateUser user, string role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            string registerId = await _authService.Register(user,role);
 
-            string userId = await _authService.RegisterUser(user);
-
-            if (userId != "failed")
+            if (registerId != "failed")
             {
-                return Ok(new { UserId = userId });
+                return Ok(new { UserId = registerId });
             }
             else
             {
