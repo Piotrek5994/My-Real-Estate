@@ -16,7 +16,6 @@ namespace My_Real_Estate.Controllers
         }
 
         [HttpPost("Register")]
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> Register([FromBody] CreateUser user, string role)
         {
             if (!ModelState.IsValid)
@@ -37,11 +36,16 @@ namespace My_Real_Estate.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] CreateLogin login)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var token = await _authService.Login(login);
 
             if (token == null)
             {
-                return BadRequest("Login failed.");
+                return NotFound("Login failed.");
             }
 
             return Ok(new { Token = token });
