@@ -1,4 +1,5 @@
-﻿using Core.IRepositories;
+﻿using Core.Commend;
+using Core.IRepositories;
 using Infrastracture.Service.IService;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,11 @@ namespace Infrastracture.Service
         {
             _authRepository = authRepository;
         }
+        public async Task<string> RegisterUser(CreateUser user)
+        {
+            string result = await _authRepository.CreateUser(user);
+            return result;
+        }
+
     }
 }

@@ -1,11 +1,8 @@
-﻿using Core.IRepositories;
+﻿using Core.Commend;
+using Core.IRepositories;
 using Infrastructure.Db;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace Infrastracture.Repositories
 {
@@ -18,6 +15,21 @@ namespace Infrastracture.Repositories
         {
             _context = context;
             _log = log;
+        }
+        public async Task<string> CreateUser(CreateUser user)
+        {
+            try
+            {
+                user.Role = "User";
+                var collection = _context.GetCollection<CreateUser>("User");
+                await collection.InsertOneAsync(user);
+                return user.Id;
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "Error creating user in MongoDB");
+                return "faile";
+            }
         }
     }
 }

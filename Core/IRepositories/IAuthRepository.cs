@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Commend;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Core.IRepositories
 {
     public interface IAuthRepository
     {
+        Task<string> CreateUser(CreateUser user);
     }
 }

@@ -6,6 +6,7 @@ namespace Infrastructure.Db
 {
     public class MongoDbContext
     {
+        public readonly MongoDbSettings _settings;
         private readonly IMongoDatabase _database;
 
         public MongoDbContext(IOptions<MongoDbSettings> mongoSettings)

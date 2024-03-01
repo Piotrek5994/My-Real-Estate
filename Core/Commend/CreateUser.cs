@@ -24,7 +24,6 @@ namespace Core.Commend
         [BsonRequired]
         [BsonElement("pesel")]
         public string PESEL { get; set; } = string.Empty;
-        [BsonRequired]
         [BsonElement("role")]
         public string Role { get; set; } = string.Empty;
         [BsonRequired]
@@ -35,9 +34,11 @@ namespace Core.Commend
         public string Password { get; set; } = string.Empty;
         [BsonElement("phone_number")]
         public string PhoneNumber { get; set; } = string.Empty;
+        [BsonIgnore]
         [BsonElement("properties")]
-        public List<string>? Properties { get; set; }
+        public List<string>? Properties { get; set; } = new List<string>();
+        [BsonIgnore]
         [BsonElement("payments")]
-        public List<string>? Payments { get; set; }
+        public List<string>? Payments { get; set; } = new List<string>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Commend;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Infrastracture.Service.IService
 {
     public interface IAuthService
     {
+        Task<string> RegisterUser(CreateUser user);
     }
 }

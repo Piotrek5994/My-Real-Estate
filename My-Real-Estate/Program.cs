@@ -26,7 +26,10 @@ namespace My_Real_Estate
 
             // Add services to the container.
             builder.Services.Configure<MongoDbSettings>(
-            builder.Configuration.GetSection(nameof(MongoDbSettings)));
+                builder.Configuration.GetSection("MongoDb"));
+
+            builder.Services.AddSingleton<MongoDbContext>(sp =>
+                new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));
 
             builder.Services.AddSingleton<MongoDbContext>(sp =>
                 new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));

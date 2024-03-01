@@ -1,4 +1,5 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.Commend;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers
@@ -12,9 +13,24 @@ namespace My_Real_Estate.Controllers
             _authService = authService;
         }
 
-        public async Task<IActionResult> Register()
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] CreateUser user)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string userId = await _authService.RegisterUser(user);
+
+            if (userId != "failed")
+            {
+                return Ok(new { UserId = userId });
+            }
+            else
+            {
+                return BadRequest(new { message = "Registration failed" });
+            }
         }
         public async Task<IActionResult> Login()
         {
