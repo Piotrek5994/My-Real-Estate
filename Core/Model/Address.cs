@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,8 @@ namespace Core.Model
 {
     public class Address
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string Country { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
