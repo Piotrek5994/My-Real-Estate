@@ -6,17 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model
+namespace Core.Commend
 {
-    public class Avatar
+    public class CreatePropertyType
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [BsonElement("avatar_src")]
-        public string AvatarScr { get; set; }
-        [BsonElement("user_id")]
+        [BsonRequired]
+        [BsonElement("property_type_name")]
+        public string PropertyTypeName { get; set; } = string.Empty;
+        [BsonRequired]
+        [BsonElement("property_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; } //FK
+        public string PropertyId { get; set; } //FK
     }
 }

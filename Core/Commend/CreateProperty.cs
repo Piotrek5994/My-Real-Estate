@@ -6,17 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model
+namespace Core.Commend
 {
-    public class Property
+    public class CreateProperty
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonRequired]
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [BsonElement("description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         [BsonElement("price")]
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal Price { get; set; }
@@ -33,7 +34,8 @@ namespace Core.Model
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime? RentEnd { get; set; }
         [BsonElement("state")]
-        public string State { get; set; }
+        public string State { get; set; } = string.Empty;
+        [BsonRequired]
         [BsonElement("user_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; } //FK
