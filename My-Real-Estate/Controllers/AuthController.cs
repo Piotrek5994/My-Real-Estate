@@ -1,5 +1,7 @@
-﻿using Core.Commend;
+﻿using Amazon.Runtime.Internal;
+using Core.Commend;
 using Infrastracture.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers
@@ -14,6 +16,7 @@ namespace My_Real_Estate.Controllers
         }
 
         [HttpPost("Register")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Register([FromBody] CreateUser user, string role)
         {
             if (!ModelState.IsValid)
@@ -31,9 +34,17 @@ namespace My_Real_Estate.Controllers
                 return BadRequest(new { message = "Registration failed" });
             }
         }
-        public async Task<IActionResult> Login()
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] CreateLogin login)
         {
-            return View();
+            var token = await _authService.Login(login);
+
+            if (token == null)
+            {
+                return BadRequest("Login failed.");
+            }
+
+            return Ok(new { Token = token });
         }
         public async Task<IActionResult> RefresToken()
         {

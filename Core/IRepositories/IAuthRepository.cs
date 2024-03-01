@@ -11,5 +11,6 @@ namespace Core.IRepositories
     {
         Task<string> CreateUser(CreateUser user);
         Task<string> CreateAdmin(CreateUser user);
+        Task<string> Login(CreateLogin login);
     }
 }

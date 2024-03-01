@@ -28,5 +28,10 @@ namespace Infrastracture.Service
 
             return result;
         }
+        public async Task<string> Login(CreateLogin login)
+        {
+            string result = await _authRepository.Login(login);
+            return result;
+        }
     }
 }
