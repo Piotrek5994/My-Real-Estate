@@ -13,7 +13,11 @@ namespace Core.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonElement("avatar_src")]
         public string AvatarScr {  get; set; } = string.Empty;
+        [BsonRequired]
+        [BsonElement("user_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; } //FK
     }
 }

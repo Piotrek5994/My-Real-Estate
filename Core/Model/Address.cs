@@ -13,14 +13,25 @@ namespace Core.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonElement("country")]
         public string Country { get; set; } = string.Empty;
+        [BsonElement("region")]
         public string Region { get; set; } = string.Empty;
-        public string Zip_Code { get; set; } = string.Empty;
+        [BsonElement("zip_code")]
+        public string ZipCode { get; set; } = string.Empty;
+        [BsonElement("city")]
         public string City { get; set; } = string.Empty;
-        public string Street_Name { get; set; } = string.Empty;
-        public string Street_Number { get; set; } = string.Empty;
+        [BsonElement("street_name")]
+        public string StreetName { get; set; } = string.Empty;
+        [BsonElement("street_number")]
+        public string StreetNumber { get; set; } = string.Empty;
+        [BsonElement("state")]
         public int State { get; set; }
-        public string AdressId { get; set; } //FK
-        public string UserId { get; set; } //FK
+        [BsonElement("property_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string PropertyId { get; set; } = string.Empty; //FK
+        [BsonElement("user_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string UserId { get; set; } = string.Empty; //FK
     }
 }

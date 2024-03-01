@@ -13,7 +13,11 @@ namespace Core.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonElement("photo_src")]
         public string PhotoSrc { get; set; } = string.Empty;
+        [BsonRequired]
+        [BsonElement("property_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string PropertyId { get; set; } //FK
     }
 }
