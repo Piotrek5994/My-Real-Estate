@@ -44,7 +44,7 @@ namespace My_Real_Estate.Controllers
 
             if (token == null)
             {
-                return NotFound("Login failed.");
+                return NotFound(new { messgae = "Login failed." });
             }
 
             return Ok(new { Token = token });
@@ -54,9 +54,13 @@ namespace My_Real_Estate.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest();
+                return BadRequest(new { Message = "Token is null or empty" });
             }
             string result = await _authService.RefreshToken(token);
+            if (result == null)
+            {
+                return BadRequest(new { Message = "Invalid token sent" });
+            }
             return Ok(new { Token = result });
         }
     }
