@@ -1,3 +1,4 @@
+using Core.CommendDto;
 using Core.IRepositories;
 using Infrastracture.Repositories;
 using Infrastracture.Service;
@@ -52,7 +53,11 @@ namespace My_Real_Estate
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                options.ExampleFilters();
             });
+
+            builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateUserDto>();
 
             // Configure JWT authentication for the application.
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -90,7 +95,10 @@ namespace My_Real_Estate
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
             }
 
             app.UseHttpsRedirection();
