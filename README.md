@@ -1,4 +1,4 @@
-# My-Real-Estate
+# My-Real-Estate - Rest Api
 
 ## Packages used in the program :globe_with_meridians:
 - BCrypt.Net-Next
