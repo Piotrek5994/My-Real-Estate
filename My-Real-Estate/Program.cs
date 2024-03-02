@@ -55,6 +55,16 @@ namespace My_Real_Estate
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
 
                 options.ExampleFilters();
+
+                options.CustomSchemaIds(type =>
+                {
+                    return type.Name switch
+                    {
+                        "CreateUserDto" => "Register",
+                        "CreateLogin" => "Login",
+                        _ => type.Name
+                    };
+                });
             });
             // Add Swegger Example
             builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateUserDto>();

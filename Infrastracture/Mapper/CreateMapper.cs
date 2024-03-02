@@ -9,16 +9,16 @@ namespace Infrastracture.Mapper
         public CreateMapper()
         {
             CreateMap<CreateUserDto, CreateUser>()
-            .AfterMap((src, dest) =>
-             {
-                 src.FirstName = dest.FirstName;
-                 src.LastName = dest.LastName;
-                 src.Gender = dest.Gender;
-                 src.PESEL = dest.PESEL;
-                 src.Email = dest.Email;
-                 src.Password = dest.Password;
-                 src.PhoneNumber = dest.PhoneNumber;
-             });
+                    .AfterMap((src, dest) =>
+                     {
+                         src.FirstName = dest.FirstName;
+                         src.LastName = dest.LastName;
+                         src.Gender = dest.Gender;
+                         src.PESEL = dest.PESEL;
+                         src.Email = dest.Email;
+                         src.Password = dest.Password;
+                         src.PhoneNumber = dest.PhoneNumber;
+                     });
         }
     }
 }
