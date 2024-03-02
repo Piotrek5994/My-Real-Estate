@@ -56,7 +56,7 @@ namespace My_Real_Estate
 
                 options.ExampleFilters();
             });
-
+            // Add Swegger Example
             builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateUserDto>();
 
             // Configure JWT authentication for the application.

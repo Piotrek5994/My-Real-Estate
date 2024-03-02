@@ -73,6 +73,18 @@ namespace Infrastracture.Repositories
                 return null;
             }
         }
+        public async Task<string> Refresh(string token)
+        {
+            try
+            {
+                return RefreshToken(token);
+            }
+            catch(Exception ex)
+            {
+                _log.LogError(ex, "Error logging in refresh token");
+                return null;
+            }
+        }
 
         private string CreateToken(User user)
         {
@@ -92,6 +104,58 @@ namespace Infrastracture.Repositories
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+        private string RefreshToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSecret);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false
+            };
+
+            SecurityToken validatedToken;
+            ClaimsPrincipal claimsPrincipal = null;
+            try
+            {
+                claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out validatedToken);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"Token validation error: {ex.Message}");
+                return null;
+            }
+
+            if (validatedToken != null && validatedToken is JwtSecurityToken jwtSecurityToken && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var email = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+                var firstName = claimsPrincipal.FindFirst(ClaimTypes.GivenName)?.Value;
+                var role = claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value;
+
+                var newTokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId),
+                        new Claim(ClaimTypes.Email, email),
+                        new Claim(ClaimTypes.GivenName, firstName),
+                        new Claim(ClaimTypes.Role, role)
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(2),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var newToken = tokenHandler.CreateToken(newTokenDescriptor);
+                _log.LogInformation($"The token has been refreshed for user o ID: {userId}");
+                return tokenHandler.WriteToken(newToken);
+            }
+            _log.LogError("Token refresh failed - invalid token");
+            return null;
         }
     }
 }

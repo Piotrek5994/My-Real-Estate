@@ -1,8 +1,6 @@
-﻿using Amazon.Runtime.Internal;
-using Core.Commend;
+﻿using Core.Commend;
 using Core.CommendDto;
 using Infrastracture.Service.IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers
@@ -23,7 +21,7 @@ namespace My_Real_Estate.Controllers
             {
                 return BadRequest(ModelState);
             }
-            string registerId = await _authService.Register(userDto,role);
+            string registerId = await _authService.Register(userDto, role);
 
             if (registerId != "failed")
             {
@@ -51,9 +49,15 @@ namespace My_Real_Estate.Controllers
 
             return Ok(new { Token = token });
         }
-        public async Task<IActionResult> RefresToken()
+        [HttpPut("Refresh")]
+        public async Task<IActionResult> RefresToken(string token)
         {
-            return View();
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest();
+            }
+            string result = await _authService.RefreshToken(token);
+            return Ok(new { Token = result });
         }
     }
 }

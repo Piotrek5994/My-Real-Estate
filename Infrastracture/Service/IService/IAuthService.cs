@@ -12,5 +12,6 @@ namespace Infrastracture.Service.IService
     {
         Task<string> Register(CreateUserDto userDto, string role);
         Task<string> Login(CreateLogin login);
+        Task<string> RefreshToken(string token);
     }
 }

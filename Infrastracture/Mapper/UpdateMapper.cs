@@ -9,5 +9,9 @@ namespace Infrastracture.Mapper
 {
     public class UpdateMapper : Profile
     {
+        public UpdateMapper()
+        {
+
+        }
     }
 }

@@ -38,5 +38,10 @@ namespace Infrastracture.Service
             string result = await _authRepository.Login(login);
             return result;
         }
+        public async Task<string> RefreshToken(string token)
+        {
+            string result = await _authRepository.Refresh(token);
+            return result;
+        }
     }
 }
