@@ -31,6 +31,9 @@ namespace My_Real_Estate
             builder.Services.AddSingleton<MongoDbContext>(sp =>
                 new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));
 
+            //AutoMapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             builder.Services.AddControllers();
             //Service 
             builder.Services.AddScoped<IAuthService,AuthService>();

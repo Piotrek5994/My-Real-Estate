@@ -1,4 +1,5 @@
 ﻿using Core.Commend;
+using Core.CommendDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Infrastracture.Service.IService
 {
     public interface IAuthService
     {
-        Task<string> Register(CreateUser user,string role);
+        Task<string> Register(CreateUserDto userDto, string role);
         Task<string> Login(CreateLogin login);
     }
 }

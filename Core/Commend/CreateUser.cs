@@ -34,10 +34,8 @@ namespace Core.Commend
         public string Password { get; set; } = string.Empty;
         [BsonElement("phone_number")]
         public string PhoneNumber { get; set; } = string.Empty;
-        [BsonIgnore]
         [BsonElement("properties")]
         public List<string>? Properties { get; set; }
-        [BsonIgnore]
         [BsonElement("payments")]
         public List<string>? Payments { get; set; }
     }

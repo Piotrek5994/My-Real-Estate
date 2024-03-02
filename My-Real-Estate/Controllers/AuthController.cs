@@ -1,5 +1,6 @@
 ﻿using Amazon.Runtime.Internal;
 using Core.Commend;
+using Core.CommendDto;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,13 @@ namespace My_Real_Estate.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateUser user, string role)
+        public async Task<IActionResult> Register([FromBody] CreateUserDto userDto, string role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            string registerId = await _authService.Register(user,role);
+            string registerId = await _authService.Register(userDto,role);
 
             if (registerId != "failed")
             {

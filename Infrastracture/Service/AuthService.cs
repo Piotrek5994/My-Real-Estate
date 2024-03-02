@@ -1,4 +1,6 @@
-﻿using Core.Commend;
+﻿using AutoMapper;
+using Core.Commend;
+using Core.CommendDto;
 using Core.IRepositories;
 using Infrastracture.Service.IService;
 using System;
@@ -12,13 +14,16 @@ namespace Infrastracture.Service
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
+        private readonly IMapper _mapper;
 
-        public AuthService(IAuthRepository authRepository)
+        public AuthService(IAuthRepository authRepository,IMapper mapper)
         {
             _authRepository = authRepository;
+            _mapper = mapper;
         }
-        public async Task<string> Register(CreateUser user, string role)
+        public async Task<string> Register(CreateUserDto userDto, string role)
         {
+            CreateUser user = _mapper.Map<CreateUser>(userDto);
             string result = role switch
             {
                 string r when r.Contains("User") => await _authRepository.CreateUser(user),
