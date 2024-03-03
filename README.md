@@ -9,6 +9,7 @@
 - Swashbuckle.AspNetCore
 - Swashbuckle.AspNetCore.Filters
 - Swashbuckle.AspNetCore.Swagger
+- Swashbuckle.AspNetCore.Annotations
 - AutoMapper.Extensions.Microsoft.DependencyInjection
 ## Api Documentation :battery:
 - Swagger
