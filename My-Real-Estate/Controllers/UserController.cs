@@ -48,6 +48,10 @@ namespace My_Real_Estate.Controllers
         public async Task<IActionResult> DeleteUser(string userId)
         {
             bool delete = await _userService.UserDelete(userId);
+            if (delete = false)
+            {
+                return BadRequest(new { message = "User does not exist." });
+            }
             return Ok(new { result = delete });
         }
     }
