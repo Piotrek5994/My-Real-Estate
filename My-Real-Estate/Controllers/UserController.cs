@@ -1,4 +1,5 @@
 ﻿using Core.CommendDto;
+using Core.Filter;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,9 @@ namespace My_Real_Estate.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUser(string? userId = null)
+        public async Task<IActionResult> GetUser([FromQuery]UserFilter filter)
         {
-            var user = await _userService.GetUserDto(userId);
+            var user = await _userService.GetUserDto(filter);
             if (user != null)
             {
                 return Json(new { result = user });

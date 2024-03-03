@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Commend;
 using Core.CommendDto;
+using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
 using Infrastracture.ModelDto;
@@ -18,9 +19,9 @@ namespace Infrastracture.Service
             _userRepository = userRepository;
             _mapper = mapper;
         }
-        public async Task<List<UserDto>> GetUserDto(string userId)
+        public async Task<List<UserDto>> GetUserDto(UserFilter filter)
         {
-            var result = await _userRepository.GetUser(userId);
+            var result = await _userRepository.GetUser(filter);
             var userDtos = _mapper.Map<List<UserDto>>(result);
             return userDtos;
         }

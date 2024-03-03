@@ -1,4 +1,5 @@
 ﻿using Core.Commend;
+using Core.Filter;
 using Core.Model;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Core.IRepositories
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetUser(string userId);
+        Task<List<User>> GetUser(UserFilter filter);
         Task<string> CreateUser(CreateUser user);
         Task<string> CreateAdmin(CreateUser user);
     }

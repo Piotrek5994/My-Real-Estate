@@ -1,9 +1,12 @@
 ﻿using Core.Commend;
+using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
 using Infrastructure.Db;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Infrastracture.Repositories
 {
@@ -17,24 +20,27 @@ namespace Infrastracture.Repositories
             _context = context;
             _log = log;
         }
-        public async Task<List<User>> GetUser(string userId)
+        public async Task<List<User>> GetUser(UserFilter filter)
         {
             try
             {
                 var collection = _context.GetCollection<User>("User");
+                var filterDefinition = Builders<User>.Filter.Empty;
 
-                if (string.IsNullOrEmpty(userId))
+                if (!string.IsNullOrEmpty(filter.Id))
                 {
-                    return await collection.Find(_ => true).ToListAsync();
+                    filterDefinition = Builders<User>.Filter.Where(user => user.Id.Contains(filter.Id));
                 }
-                else
-                { 
-                    return await collection.Find(user => user.Id == userId).ToListAsync();
-                }
+
+                var users = collection.Find(filterDefinition)
+                                            .Skip((filter.Page - 1) * filter.Limit)
+                                            .Limit(filter.Limit);
+
+                return await users.ToListAsync();
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, $"Error getting user(s). UserID: {userId}.");
+                _log.LogError(ex, "Error getting user(s)");
                 return null;
             }
         }
