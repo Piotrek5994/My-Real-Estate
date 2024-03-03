@@ -38,12 +38,12 @@ namespace My_Real_Estate.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest(new { Message = "Token is null or empty" });
+                return BadRequest(new { Message = "Token is null or empty." });
             }
             string result = await _authService.RefreshToken(token);
             if (result == null)
             {
-                return BadRequest(new { Message = "Invalid token sent" });
+                return BadRequest(new { Message = "Invalid token sent." });
             }
             return Ok(new { Token = result });
         }

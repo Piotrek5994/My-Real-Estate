@@ -29,6 +29,7 @@ namespace Core.Model
         public string Password { get; set; }
         [BsonElement("phone_number")]
         public string PhoneNumber { get; set; }
+        [BsonElement("properties")]
         public List<string>? Properties { get; set; }
         [BsonElement("payments")]
         public List<string>? Payments { get; set; }

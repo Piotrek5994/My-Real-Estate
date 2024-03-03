@@ -2,13 +2,9 @@
 using Core.Commend;
 using Core.CommendDto;
 using Core.IRepositories;
-using Infrastracture.Repositories;
+using Core.Model;
+using Infrastracture.ModelDto;
 using Infrastracture.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Service
 {
@@ -21,6 +17,12 @@ namespace Infrastracture.Service
         {
             _userRepository = userRepository;
             _mapper = mapper;
+        }
+        public async Task<List<UserDto>> GetUserDto(string userId)
+        {
+            var result = await _userRepository.GetUser(userId);
+            var userDtos = _mapper.Map<List<UserDto>>(result);
+            return userDtos;
         }
         public async Task<string> Register(CreateUserDto userDto, string role)
         {

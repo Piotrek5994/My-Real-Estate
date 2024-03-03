@@ -1,5 +1,4 @@
 ﻿using Core.CommendDto;
-using Infrastracture.Service;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +15,14 @@ namespace My_Real_Estate.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUser(string? userId = null)
         {
-            return View();
+            var user = await _userService.GetUserDto(userId);
+            if (user != null)
+            {
+                return Json(new { result = user });
+            }
+            return NotFound(new { message = "User or Users don't found." }); ;
         }
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto, string role)
@@ -31,18 +35,18 @@ namespace My_Real_Estate.Controllers
             }
             else
             {
-                return BadRequest(new { message = "Registration failed" });
+                return BadRequest(new { message = "Registration failed." });
             }
         }
         [HttpPut]
         public async Task<IActionResult> UpdateUser(string userId)
         {
-            return View();
+            return Ok();
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            return View();
+            return Ok();
         }
     }
 }
