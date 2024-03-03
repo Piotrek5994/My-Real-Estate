@@ -61,8 +61,10 @@ namespace My_Real_Estate
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
 
+                //Add access for swagger model example
                 options.ExampleFilters();
 
+                //Add access for swagger description
                 options.EnableAnnotations();
 
                 options.CustomSchemaIds(type =>
