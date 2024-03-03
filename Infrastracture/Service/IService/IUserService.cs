@@ -13,5 +13,6 @@ namespace Infrastracture.Service.IService
     {
         Task<List<UserDto>> GetUserDto(UserFilter filter);
         Task<string> Register(CreateUserDto userDto, string role);
+        Task<bool> UserDelete(string id);
     }
 }

@@ -14,5 +14,6 @@ namespace Core.IRepositories
         Task<List<User>> GetUser(UserFilter filter);
         Task<string> CreateUser(CreateUser user);
         Task<string> CreateAdmin(CreateUser user);
+        Task<bool> DeleteUser(string id);
     }
 }

@@ -16,7 +16,7 @@ namespace My_Real_Estate.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUser([FromQuery]UserFilter filter)
+        public async Task<IActionResult> GetUser([FromQuery] UserFilter filter)
         {
             var user = await _userService.GetUserDto(filter);
             if (user != null)
@@ -47,7 +47,8 @@ namespace My_Real_Estate.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            return Ok();
+            bool delete = await _userService.UserDelete(userId);
+            return Ok(new { result = delete });
         }
     }
 }

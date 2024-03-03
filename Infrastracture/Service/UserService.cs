@@ -37,5 +37,10 @@ namespace Infrastracture.Service
 
             return result;
         }
+        public async Task<bool> UserDelete(string id)
+        {
+            bool result = await _userRepository.DeleteUser(id);
+            return result;
+        }
     }
 }

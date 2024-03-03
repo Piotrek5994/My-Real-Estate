@@ -5,6 +5,7 @@ using Core.Model;
 using Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -39,7 +40,7 @@ namespace Infrastracture.Repositories
 
                 return await users.ToListAsync();
             }
-            catch (Exception ex)
+            catch (MongoException ex)
             {
                 _log.LogError(ex, "Error getting user(s)");
                 return null;
@@ -59,7 +60,7 @@ namespace Infrastracture.Repositories
                 await collection.InsertOneAsync(user);
                 return user.Id;
             }
-            catch (Exception ex)
+            catch (MongoException ex)
             {
                 _log.LogError(ex, "Error creating user in MongoDB.");
                 return "failed";
@@ -74,10 +75,26 @@ namespace Infrastracture.Repositories
                 await collection.InsertOneAsync(user);
                 return user.Id;
             }
-            catch (Exception ex)
+            catch (MongoException ex)
             {
                 _log.LogError(ex, "Error creating user in MongoDB.");
                 return "faile";
+            }
+        }
+        public async Task<bool> DeleteUser(string id)
+        {
+            try
+            {
+                var collection = _context.GetCollection<User>("User");
+                var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(id));
+                var result = await collection.DeleteOneAsync(filter);
+
+                return result.DeletedCount > 0;
+            }
+            catch (MongoException ex)
+            {
+                _log.LogError(ex, "Error delete user in MongoDb.");
+                return false;
             }
         }
     }
