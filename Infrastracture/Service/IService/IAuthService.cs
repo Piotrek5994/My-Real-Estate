@@ -10,7 +10,6 @@ namespace Infrastracture.Service.IService
 {
     public interface IAuthService
     {
-        Task<string> Register(CreateUserDto userDto, string role);
         Task<string> Login(CreateLogin login);
         Task<string> RefreshToken(string token);
     }

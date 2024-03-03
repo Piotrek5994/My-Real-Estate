@@ -21,18 +21,6 @@ namespace Infrastracture.Service
             _authRepository = authRepository;
             _mapper = mapper;
         }
-        public async Task<string> Register(CreateUserDto userDto, string role)
-        {
-            CreateUser user = _mapper.Map<CreateUser>(userDto);
-            string result = role switch
-            {
-                string r when r.Contains("User") => await _authRepository.CreateUser(user),
-                string r when r.Contains("Admin") => await _authRepository.CreateAdmin(user),
-                _ => "Invalid role"
-            };
-
-            return result;
-        }
         public async Task<string> Login(CreateLogin login)
         {
             string result = await _authRepository.Login(login);

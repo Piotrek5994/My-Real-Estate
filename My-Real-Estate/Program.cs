@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 using System.Text;
 
 namespace My_Real_Estate
@@ -38,12 +39,18 @@ namespace My_Real_Estate
             builder.Services.AddControllers();
             //Service 
             builder.Services.AddScoped<IAuthService,AuthService>();
+            builder.Services.AddScoped<IUserService,UserService>();
             //Repository
             builder.Services.AddScoped<IAuthRepository,AuthRepository>();
+            builder.Services.AddScoped<IUserRepository,UserRepository>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -55,6 +62,8 @@ namespace My_Real_Estate
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
 
                 options.ExampleFilters();
+
+                options.EnableAnnotations();
 
                 options.CustomSchemaIds(type =>
                 {

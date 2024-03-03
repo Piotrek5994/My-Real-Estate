@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
@@ -14,25 +16,7 @@ namespace My_Real_Estate.Controllers
             _authService = authService;
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] CreateUserDto userDto, string role)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            string registerId = await _authService.Register(userDto, role);
-
-            if (registerId != "failed")
-            {
-                return Ok(new { UserId = registerId });
-            }
-            else
-            {
-                return BadRequest(new { message = "Registration failed" });
-            }
-        }
-        [HttpPost("Login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] CreateLogin login)
         {
             if (!ModelState.IsValid)
@@ -49,7 +33,7 @@ namespace My_Real_Estate.Controllers
 
             return Ok(new { Token = token });
         }
-        [HttpPut("Refresh")]
+        [HttpPut]
         public async Task<IActionResult> RefresToken(string token)
         {
             if (string.IsNullOrEmpty(token))

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Core.IRepositories
 {
-    public interface IAuthRepository
+    public interface IUserRepository
     {
-        Task<string> Login(CreateLogin login);
-        Task<string> Refresh(string token);
+        Task<string> CreateUser(CreateUser user);
+        Task<string> CreateAdmin(CreateUser user);
     }
 }
