@@ -32,6 +32,7 @@ namespace Infrastracture.Repositories
                     filterDefinition = Builders<User>.Filter.Where(user => user.Id.Contains(filter.Id));
                 }
 
+                // Pagination
                 var users = collection.Find(filterDefinition)
                                             .Skip((filter.Page - 1) * filter.Limit)
                                             .Limit(filter.Limit);
