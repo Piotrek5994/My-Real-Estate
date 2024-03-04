@@ -51,6 +51,12 @@ namespace My_Real_Estate.Controllers
         [Route("/Auth/Role")]
         public async Task<IActionResult> ChangeRole(string userId,string? role = null)
         {
+            var validRoles = new HashSet<string> { "Admin", "User" };
+
+            if (role != null && !validRoles.Contains(role))
+            {
+                return BadRequest(new { message = $"Invalid role. Only the following roles are allowed: {string.Join(", ", validRoles)}" });
+            }
             bool result = await _authService.UpdateUserRole(userId,role);
             if(!result)
             {
