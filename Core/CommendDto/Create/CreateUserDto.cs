@@ -18,7 +18,7 @@ namespace Core.CommendDto.Create
 
         [Required]
         [JsonProperty(Required = Required.Always)]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Email must contain an '@'.")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         [Required]

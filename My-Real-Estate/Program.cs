@@ -71,8 +71,9 @@ namespace My_Real_Estate
                 {
                     return type.Name switch
                     {
-                        "CreateUserDto" => "Register",
                         "CreateLogin" => "Login",
+                        "CreateUserDto" => "Register-User",
+                        "UpdateUser" => "Update-User",
                         _ => type.Name
                     };
                 });

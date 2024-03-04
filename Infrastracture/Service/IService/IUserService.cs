@@ -1,13 +1,7 @@
 ﻿using Core.Commend.Update;
 using Core.CommendDto.Create;
-using Core.CommendDto.Update;
 using Core.Filter;
 using Infrastracture.ModelDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Service.IService
 {
