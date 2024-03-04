@@ -65,7 +65,7 @@ namespace My_Real_Estate.Controllers
             return Ok(new { ChangeRole = role });
         }
         [HttpPatch]
-        [Route("/Auth/Change")]
+        [Route("/Auth/Password")]
         public async Task<IActionResult> ChangePassword(UpdatePassword password)
         {
             bool result = await _authService.ChangeUserPassword(password);
