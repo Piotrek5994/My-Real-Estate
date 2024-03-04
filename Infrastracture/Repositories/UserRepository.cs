@@ -1,4 +1,5 @@
-﻿using Core.Commend;
+﻿using Core.Commend.Create;
+using Core.Commend.Update;
 using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
@@ -81,6 +82,55 @@ namespace Infrastracture.Repositories
                 return "faile";
             }
         }
+        public async Task<bool> UpdateUser(UpdateUser updateUser, string userId)
+        {
+            try
+            {
+                var collection = _context.GetCollection<User>("User");
+                var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId));
+
+                var updates = new List<UpdateDefinition<User>>();
+
+                if (!string.IsNullOrEmpty(updateUser.FirstName))
+                    updates.Add(Builders<User>.Update.Set(u => u.FirstName, updateUser.FirstName));
+                if (!string.IsNullOrEmpty(updateUser.LastName))
+                    updates.Add(Builders<User>.Update.Set(u => u.LastName, updateUser.LastName));
+                if (!string.IsNullOrEmpty(updateUser.Gender))
+                    updates.Add(Builders<User>.Update.Set(u => u.Gender, updateUser.Gender));
+                if (!string.IsNullOrEmpty(updateUser.PESEL))
+                    updates.Add(Builders<User>.Update.Set(u => u.PESEL, updateUser.PESEL));
+                if (!string.IsNullOrEmpty(updateUser.Role))
+                    updates.Add(Builders<User>.Update.Set(u => u.Role, updateUser.Role));
+                if (!string.IsNullOrEmpty(updateUser.Email))
+                    updates.Add(Builders<User>.Update.Set(u => u.Email, updateUser.Email));
+                if (!string.IsNullOrEmpty(updateUser.Password))
+                    updates.Add(Builders<User>.Update.Set(u => u.Password, updateUser.Password));
+                if (!string.IsNullOrEmpty(updateUser.PhoneNumber))
+                    updates.Add(Builders<User>.Update.Set(u => u.PhoneNumber, updateUser.PhoneNumber));
+                if (updateUser.Properties != null && updateUser.Properties.Any())
+                    updates.Add(Builders<User>.Update.Set(u => u.Properties, updateUser.Properties));
+                if (updateUser.Payments != null && updateUser.Payments.Any())
+                    updates.Add(Builders<User>.Update.Set(u => u.Payments, updateUser.Payments));
+
+                if (updates.Count == 0)
+                {
+                    return false;
+                }
+
+                var combinedUpdate = Builders<User>.Update.Combine(updates);
+
+                var result = await collection.UpdateOneAsync(filter, combinedUpdate);
+
+                return result.ModifiedCount > 0;
+            }
+            catch (MongoException ex)
+            {
+                _log.LogError(ex, "Error updating user in MongoDB.");
+                return false;
+            }
+        }
+
+
         public async Task<bool> DeleteUser(string id)
         {
             try

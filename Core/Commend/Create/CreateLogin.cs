@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Core.Commend
+namespace Core.Commend.Create
 {
     public class CreateLogin
     {

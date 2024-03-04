@@ -1,4 +1,5 @@
-﻿using Core.CommendDto;
+﻿using Core.CommendDto.Create;
+using Core.CommendDto.Update;
 using Core.Filter;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -40,15 +41,20 @@ namespace My_Real_Estate.Controllers
             }
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(string userId)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto, string userId)
         {
-            return Ok();
+            bool update = await _userService.UserUpdate(userDto, userId);
+            if (!update)
+            {
+                return BadRequest(new { message = "User update fail" });
+            }
+            return Ok(new { result = update });
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             bool delete = await _userService.UserDelete(userId);
-            if (delete = false)
+            if (!delete)
             {
                 return BadRequest(new { message = "User does not exist." });
             }

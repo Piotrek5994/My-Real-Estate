@@ -3,7 +3,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.CommendDto
+namespace Core.CommendDto.Create
 {
     public class CreateUserDto
     {
@@ -18,7 +18,7 @@ namespace Core.CommendDto
 
         [Required]
         [JsonProperty(Required = Required.Always)]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",ErrorMessage = "Email must contain an '@'.")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Email must contain an '@'.")]
         public string Email { get; set; }
 
         [Required]

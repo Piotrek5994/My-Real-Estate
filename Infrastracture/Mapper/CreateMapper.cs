@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Core.Commend;
-using Core.CommendDto;
+using Core.Commend.Create;
+using Core.CommendDto.Create;
 
 namespace Infrastracture.Mapper
 {

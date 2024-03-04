@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using Core.Commend;
-using Core.CommendDto;
+using Core.Commend.Create;
+using Core.Commend.Update;
+using Core.CommendDto.Create;
+using Core.CommendDto.Update;
 using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
@@ -35,6 +37,12 @@ namespace Infrastracture.Service
                 _ => "Invalid role"
             };
 
+            return result;
+        }
+        public async Task<bool> UserUpdate(UpdateUserDto userDto,string userId)
+        {
+            UpdateUser user = _mapper.Map<UpdateUser>(userDto);
+            bool result = await _userRepository.UpdateUser(user, userId);
             return result;
         }
         public async Task<bool> UserDelete(string id)

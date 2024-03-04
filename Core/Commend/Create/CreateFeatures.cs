@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Commend
+namespace Core.Commend.Create
 {
-    public class CreatePhoto
+    public class CreateFeatures
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [BsonElement("photo_src")]
-        public string PhotoSrc { get; set; } = string.Empty;
+        [BsonElement("features_name")]
+        public string FeatureName { get; set; } = string.Empty;
         [BsonRequired]
-        [BsonElement("property_id")]
+        [BsonElement("user_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string PropertyId { get; set; } //FK
+        public string UserId { get; set; }//FK
     }
 }
