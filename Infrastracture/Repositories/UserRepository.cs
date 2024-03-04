@@ -33,11 +33,16 @@ namespace Infrastracture.Repositories
                 {
                     filterDefinition = Builders<User>.Filter.Where(user => user.Id.Contains(filter.Id));
                 }
+                // Define sorting
+                var sortDefinition = filter.SortDescending ?
+                                     Builders<User>.Sort.Descending(filter.SortBy) :
+                                     Builders<User>.Sort.Ascending(filter.SortBy);
 
-                // Pagination
+                // Pagination and apply sorting
                 var users = collection.Find(filterDefinition)
-                                            .Skip((filter.Page - 1) * filter.Limit)
-                                            .Limit(filter.Limit);
+                                      .Sort(sortDefinition) // Apply the sorting here
+                                      .Skip((filter.Page - 1) * filter.Limit)
+                                      .Limit(filter.Limit);
 
                 return await users.ToListAsync();
             }
