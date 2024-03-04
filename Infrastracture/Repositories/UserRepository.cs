@@ -40,7 +40,7 @@ namespace Infrastracture.Repositories
 
                 // Pagination and apply sorting
                 var users = collection.Find(filterDefinition)
-                                      .Sort(sortDefinition) // Apply the sorting here
+                                      .Sort(sortDefinition)
                                       .Skip((filter.Page - 1) * filter.Limit)
                                       .Limit(filter.Limit);
 
