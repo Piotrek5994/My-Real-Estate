@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,5 +27,17 @@ namespace Core.Commend.Update
             ErrorMessage = "Password must start with a capital letter, contain at least 4 digits and one special character."
         )]
         public string NewPassword { get; set; }
+    }
+    public class UpdatePasswordExample : IExamplesProvider<UpdatePassword>
+    {
+        public UpdatePassword GetExamples()
+        {
+            return new UpdatePassword
+            {
+                userId = "",
+                OldPassword = "",
+                NewPassword = ""
+            };
+        }
     }
 }

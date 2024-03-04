@@ -20,7 +20,7 @@ namespace Core.Commend.Update
         public string? Password { get; set; }
         public string? PhoneNumber { get; set; }
     }
-    public class CreateUpdateDtoExample : IExamplesProvider<UpdateUser>
+    public class UpdateUserExample : IExamplesProvider<UpdateUser>
     {
         public UpdateUser GetExamples()
         {
