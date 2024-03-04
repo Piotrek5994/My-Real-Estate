@@ -99,8 +99,6 @@ namespace Infrastracture.Repositories
                     updates.Add(Builders<User>.Update.Set(u => u.Gender, updateUser.Gender));
                 if (!string.IsNullOrEmpty(updateUser.PESEL))
                     updates.Add(Builders<User>.Update.Set(u => u.PESEL, updateUser.PESEL));
-                if (!string.IsNullOrEmpty(updateUser.Role))
-                    updates.Add(Builders<User>.Update.Set(u => u.Role, updateUser.Role));
                 if (!string.IsNullOrEmpty(updateUser.Email))
                     updates.Add(Builders<User>.Update.Set(u => u.Email, updateUser.Email));
                 if (!string.IsNullOrEmpty(updateUser.Password))

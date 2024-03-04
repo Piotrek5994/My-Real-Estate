@@ -39,9 +39,8 @@ namespace Infrastracture.Service
 
             return result;
         }
-        public async Task<bool> UserUpdate(UpdateUserDto userDto,string userId)
+        public async Task<bool> UserUpdate(UpdateUser user,string userId)
         {
-            UpdateUser user = _mapper.Map<UpdateUser>(userDto);
             bool result = await _userRepository.UpdateUser(user, userId);
             return result;
         }

@@ -1,4 +1,5 @@
-﻿using Core.CommendDto.Create;
+﻿using Core.Commend.Update;
+using Core.CommendDto.Create;
 using Core.CommendDto.Update;
 using Core.Filter;
 using Infrastracture.Service.IService;
@@ -41,9 +42,9 @@ namespace My_Real_Estate.Controllers
             }
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userDto, string userId)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUser user, string userId)
         {
-            bool update = await _userService.UserUpdate(userDto, userId);
+            bool update = await _userService.UserUpdate(user, userId);
             if (!update)
             {
                 return BadRequest(new { message = "User update fail" });
