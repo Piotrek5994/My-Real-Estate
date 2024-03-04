@@ -1,4 +1,5 @@
 ﻿using Core.Commend.Create;
+using Core.Commend.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace Core.IRepositories
         Task<string> Login(CreateLogin login);
         Task<string> Refresh(string token);
         Task<bool> UpdateRole(string userId, string? role);
-        Task<bool> ChangePassword(string userId, string oldPassword, string newPassword);
+        Task<bool> ChangePassword(UpdatePassword password);
     }
 }

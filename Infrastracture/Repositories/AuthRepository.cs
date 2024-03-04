@@ -1,4 +1,5 @@
 ﻿using Core.Commend.Create;
+using Core.Commend.Update;
 using Core.IRepositories;
 using Core.Model;
 using Infrastracture.Helper;
@@ -102,32 +103,32 @@ namespace Infrastracture.Repositories
                 return false;
             }
         }
-        public async Task<bool> ChangePassword(string userId, string oldPassword, string newPassword)
+        public async Task<bool> ChangePassword(UpdatePassword password)
         {
             try
             {
                 var collection = _context.GetCollection<User>("User");
-                var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId));
+                var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(password.userId));
 
                 var user = await collection.Find(filter).FirstOrDefaultAsync();
                 if (user == null)
                 {
-                    _log.LogError($"User not exist by id : {userId}.");
+                    _log.LogError($"User not exist by id : {password.userId}.");
                     return false;
                 }
                 else
                 {
-                    if (PasswordHasher.VerifyPassword(oldPassword, user.Password))
+                    if (PasswordHasher.VerifyPassword(password.OldPassword, user.Password))
                     {
-                        newPassword = PasswordHasher.HashPassword(newPassword);
-                        var update = Builders<User>.Update.Set(u => u.Password, newPassword);
+                        password.NewPassword = PasswordHasher.HashPassword(password.NewPassword);
+                        var update = Builders<User>.Update.Set(u => u.Password, password.NewPassword);
                         var result = await collection.UpdateOneAsync(filter, update);
 
                         return result.ModifiedCount > 0;
                     }
                     else
                     {
-                        _log.LogError($"Change password attempt failed for user ID: {userId}. Incorrect password provided.");
+                        _log.LogError($"Change password attempt failed for user ID: {password.userId}. Incorrect password provided.");
                         return false;
                     }
                 }
@@ -137,7 +138,6 @@ namespace Infrastracture.Repositories
                 _log.LogError(ex, "Error change user password.");
                 return false;
             }
-            return false;
         }
 
         private string CreateToken(User user)

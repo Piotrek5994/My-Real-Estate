@@ -1,4 +1,5 @@
 ﻿using Core.Commend.Create;
+using Core.Commend.Update;
 using Core.CommendDto;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace Infrastracture.Service.IService
         Task<string> Login(CreateLogin login);
         Task<string> RefreshToken(string token);
         Task<bool> UpdateUserRole(string userId, string? role);
-        Task<bool> ChangeUserPassword(string userId, string oldPassword, string newPassword);
+        Task<bool> ChangeUserPassword(UpdatePassword password);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Core.Commend.Create;
+using Core.Commend.Update;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,14 +66,14 @@ namespace My_Real_Estate.Controllers
         }
         [HttpPatch]
         [Route("/Auth/Change")]
-        public async Task<IActionResult> ChangePassword(string userId, string oldPassword, string newPassword)
+        public async Task<IActionResult> ChangePassword(UpdatePassword password)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword))
+            if (string.IsNullOrEmpty(password.userId) || string.IsNullOrEmpty(password.OldPassword) || string.IsNullOrEmpty(password.NewPassword))
             {
                 return BadRequest(new { message = "UserId, old password, and new password cannot be empty." });
             }
 
-            bool result = await _authService.ChangeUserPassword(userId, oldPassword, newPassword);
+            bool result = await _authService.ChangeUserPassword(password);
             return Ok(new { ChangePassword = result });
         }
     }
