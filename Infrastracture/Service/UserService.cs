@@ -38,15 +38,8 @@ namespace Infrastracture.Service
 
             return result;
         }
-        public async Task<bool> UserUpdate(UpdateUser user,string userId)
-        {
-            bool result = await _userRepository.UpdateUser(user, userId);
-            return result;
-        }
-        public async Task<bool> UserDelete(string id)
-        {
-            bool result = await _userRepository.DeleteUser(id);
-            return result;
-        }
+        public async Task<bool> UserUpdate(UpdateUser user,string userId) => await _userRepository.UpdateUser(user, userId);
+
+        public async Task<bool> UserDelete(string id) => await _userRepository.DeleteUser(id);
     }
 }
