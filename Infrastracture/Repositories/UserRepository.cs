@@ -105,10 +105,6 @@ namespace Infrastracture.Repositories
                     updates.Add(Builders<User>.Update.Set(u => u.Password, updateUser.Password));
                 if (!string.IsNullOrEmpty(updateUser.PhoneNumber))
                     updates.Add(Builders<User>.Update.Set(u => u.PhoneNumber, updateUser.PhoneNumber));
-                if (updateUser.Properties != null && updateUser.Properties.Any())
-                    updates.Add(Builders<User>.Update.Set(u => u.Properties, updateUser.Properties));
-                if (updateUser.Payments != null && updateUser.Payments.Any())
-                    updates.Add(Builders<User>.Update.Set(u => u.Payments, updateUser.Payments));
 
                 if (updates.Count == 0)
                 {
