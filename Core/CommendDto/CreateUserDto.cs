@@ -3,7 +3,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.CommendDto.Create
+namespace Core.CommendDto
 {
     public class CreateUserDto
     {

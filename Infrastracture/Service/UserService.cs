@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Core.Commend.Create;
 using Core.Commend.Update;
-using Core.CommendDto.Create;
+using Core.CommendDto;
 using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
