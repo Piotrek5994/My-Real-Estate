@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Commend.Create;
 using Core.CommendDto;
+using Infrastracture.Helper;
 
 namespace Infrastracture.Mapper
 {
@@ -9,6 +10,10 @@ namespace Infrastracture.Mapper
         public CreateMapper()
         {
             CreateMap<CreateUserDto, CreateUser>()
+                    .BeforeMap((src,dest) =>
+                    {
+                        src.Password = PasswordHasher.HashPassword(src.Password).ToString();
+                    })
                     .AfterMap((src, dest) =>
                      {
                          src.FirstName = dest.FirstName;

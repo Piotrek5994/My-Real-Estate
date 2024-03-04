@@ -1,6 +1,7 @@
 ﻿using Core.Commend.Create;
 using Core.IRepositories;
 using Core.Model;
+using Infrastracture.Helper;
 using Infrastructure.Db;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -30,13 +31,23 @@ namespace Infrastracture.Repositories
             try
             {
                 var collection = _context.GetCollection<User>("User");
-                var user = await collection.Find(u => u.Email == login.Email && u.Password == login.Password).FirstOrDefaultAsync();
+                var user = await collection.Find(u => u.Email == login.Email).FirstOrDefaultAsync();
+
                 if (user == null)
                 {
-                    return "Authentication failed. User not found or password incorrect.";
+                    return "Authentication failed. User not found.";
                 }
-
-                return CreateToken(user);
+                else
+                {
+                    if (PasswordHasher.VerifyPassword(login.Password, user.Password))
+                    {
+                        return CreateToken(user);
+                    }
+                    else
+                    {
+                        return "Authentication failed. Password incorrect.";
+                    }
+                }
             }
             catch (Exception ex)
             {
