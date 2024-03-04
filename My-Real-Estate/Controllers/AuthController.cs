@@ -47,5 +47,16 @@ namespace My_Real_Estate.Controllers
             }
             return Ok(new { Token = result });
         }
+        [HttpPatch]
+        [Route("/Auth/Role")]
+        public async Task<IActionResult> ChangeRole(string userId,string? role = null)
+        {
+            bool result = await _authService.UpdateUserRole(userId,role);
+            if(!result)
+            {
+                return BadRequest(new {message = $"Incorrect role change for user : {userId}" });
+            }
+            return Ok(new { ChangeRole = role });
+        }
     }
 }

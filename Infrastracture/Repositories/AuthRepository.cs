@@ -5,6 +5,7 @@ using Infrastructure.Db;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -49,10 +50,45 @@ namespace Infrastracture.Repositories
             {
                 return RefreshToken(token);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.LogError(ex, "Error logging in refresh token");
                 return null;
+            }
+        }
+        public async Task<bool> UpdateRole(string userId, string? role)
+        {
+            try
+            {
+                var collection = _context.GetCollection<User>("User");
+                var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId));
+
+                bool userExists = await collection.Find(filter).AnyAsync();
+                if (!userExists)
+                {
+                    _log.LogError($"User not exist by id : {userId}");
+                    return false;
+                }
+
+                var update = new List<UpdateDefinition<User>>();
+
+                if (!string.IsNullOrEmpty(role))
+                    update.Add(Builders<User>.Update.Set(u => u.Role, role));
+
+                if (update.Count == 0)
+                {
+                    return false;
+                }
+
+                var combinedUpdate = Builders<User>.Update.Combine(update);
+                var result = await collection.UpdateOneAsync(filter, combinedUpdate);
+
+                return result.ModifiedCount > 0;
+            }
+            catch (MongoException ex)
+            {
+                _log.LogError(ex, "Error change user role");
+                return false;
             }
         }
 

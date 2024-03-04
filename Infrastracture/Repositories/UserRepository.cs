@@ -112,7 +112,6 @@ namespace Infrastracture.Repositories
                 }
 
                 var combinedUpdate = Builders<User>.Update.Combine(updates);
-
                 var result = await collection.UpdateOneAsync(filter, combinedUpdate);
 
                 return result.ModifiedCount > 0;

@@ -11,5 +11,6 @@ namespace Core.IRepositories
     {
         Task<string> Login(CreateLogin login);
         Task<string> Refresh(string token);
+        Task<bool> UpdateRole(string userId, string? role);
     }
 }

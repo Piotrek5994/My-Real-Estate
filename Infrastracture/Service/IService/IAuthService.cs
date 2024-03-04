@@ -12,5 +12,6 @@ namespace Infrastracture.Service.IService
     {
         Task<string> Login(CreateLogin login);
         Task<string> RefreshToken(string token);
+        Task<bool> UpdateUserRole(string userId, string? role);
     }
 }

@@ -31,5 +31,10 @@ namespace Infrastracture.Service
             string result = await _authRepository.Refresh(token);
             return result;
         }
+        public async Task<bool> UpdateUserRole(string userId,string? role)
+        {
+            bool result = await _authRepository.UpdateRole(userId,role);
+            return result;
+        }
     }
 }
