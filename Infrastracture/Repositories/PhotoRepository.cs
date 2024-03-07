@@ -1,8 +1,7 @@
 ﻿using Core.IRepositories;
 
-namespace Infrastracture.Repositories
+namespace Infrastracture.Repositories;
+
+public class PhotoRepository : IPhotoRepository
 {
-    public class PhotoRepository : IPhotoRepository
-    {
-    }
 }

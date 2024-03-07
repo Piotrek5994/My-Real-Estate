@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model
+namespace Core.Model;
+
+public class Avatar
 {
-    public class Avatar
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonElement("avatar_src")]
-        public string AvatarScr { get; set; }
-        [BsonElement("user_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; } //FK
-    }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+    [BsonElement("avatar_src")]
+    public string AvatarScr { get; set; }
+    [BsonElement("user_id")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string UserId { get; set; } //FK
 }

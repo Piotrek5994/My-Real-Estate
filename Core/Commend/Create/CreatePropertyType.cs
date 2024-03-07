@@ -6,19 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Commend.Create
+namespace Core.Commend.Create;
+
+public class CreatePropertyType
 {
-    public class CreatePropertyType
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonRequired]
-        [BsonElement("property_type_name")]
-        public string PropertyTypeName { get; set; } = string.Empty;
-        [BsonRequired]
-        [BsonElement("property_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string PropertyId { get; set; } //FK
-    }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+    [BsonRequired]
+    [BsonElement("property_type_name")]
+    public string PropertyTypeName { get; set; } = string.Empty;
+    [BsonRequired]
+    [BsonElement("property_id")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string PropertyId { get; set; } //FK
 }

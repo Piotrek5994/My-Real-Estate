@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastracture.Repositories
+namespace Infrastracture.Repositories;
+
+public class PropertyRepository : IPropertyRepository
 {
-    public class PropertyRepository : IPropertyRepository
-    {
-    }
 }

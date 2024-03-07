@@ -8,14 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.IRepositories
+namespace Core.IRepositories;
+
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
-        Task<List<User>> GetUser(UserFilter filter);
-        Task<string> CreateUser(CreateUser user);
-        Task<string> CreateAdmin(CreateUser user);
-        Task<bool> UpdateUser(UpdateUser updateUser, string userId);
-        Task<bool> DeleteUser(string id);
-    }
+    Task<List<User>> GetUser(UserFilter filter);
+    Task<string> CreateUser(CreateUser user);
+    Task<string> CreateAdmin(CreateUser user);
+    Task<bool> UpdateUser(UpdateUser updateUser, string userId);
+    Task<bool> DeleteUser(string id);
 }

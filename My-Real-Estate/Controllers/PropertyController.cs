@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace My_Real_Estate.Controllers
+namespace My_Real_Estate.Controllers;
+
+public class PropertyController : Controller
 {
-    public class PropertyController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

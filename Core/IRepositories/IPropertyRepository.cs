@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.IRepositories
+namespace Core.IRepositories;
+
+public interface IPropertyRepository
 {
-    public interface IPropertyRepository
-    {
-    }
 }

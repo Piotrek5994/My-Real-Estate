@@ -1,13 +1,19 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.IRepositories;
+using Infrastracture.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastracture.Service
+namespace Infrastracture.Service;
+
+public class PhotoService : IPhotoService
 {
-    public class PhotoService : IPhotoService
+    private readonly IPhotoRepository _photoRepository;
+
+    public PhotoService(IPhotoRepository photoRepository)
     {
+        _photoRepository = photoRepository;
     }
 }

@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model
+namespace Core.Model;
+
+public class PropertyType
 {
-    public class PropertyType
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonElement("property_type_name")]
-        public string PropertyTypeName { get; set; }
-        [BsonElement("property_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string PropertyId { get; set; } //FK
-    }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+    [BsonElement("property_type_name")]
+    public string PropertyTypeName { get; set; }
+    [BsonElement("property_id")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string PropertyId { get; set; } //FK
 }

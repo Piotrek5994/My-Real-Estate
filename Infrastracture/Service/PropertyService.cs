@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastracture.Service
+namespace Infrastracture.Service;
+
+public class PropertyService : IPropertyService
 {
-    public class PropertyService : IPropertyService
-    {
-    }
 }

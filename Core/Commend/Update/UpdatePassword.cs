@@ -7,37 +7,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Commend.Update
+namespace Core.Commend.Update;
+
+public class UpdatePassword
 {
-    public class UpdatePassword
+    [Required]
+    public string userId {  get; set; }
+    [Required]
+    [DataType(DataType.Password)]
+    [RegularExpression(
+        @"^[A-Z](?=.*\d{4,})(?=.*[!@#$%^&*()\-_=+{};:,<.>]).+$",
+        ErrorMessage = "Password must start with a capital letter, contain at least 4 digits and one special character."
+    )]
+    public string OldPassword { get; set; }
+    [Required]
+    [DataType(DataType.Password)]
+    [RegularExpression(
+        @"^[A-Z](?=.*\d{4,})(?=.*[!@#$%^&*()\-_=+{};:,<.>]).+$",
+        ErrorMessage = "Password must start with a capital letter, contain at least 4 digits and one special character."
+    )]
+    public string NewPassword { get; set; }
+}
+public class UpdatePasswordExample : IExamplesProvider<UpdatePassword>
+{
+    public UpdatePassword GetExamples()
     {
-        [Required]
-        public string userId {  get; set; }
-        [Required]
-        [DataType(DataType.Password)]
-        [RegularExpression(
-            @"^[A-Z](?=.*\d{4,})(?=.*[!@#$%^&*()\-_=+{};:,<.>]).+$",
-            ErrorMessage = "Password must start with a capital letter, contain at least 4 digits and one special character."
-        )]
-        public string OldPassword { get; set; }
-        [Required]
-        [DataType(DataType.Password)]
-        [RegularExpression(
-            @"^[A-Z](?=.*\d{4,})(?=.*[!@#$%^&*()\-_=+{};:,<.>]).+$",
-            ErrorMessage = "Password must start with a capital letter, contain at least 4 digits and one special character."
-        )]
-        public string NewPassword { get; set; }
-    }
-    public class UpdatePasswordExample : IExamplesProvider<UpdatePassword>
-    {
-        public UpdatePassword GetExamples()
+        return new UpdatePassword
         {
-            return new UpdatePassword
-            {
-                userId = "",
-                OldPassword = "",
-                NewPassword = ""
-            };
-        }
+            userId = "",
+            OldPassword = "",
+            NewPassword = ""
+        };
     }
 }
