@@ -41,11 +41,13 @@ namespace My_Real_Estate
             builder.Services.AddScoped<IAuthService,AuthService>();
             builder.Services.AddScoped<IUserService,UserService>();
             builder.Services.AddScoped<IPhotoService,PhotoService>();
+            builder.Services.AddScoped<IPropertyService,PropertyService>();
 
             //Repository
             builder.Services.AddScoped<IAuthRepository,AuthRepository>();
             builder.Services.AddScoped<IUserRepository,UserRepository>();
             builder.Services.AddScoped<IPhotoRepository,PhotoRepository>();
+            builder.Services.AddScoped<IPropertyRepository,PropertyRepository>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
