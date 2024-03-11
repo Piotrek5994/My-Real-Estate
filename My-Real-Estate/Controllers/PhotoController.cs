@@ -16,7 +16,7 @@ public class PhotoController : Controller
     }
     [HttpGet]
     [Route("/Avatar")]
-    public async Task<IActionResult> GetUploadAvatarPhoto()
+    public async Task<IActionResult> GetAvatarPhoto()
     {
         return Ok();
     }
@@ -30,12 +30,24 @@ public class PhotoController : Controller
             return BadRequest(new { Message = "User ID is requaierd." });
         }
 
-        var result = await _photoService.UploadPhoto(formFile, userId,"Avatar");
+        var result = await _photoService.UploadPhoto(formFile, userId, "Avatar");
         if (result == null)
         {
             return BadRequest(new { Message = "Error loading image." });
         }
 
         return Ok(new { AvatarId = result });
+    }
+    [HttpPut]
+    [Route("/Avatar")]
+    public async Task<IActionResult> UpdateAvatarPhoto(string avaterId)
+    {
+        return Ok();
+    }
+    [HttpDelete]
+    [Route("/Avatar")]
+    public async Task<IActionResult> DeleteAvatarPhoto(string avatarId)
+    {
+        return Ok();
     }
 }
