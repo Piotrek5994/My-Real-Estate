@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,4 +9,5 @@ namespace Infrastracture.Service.IService;
 
 public interface IPhotoService
 {
+    Task<string> UploadPhoto(IFormFile formFile, string userId, string operationName);
 }

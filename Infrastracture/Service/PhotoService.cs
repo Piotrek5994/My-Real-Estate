@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.IRepositories;
 using Infrastracture.Service.IService;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,15 @@ public class PhotoService : IPhotoService
     {
         _photoRepository = photoRepository;
         _mapper = mapper;
+    }
+    public async Task<string> UploadPhoto(IFormFile formFile,string userId,string operationName)
+    {
+        string result = operationName switch
+        {
+            string r when r.Contains("Avatar") => await _photoRepository.UploudAvatarPhoto(formFile, userId),
+            _ => "Invalid operation"
+        };
+
+        return result;
     }
 }

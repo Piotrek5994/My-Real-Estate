@@ -1,5 +1,5 @@
-﻿using Core.IRepositories;
-using Infrastracture.Service.IService;
+﻿using Infrastracture.Service.IService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -13,5 +13,22 @@ public class PhotoController : Controller
     public PhotoController(IPhotoService photoService)
     {
         _photoService = photoService;
+    }
+    [HttpPost]
+    [Route("/Avatar")]
+    public async Task<IActionResult> UploadAvatarPhoto(IFormFile formFile, string userId)
+    {
+        if (userId == null || string.IsNullOrEmpty(userId))
+        {
+            return BadRequest(new { Message = "Invalid user ID." });
+        }
+
+        var result = await _photoService.UploadPhoto(formFile, userId,"Avatar");
+        if (result == null)
+        {
+            return BadRequest(new { Message = "Error loading image." });
+        }
+
+        return Ok(new { Message = "Avatar has been successfully uploaded and saved." });
     }
 }
