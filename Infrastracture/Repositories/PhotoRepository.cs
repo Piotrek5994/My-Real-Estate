@@ -1,8 +1,10 @@
-﻿using Core.Filter;
+﻿using Core.Commend.Create;
+using Core.Filter;
 using Core.IRepositories;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 
 namespace Infrastracture.Repositories;
 
@@ -26,6 +28,7 @@ public class PhotoRepository : IPhotoRepository
             {
                 Id = userId,
             };
+
             var chackUser = await _userRepository.GetUser(userFilter);
             if (chackUser == null)
             {
@@ -52,10 +55,24 @@ public class PhotoRepository : IPhotoRepository
             {
                 await formFile.CopyToAsync(stream);
             }
+            var collection = _context.GetCollection<CreateAvatar>("Avatar");
+            var userAvatar = await collection.Find(u => u.AvatarScr == fileName).FirstOrDefaultAsync();
+            if (userAvatar != null)
+            {
+                return "The user has an avatar";
+            }
+
+            CreateAvatar create = new CreateAvatar
+            {
+                AvatarScr = fileName,
+                UserId = userId,
+            };
+
+            await collection.InsertOneAsync(create);
 
             return filePath;
         }
-        catch (Exception ex)
+        catch (MongoException ex)
         {
             _log.LogError(ex, "Error with UploudAvatarPhoto");
             return null;

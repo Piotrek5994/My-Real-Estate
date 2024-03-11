@@ -31,7 +31,7 @@ public class UserRepository : IUserRepository
 
             if (!string.IsNullOrEmpty(filter.Id))
             {
-                filterDefinition = Builders<User>.Filter.Where(user => user.Id.Contains(filter.Id));
+                filterDefinition = Builders<User>.Filter.Eq("_id", ObjectId.Parse(filter.Id));
             }
             // Define sorting
             var sortDefinition = filter.SortDescending ?
@@ -76,8 +76,13 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            user.Role = "Admin";
             var collection = _context.GetCollection<CreateUser>("User");
+            var existingUser = await collection.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
+            if (existingUser != null)
+            {
+                return "The user with the provided email address is already registered.";
+            }
+            user.Role = "Admin";
             await collection.InsertOneAsync(user);
             return user.Id;
         }
