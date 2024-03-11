@@ -70,7 +70,7 @@ public class PhotoRepository : IPhotoRepository
 
             await collection.InsertOneAsync(create);
 
-            return filePath;
+            return create.Id;
         }
         catch (MongoException ex)
         {

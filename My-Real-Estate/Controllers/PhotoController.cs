@@ -29,6 +29,6 @@ public class PhotoController : Controller
             return BadRequest(new { Message = "Error loading image." });
         }
 
-        return Ok(new { Message = "Avatar has been successfully uploaded and saved." });
+        return Ok(new { AvatarId = result });
     }
 }
