@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Infrastracture.Service;
 
-public class PhotoService : IPhotoService
+public class FeaturesService : IFeaturesService
 {
-    private readonly IPhotoRepository _photoRepository;
+    private readonly IFeaturesRepository _featuresRepository;
     private readonly IMapper _mapper;
 
-    public PhotoService(IPhotoRepository photoRepository,IMapper mapper)
+    public FeaturesService(IFeaturesRepository featuresRepository, IMapper mapper)
     {
-        _photoRepository = photoRepository;
+        _featuresRepository = featuresRepository;
         _mapper = mapper;
     }
 }

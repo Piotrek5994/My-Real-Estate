@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class PhotoController : Controller
 {
     private readonly IPhotoService _photoService;
@@ -11,10 +13,5 @@ public class PhotoController : Controller
     public PhotoController(IPhotoService photoService)
     {
         _photoService = photoService;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
     }
 }

@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastracture.Service.IService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class PropertyController : Controller
 {
-    public IActionResult Index()
+    private readonly IPropertyService _propertyService;
+
+    public PropertyController(IPropertyService propertyService)
     {
-        return View();
+        _propertyService = propertyService;
     }
 }
