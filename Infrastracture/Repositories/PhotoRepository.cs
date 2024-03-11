@@ -58,7 +58,7 @@ public class PhotoRepository : IPhotoRepository
                 await formFile.CopyToAsync(stream);
             }
             var collection = _context.GetCollection<CreateAvatar>("Avatar");
-            var userAvatar = await collection.Find(u => u.AvatarScr == fileName).FirstOrDefaultAsync();
+            var userAvatar = await collection.Find(u => u.AvatarScr.Contains(fileName)).FirstOrDefaultAsync();
             if (userAvatar != null)
             {
                 _log.LogError("Error user has an avatar");
