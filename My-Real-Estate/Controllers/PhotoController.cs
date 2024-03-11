@@ -14,13 +14,20 @@ public class PhotoController : Controller
     {
         _photoService = photoService;
     }
+    [HttpGet]
+    [Route("/Avatar")]
+    public async Task<IActionResult> GetUploadAvatarPhoto()
+    {
+        return Ok();
+    }
+
     [HttpPost]
     [Route("/Avatar")]
     public async Task<IActionResult> UploadAvatarPhoto(IFormFile formFile, string userId)
     {
         if (userId == null || string.IsNullOrEmpty(userId))
         {
-            return BadRequest(new { Message = "Invalid user ID." });
+            return BadRequest(new { Message = "User ID is requaierd." });
         }
 
         var result = await _photoService.UploadPhoto(formFile, userId,"Avatar");
