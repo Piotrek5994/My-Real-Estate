@@ -32,6 +32,7 @@ public class PhotoRepository : IPhotoRepository
             var chackUser = await _userRepository.GetUser(userFilter);
             if (chackUser == null)
             {
+                _log.LogError("Error chosen user not exist");
                 return "Chosen user not exist";
             }
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -48,6 +49,7 @@ public class PhotoRepository : IPhotoRepository
 
             if (File.Exists(filePath))
             {
+                _log.LogError("Error user alredy has an avatar");
                 return "This user already has an avatar.";
             }
 
@@ -59,6 +61,7 @@ public class PhotoRepository : IPhotoRepository
             var userAvatar = await collection.Find(u => u.AvatarScr == fileName).FirstOrDefaultAsync();
             if (userAvatar != null)
             {
+                _log.LogError("Error user has an avatar");
                 return "The user has an avatar";
             }
 
