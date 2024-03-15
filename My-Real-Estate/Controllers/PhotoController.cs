@@ -16,9 +16,11 @@ public class PhotoController : Controller
     }
     [HttpGet]
     [Route("/Avatar")]
-    public async Task<IActionResult> GetAvatarPhoto()
+    [Produces("image/jpeg", "image/png")]
+    public async Task<IActionResult> GetAvatarPhoto(string userId)
     {
-        return Ok();
+        var result = await _photoService.GetAvatar(userId);
+        return Ok(result);
     }
 
     [HttpPost]

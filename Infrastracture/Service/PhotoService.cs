@@ -20,6 +20,11 @@ public class PhotoService : IPhotoService
         _photoRepository = photoRepository;
         _mapper = mapper;
     }
+    public async Task<Stream> GetAvatar(string userId)
+    {
+        Stream result = await _photoRepository.GetAvatarPhoto(userId);
+        return result;
+    }
     public async Task<string> UploadPhoto(IFormFile formFile,string userId,string operationName)
     {
         string result = operationName switch

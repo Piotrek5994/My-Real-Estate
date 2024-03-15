@@ -2,10 +2,12 @@
 using Core.Commend.Create;
 using Core.Filter;
 using Core.IRepositories;
+using Core.Model;
 using Infrastracture.Db;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastracture.Repositories;
@@ -24,10 +26,24 @@ public class PhotoRepository : IPhotoRepository
         _userRepository = userRepository;
         _bunnyContext = bunnyContext;
     }
-    public async Task<string> GetAvatarPhoto(string userId)
+    public async Task<Stream> GetAvatarPhoto(string userId)
     {
         try
         {
+            var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
+            if (chackUser == null)
+            {
+                _log.LogError("Error: chosen user does not exist");
+                return null;
+            }
+            var collection = _context.GetCollection<Avatar>("Avatar");
+            var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+            if (userFilter == null)
+            {
+                _log.LogError("Error: user does not have an avatar");
+            }
+            var stream = await _bunnyContext.DownloadObjectAsStreamAsync(userFilter.AvatarScr);
+            return stream;
 
         }
         catch (BunnyCDNStorageException ex)
@@ -40,7 +56,6 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with GetAvatarPhoto in MongoDb : {ex.Message}");
             return null;
         }
-        return "";
     }
     public async Task<string> UploudAvatarPhoto(IFormFile formFile, string userId)
     {

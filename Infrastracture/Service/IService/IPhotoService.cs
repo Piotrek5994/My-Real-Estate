@@ -9,5 +9,6 @@ namespace Infrastracture.Service.IService;
 
 public interface IPhotoService
 {
+    Task<Stream> GetAvatar(string userId);
     Task<string> UploadPhoto(IFormFile formFile, string userId, string operationName);
 }

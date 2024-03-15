@@ -70,6 +70,8 @@ public class Program
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);
 
+            options.MapType<Stream>(() => new OpenApiSchema { Type = "file", Format = "binary" });
+
             options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

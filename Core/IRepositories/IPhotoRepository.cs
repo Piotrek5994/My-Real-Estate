@@ -9,5 +9,6 @@ namespace Core.IRepositories;
 
 public interface IPhotoRepository
 {
+    Task<Stream> GetAvatarPhoto(string userId);
     Task<string> UploudAvatarPhoto(IFormFile formFile, string userId);
 }
