@@ -52,6 +52,6 @@ public class PhotoController : Controller
     public async Task<IActionResult> DeleteAvatarPhoto(string userId)
     {
          await _photoService.DeleteAvatar(userId);
-        return Ok(new {message = true});
+        return Ok(new { Success = true});
     }
 }
