@@ -24,6 +24,24 @@ public class PhotoRepository : IPhotoRepository
         _userRepository = userRepository;
         _bunnyContext = bunnyContext;
     }
+    public async Task<string> GetAvatarPhoto(string userId)
+    {
+        try
+        {
+
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+            return null;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error with GetAvatarPhoto in MongoDb : {ex.Message}");
+            return null;
+        }
+        return "";
+    }
     public async Task<string> UploudAvatarPhoto(IFormFile formFile, string userId)
     {
         try
@@ -69,6 +87,39 @@ public class PhotoRepository : IPhotoRepository
         {
             _log.LogError(ex, $"Error with UploudAvatarPhoto in MongoDb : {ex.Message}");
             return null;
+        }
+    }
+    public async Task<string> ChangeAvatarPhoto(IFormFile formFile, string userId)
+    {
+        try
+        {
+
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+            return null;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error with ChangeAvatarPhoto in MongoDb : {ex.Message}");
+            return null;
+        }
+        return "";
+    }
+    public async Task DeleteAvatarPhoto(string userId)
+    {
+        try
+        {
+
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
         }
     }
 }
