@@ -11,6 +11,7 @@
 - Swashbuckle.AspNetCore.Swagger
 - Swashbuckle.AspNetCore.Annotations
 - AutoMapper.Extensions.Microsoft.DependencyInjection
+- BunnyCDN.Net.Storage
 ## Api Documentation :battery:
 - Swagger
 ## Database :performing_arts:
