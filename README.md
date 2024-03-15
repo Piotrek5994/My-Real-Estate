@@ -18,4 +18,4 @@
 - MongoDb
 ## About Program :ocean:
 The project involves creating a backend for a website used to manage and publish long-term rentals to make it easier for people to manage it,
-issuing invoices and a payment system, the entire API is connected to the MongoDb nosql database
+issuing invoices and a payment system, the entire API is connected to the MongoDb nosql database and hosted storage by bunny.net
