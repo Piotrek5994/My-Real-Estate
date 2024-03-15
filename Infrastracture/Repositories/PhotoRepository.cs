@@ -1,6 +1,8 @@
-﻿using Core.Commend.Create;
+﻿using BunnyCDN.Net.Storage;
+using Core.Commend.Create;
 using Core.Filter;
 using Core.IRepositories;
+using Infrastracture.Db;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,56 +15,39 @@ public class PhotoRepository : IPhotoRepository
     private readonly MongoDbContext _context;
     private readonly IUserRepository _userRepository;
     private readonly ILogger _log;
+    private readonly BunnyCdnContext _bunnyContext;
 
-    public PhotoRepository(MongoDbContext context, ILogger<PhotoRepository> log, IUserRepository userRepository)
+    public PhotoRepository(MongoDbContext context, ILogger<PhotoRepository> log, IUserRepository userRepository, BunnyCdnContext bunnyContext)
     {
         _context = context;
         _log = log;
         _userRepository = userRepository;
+        _bunnyContext = bunnyContext;
     }
     public async Task<string> UploudAvatarPhoto(IFormFile formFile, string userId)
     {
         try
         {
-            UserFilter userFilter = new UserFilter
-            {
-                Id = userId,
-            };
-
-            var chackUser = await _userRepository.GetUser(userFilter);
+            var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
             if (chackUser == null)
             {
-                _log.LogError("Error chosen user not exist");
-                return "Chosen user not exist";
-            }
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            string avatarFolder = Path.Combine(desktopPath, "AvatarPhotos");
-
-            if (!Directory.Exists(avatarFolder))
-            {
-                Directory.CreateDirectory(avatarFolder);
+                _log.LogError("Error: chosen user does not exist");
+                return "Chosen user does not exist";
             }
 
-            string fileName = $"{userId}_avatar{Path.GetExtension(formFile.FileName)}";
-            string filePath = Path.Combine(avatarFolder, fileName);
+            string fileName = $"/myrealestate/{userId}_avatar{Path.GetExtension(formFile.FileName)}";
 
-            if (File.Exists(filePath))
-            {
-                _log.LogError("Error user alredy has an avatar");
-                return "This user already has an avatar.";
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await formFile.CopyToAsync(stream);
-            }
             var collection = _context.GetCollection<CreateAvatar>("Avatar");
-            var userAvatar = await collection.Find(u => u.AvatarScr.Contains(fileName)).FirstOrDefaultAsync();
+            var userAvatar = await collection.Find(u => u.AvatarScr == fileName).FirstOrDefaultAsync();
             if (userAvatar != null)
             {
-                _log.LogError("Error user has an avatar");
-                return "The user has an avatar";
+                _log.LogError("Error: user already has an avatar");
+                return "The user already has an avatar";
+            }
+
+            using (var stream = formFile.OpenReadStream())
+            {
+                await _bunnyContext.UploadObjectAsync(stream, fileName);
             }
 
             CreateAvatar create = new CreateAvatar
@@ -75,9 +60,14 @@ public class PhotoRepository : IPhotoRepository
 
             return create.Id;
         }
+        catch (BunnyCDNStorageException ex)
+        {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+            return null;
+        }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error with UploudAvatarPhoto");
+            _log.LogError(ex, $"Error with UploudAvatarPhoto in MongoDb : {ex.Message}");
             return null;
         }
     }

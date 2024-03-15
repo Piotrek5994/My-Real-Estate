@@ -1,5 +1,6 @@
 using Core.CommendDto;
 using Core.IRepositories;
+using Infrastracture.Db;
 using Infrastracture.Repositories;
 using Infrastracture.Service;
 using Infrastracture.Service.IService;
@@ -33,6 +34,11 @@ public class Program
         builder.Services.AddSingleton<MongoDbContext>(sp =>
             new MongoDbContext(sp.GetRequiredService<IOptions<MongoDbSettings>>()));
 
+        builder.Services.Configure<BunnyCdnSettings>(
+            builder.Configuration.GetSection("BunnyCDN"));
+
+        builder.Services.AddSingleton<BunnyCdnContext>(sp =>
+            new BunnyCdnContext(sp.GetRequiredService<IOptions<BunnyCdnSettings>>()));
         //AutoMapper
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
