@@ -48,8 +48,9 @@ public class PhotoController : Controller
     }
     [HttpDelete]
     [Route("/Avatar")]
-    public async Task<IActionResult> DeleteAvatarPhoto(string avatarId)
+    public async Task<IActionResult> DeleteAvatarPhoto(string userId)
     {
-        return Ok();
+         await _photoService.DeleteAvatar(userId);
+        return Ok(new {message = true});
     }
 }

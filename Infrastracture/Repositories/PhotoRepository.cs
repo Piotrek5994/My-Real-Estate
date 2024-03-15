@@ -36,12 +36,14 @@ public class PhotoRepository : IPhotoRepository
                 _log.LogError("Error: chosen user does not exist");
                 return null;
             }
+
             var collection = _context.GetCollection<Avatar>("Avatar");
             var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
             if (userFilter == null)
             {
                 _log.LogError("Error: user does not have an avatar");
             }
+
             var stream = await _bunnyContext.DownloadObjectAsStreamAsync(userFilter.AvatarScr);
             return stream;
 
@@ -108,7 +110,19 @@ public class PhotoRepository : IPhotoRepository
     {
         try
         {
+            var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
+            if (chackUser == null)
+            {
+                _log.LogError("Error: chosen user does not exist");
+                return "Chosen user does not exist";
+            }
 
+            var collection = _context.GetCollection<Avatar>("Avatar");
+            var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+            if (userFilter == null)
+            {
+                _log.LogError("Error: user does not have an avatar");
+            }
         }
         catch (BunnyCDNStorageException ex)
         {
@@ -126,7 +140,24 @@ public class PhotoRepository : IPhotoRepository
     {
         try
         {
+            var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
+            if (chackUser == null)
+            {
+                _log.LogError("Error: chosen user does not exist");
+            }
 
+            var collection = _context.GetCollection<Avatar>("Avatar");
+
+            var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+            if (userFilter != null && userFilter.AvatarScr != null)
+            {
+                await _bunnyContext.DeleteObjectAsync(userFilter.AvatarScr);
+            }
+
+            var filter = Builders<Avatar>.Filter.Eq(a => a.UserId, userId);
+            var update = Builders<Avatar>.Update.Set(a => a.AvatarScr, null);
+
+            await collection.UpdateOneAsync(filter, update);
         }
         catch (BunnyCDNStorageException ex)
         {

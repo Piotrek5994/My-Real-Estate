@@ -11,4 +11,6 @@ public interface IPhotoRepository
 {
     Task<Stream> GetAvatarPhoto(string userId);
     Task<string> UploudAvatarPhoto(IFormFile formFile, string userId);
+    Task<string> ChangeAvatarPhoto(IFormFile formFile, string userId);
+    Task DeleteAvatarPhoto(string userId);
 }
