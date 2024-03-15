@@ -42,9 +42,10 @@ public class PhotoController : Controller
     }
     [HttpPut]
     [Route("/Avatar")]
-    public async Task<IActionResult> UpdateAvatarPhoto(string avaterId)
+    public async Task<IActionResult> UpdateAvatarPhoto(IFormFile formFile,string userId)
     {
-        return Ok();
+        var result = await _photoService.ChangePhoto(formFile,userId, "ChangeAvatar");
+        return Ok(new { AvatarId = result });
     }
     [HttpDelete]
     [Route("/Avatar")]

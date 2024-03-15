@@ -15,7 +15,7 @@ public class PhotoService : IPhotoService
     private readonly IPhotoRepository _photoRepository;
     private readonly IMapper _mapper;
 
-    public PhotoService(IPhotoRepository photoRepository,IMapper mapper)
+    public PhotoService(IPhotoRepository photoRepository, IMapper mapper)
     {
         _photoRepository = photoRepository;
         _mapper = mapper;
@@ -25,11 +25,21 @@ public class PhotoService : IPhotoService
         Stream result = await _photoRepository.GetAvatarPhoto(userId);
         return result;
     }
-    public async Task<string> UploadPhoto(IFormFile formFile,string userId,string operationName)
+    public async Task<string> UploadPhoto(IFormFile formFile, string userId, string operationName)
     {
         string result = operationName switch
         {
             string r when r.Contains("Avatar") => await _photoRepository.UploudAvatarPhoto(formFile, userId),
+            _ => "Invalid operation"
+        };
+
+        return result;
+    }
+    public async Task<string> ChangePhoto(IFormFile formFile, string userId,string operationName)
+    {
+        string result = operationName switch
+        {
+            string r when r.Contains("ChangeAvatar") => await _photoRepository.ChangeAvatarPhoto(formFile,userId),
             _ => "Invalid operation"
         };
 

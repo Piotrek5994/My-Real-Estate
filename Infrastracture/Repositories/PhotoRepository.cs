@@ -7,7 +7,6 @@ using Infrastracture.Db;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastracture.Repositories;
@@ -117,12 +116,33 @@ public class PhotoRepository : IPhotoRepository
                 return "Chosen user does not exist";
             }
 
+            await DeleteAvatarPhoto(userId);
+
             var collection = _context.GetCollection<Avatar>("Avatar");
-            var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
-            if (userFilter == null)
+            var userAvatar = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+
+            string fileName = $"/myrealestate/{userId}_avatar{Path.GetExtension(formFile.FileName)}";
+
+            using (var stream = formFile.OpenReadStream())
             {
-                _log.LogError("Error: user does not have an avatar");
+                await _bunnyContext.UploadObjectAsync(stream, fileName);
+            };
+
+            if (userAvatar.AvatarScr == null)
+            {
+                var filter = Builders<Avatar>.Filter.Eq(a => a.UserId, userId);
+                var update = Builders<Avatar>.Update.Set(a => a.AvatarScr, fileName);
+                await collection.UpdateOneAsync(filter, update);
+
+                return "Avatar changed successfully";
             }
+            else
+            {
+                await UploudAvatarPhoto(formFile, userId);
+
+                return "Avatar create successfully";
+            }
+
         }
         catch (BunnyCDNStorageException ex)
         {
@@ -134,7 +154,6 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with ChangeAvatarPhoto in MongoDb : {ex.Message}");
             return null;
         }
-        return "";
     }
     public async Task DeleteAvatarPhoto(string userId)
     {
