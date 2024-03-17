@@ -35,9 +35,5 @@ public class PropertyService : IPropertyService
         var result = await _propertyRepository.CreateProperty(property);
         return result;
     }
-    public async Task<bool> DeleteProperty(string propertyId)
-    {
-
-    }
-
+    public async Task<bool> DeleteProperty(string propertyId) => await _propertyRepository.DeleteProperty(propertyId);
 }

@@ -13,4 +13,5 @@ public interface IPropertyService
 {
     Task<List<PropertyDto>> GetPropertyDto(PropertyFilter filter);
     Task<string> CreatePropertyDto(CreatePropertyDto propertyDto);
+    Task<bool> DeleteProperty(string propertyId);
 }

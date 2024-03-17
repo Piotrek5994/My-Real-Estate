@@ -42,8 +42,9 @@ public class PropertyController : Controller
         return Ok();
     }
     [HttpDelete]
-    public async Task<IActionResult> DeleteProperty()
+    public async Task<IActionResult> DeleteProperty(string propertyId)
     {
-        return Ok();
+        var result = await _propertyService.DeleteProperty(propertyId);
+        return Ok(new {Success = result });
     }
 }

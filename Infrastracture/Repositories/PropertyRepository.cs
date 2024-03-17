@@ -96,14 +96,29 @@ public class PropertyRepository : IPropertyRepository
         try
         {
             var collection = _context.GetCollection<Property>("Property");
-            var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
-            var result = await collection.DeleteOneAsync(filter);
+            var propertyFilter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+            var property = await collection.Find(propertyFilter).FirstOrDefaultAsync();
+
+            if (property == null)
+                return false;
+
+            var userId = property.UserId;
+
+            var result = await collection.DeleteOneAsync(propertyFilter);
+
+            if (result.DeletedCount > 0)
+            {
+                var collectionUser = _context.GetCollection<User>("User");
+                var userFilter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId));
+                var update = Builders<User>.Update.Pull(u => u.Properties, propertyId);
+                await collectionUser.UpdateOneAsync(userFilter, update);
+            }
 
             return result.DeletedCount > 0;
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error delete property in MongoDb.");
+            _log.LogError(ex, "Error deleting property in MongoDB.");
             return false;
         }
     }
