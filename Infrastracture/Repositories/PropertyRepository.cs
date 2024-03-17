@@ -1,4 +1,5 @@
-﻿using Core.Filter;
+﻿using Core.Commend.Create;
+using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
 using Infrastructure.Db;
@@ -19,5 +20,9 @@ public class PropertyRepository : IPropertyRepository
     public async Task<Property> GetProperty(PropertyFilter filter)
     {
         return null;
+    }
+    public async Task<string> CreateProperty(CreateProperty property)
+    {
+        return "";
     }
 }
