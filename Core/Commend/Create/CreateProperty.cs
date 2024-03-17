@@ -24,9 +24,9 @@ public class CreateProperty
     [BsonElement("size")]
     public int Size { get; set; }
     [BsonElement("number_of_rooms")]
-    public short NumberOfRooms { get; set; }
+    public int NumberOfRooms { get; set; }
     [BsonElement("number_of_people")]
-    public short NumberOfPeople { get; set; }
+    public int NumberOfPeople { get; set; }
     [BsonElement("rent_start")]
     [BsonRepresentation(BsonType.DateTime)]
     public DateTime? RentStart { get; set; }
