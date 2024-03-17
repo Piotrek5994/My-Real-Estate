@@ -11,6 +11,6 @@ public class UserFilter
     public string? Id { get; set; }
     public int Limit { get; set; } = 10;
     public int Page { get; set; } = 1;
-    public string SortBy { get; set; }
+    public string SortBy { get; set; } = "first_Name";
     public bool SortDescending { get; set; } = false;
 }

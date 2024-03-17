@@ -1,4 +1,6 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.Commend.Create;
+using Core.Filter;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -15,12 +17,12 @@ public class PropertyController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetProperty()
+    public async Task<IActionResult> GetProperty([FromQuery] PropertyFilter filter)
     {
         return Ok();
     }
     [HttpPost]
-    public async Task<IActionResult> CreateProperty()
+    public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto propertyDto)
     {
         return Ok();
     }

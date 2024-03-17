@@ -1,4 +1,6 @@
-﻿using Core.IRepositories;
+﻿using Core.Filter;
+using Core.IRepositories;
+using Core.Model;
 using Infrastructure.Db;
 using Microsoft.Extensions.Logging;
 
@@ -13,5 +15,9 @@ public class PropertyRepository : IPropertyRepository
     {
         _context = context;
         _log = log;
+    }
+    public async Task<Property> GetProperty(PropertyFilter filter)
+    {
+        return null;
     }
 }
