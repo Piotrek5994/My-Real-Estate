@@ -17,7 +17,8 @@
 ## Database :performing_arts:
 - MongoDb
 ## Database Diagram :bomb:
-![My-Real-Estate](https://github.com/Piotrek5994/My-Real-Estate/assets/93675867/85efa437-d164-403d-9128-a7bdadda53fa)
+![My-Real-Estate ](https://github.com/Piotrek5994/My-Real-Estate/assets/93675867/a66c03d7-2de9-47c2-b5f5-311ffa24fb3c)
+
 
 ## About Program :ocean:
 The project involves creating a backend for a website used to manage and publish long-term rentals to make it easier for people to manage it,
