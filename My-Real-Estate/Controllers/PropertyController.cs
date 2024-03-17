@@ -1,5 +1,4 @@
-﻿using Core.Commend.Create;
-using Core.CommendDto;
+﻿using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,12 @@ public class PropertyController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto propertyDto)
     {
-        return Ok();
+        var propertyId = await _propertyService.CreatePropertyDto(propertyDto);
+        if (propertyId == null)
+        {
+            return BadRequest(new { message = "Create property fail" });
+        }
+        return Ok(new { PropertyId = propertyId });
     }
     [HttpPut]
     public async Task<IActionResult> UpdateProperty()

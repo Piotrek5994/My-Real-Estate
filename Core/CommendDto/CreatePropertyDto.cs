@@ -43,7 +43,7 @@ namespace Core.CommendDto
                     NumberOfPeople = 6,
                     RentStart = new DateTime(2024, 6, 1),
                     RentEnd = new DateTime(2024, 8, 31),
-                    State = 1,
+                    State = 0,
                     UserId = "user123"
                 };
             }

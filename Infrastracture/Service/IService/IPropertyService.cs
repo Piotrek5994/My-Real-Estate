@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.CommendDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,4 +9,5 @@ namespace Infrastracture.Service.IService;
 
 public interface IPropertyService
 {
+    Task<string> CreatePropertyDto(CreatePropertyDto propertyDto);
 }

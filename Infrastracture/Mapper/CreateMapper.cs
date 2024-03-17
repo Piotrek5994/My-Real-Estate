@@ -24,5 +24,18 @@ public class CreateMapper : Profile
                      src.Password = dest.Password;
                      src.PhoneNumber = dest.PhoneNumber;
                  });
+        CreateMap<CreatePropertyDto, CreateProperty>()
+                .AfterMap((src, dest) =>
+                {
+                    src.Name = dest.Name;
+                    src.Description = dest.Description;
+                    src.Price = dest.Price;
+                    src.Size = dest.Size;
+                    src.NumberOfPeople = dest.NumberOfPeople;
+                    src.NumberOfPeople = dest.NumberOfPeople;
+                    src.RentStart = dest.RentStart;
+                    src.RentEnd = dest.RentEnd;
+                    src.State = Convert.ToInt32(dest.State);
+                });
     }
 }

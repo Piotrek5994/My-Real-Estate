@@ -35,7 +35,7 @@ public class CreateUser
     [BsonElement("phone_number")]
     public string PhoneNumber { get; set; } = string.Empty;
     [BsonElement("properties")]
-    public List<string>? Properties { get; set; }
+    public List<string> Properties { get; set; } = new List<string>();
     [BsonElement("payments")]
-    public List<string>? Payments { get; set; }
+    public List<string> Payments { get; set; } = new List<string>();
 }
