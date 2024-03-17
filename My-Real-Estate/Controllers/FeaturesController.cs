@@ -13,4 +13,24 @@ public class FeaturesController : Controller
     {
         _featuresService = featuresService;
     }
+    [HttpGet]
+    public async Task<IActionResult> GetFeatures()
+    {
+        return Ok();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateFeatures()
+    {
+        return Ok();
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdateFeatures()
+    {
+        return Ok();
+    }
+    [HttpDelete]
+    public async Task<IActionResult> DeleteFeatures()
+    {
+        return Ok();
+    }
 }

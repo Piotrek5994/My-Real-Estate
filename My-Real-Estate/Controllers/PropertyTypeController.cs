@@ -14,4 +14,24 @@ public class PropertyTypeController : ControllerBase
     {
         _propertyTypeService = propertyTypeService;
     }
+    [HttpGet]
+    public async Task<IActionResult> GetPropertyType()
+    {
+        return Ok();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreatePropertyType()
+    {
+        return Ok();
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdatePropertyType()
+    {
+        return Ok();
+    }
+    [HttpDelete]
+    public async Task<IActionResult> DeletePropertyType()
+    {
+        return Ok();
+    }
 }

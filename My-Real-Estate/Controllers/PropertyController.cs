@@ -13,4 +13,25 @@ public class PropertyController : Controller
     {
         _propertyService = propertyService;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetProperty()
+    {
+        return Ok();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateProperty()
+    {
+        return Ok();
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdateProperty()
+    {
+        return Ok();
+    }
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProperty()
+    {
+        return Ok();
+    }
 }
