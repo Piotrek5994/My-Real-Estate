@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Model;
+using Core.ModelDto;
 using Infrastracture.ModelDto;
 
 namespace Infrastracture.Mapper;
@@ -22,5 +23,19 @@ public class GetMapper : Profile
                     src.Properties = dest.Properties;
                     src.Payments = dest.Payments;
                 });
+        CreateMap<Property, PropertyDto>()
+                .AfterMap((src, dest) =>
+                {
+                    src.Id = dest.Id;
+                    src.Name = dest.Name;
+                    src.Description = dest.Description;
+                    src.Price = dest.Price;
+                    src.Size = dest.Size;
+                    src.NumberOfRooms = dest.NumberOfRooms;
+                    src.NumberOfPeople = dest.NumberOfPeople;
+                    src.RentStart = dest.RentStart;
+                    src.RentEnd = dest.RentEnd;
+                })
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => Convert.ToInt32(src.State)));
     }
 }

@@ -3,6 +3,7 @@ using Core.Commend.Create;
 using Core.CommendDto;
 using Core.Filter;
 using Core.IRepositories;
+using Core.ModelDto;
 using Infrastracture.Service.IService;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,12 @@ public class PropertyService : IPropertyService
     {
         _propertyRepository = propertyRepository;
         _mapper = mapper;
+    }
+    public async Task<List<PropertyDto>> GetPropertyDto(PropertyFilter filter)
+    {
+        var result = await _propertyRepository.GetProperty(filter);
+        var propertyDto = _mapper.Map<List<PropertyDto>>(result);
+        return propertyDto;
     }
     public async Task<string> CreatePropertyDto(CreatePropertyDto propertyDto)
     {

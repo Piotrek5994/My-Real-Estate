@@ -7,7 +7,6 @@ using Infrastructure.Db;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastracture.Repositories;
 
@@ -23,9 +22,42 @@ public class PropertyRepository : IPropertyRepository
         _log = log;
         _userRepository = userRepository;
     }
-    public async Task<Property> GetProperty(PropertyFilter filter)
+    public async Task<List<Property>> GetProperty(PropertyFilter filter)
     {
-        return null;
+        try
+        {
+            var collection = _context.GetCollection<Property>("Property");
+            var filterDefinitions = new List<FilterDefinition<Property>>();
+            filterDefinitions.Add(Builders<Property>.Filter.Empty);
+
+            if (!string.IsNullOrEmpty(filter.Id))
+            {
+                filterDefinitions.Add(Builders<Property>.Filter.Eq("_id", ObjectId.Parse(filter.Id)));
+            }
+            if (!string.IsNullOrEmpty(filter.UserId))
+            {
+                filterDefinitions.Add(Builders<Property>.Filter.Eq("user_id", ObjectId.Parse(filter.UserId)));
+            }
+
+            var combinedFilter = Builders<Property>.Filter.And(filterDefinitions);
+
+            var sortDefinition = filter.SortDescending ?
+                                 Builders<Property>.Sort.Descending(filter.SortBy) :
+                                 Builders<Property>.Sort.Ascending(filter.SortBy);
+
+            var properties = await collection.Find(combinedFilter)
+                                             .Sort(sortDefinition)
+                                             .Skip((filter.Page - 1) * filter.Limit)
+                                             .Limit(filter.Limit)
+                                             .ToListAsync();
+
+            return properties;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, "Error getting property(s)");
+            return null;
+        }
     }
     public async Task<string> CreateProperty(CreateProperty property)
     {

@@ -19,7 +19,12 @@ public class PropertyController : Controller
     [HttpGet]
     public async Task<IActionResult> GetProperty([FromQuery] PropertyFilter filter)
     {
-        return Ok();
+        var property = await _propertyService.GetPropertyDto(filter);
+        if (property != null)
+        {
+            return Json(new { result = property });
+        }
+        return NotFound(new {message = "Property of Propertys don't found"});
     }
     [HttpPost]
     public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto propertyDto)
