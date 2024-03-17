@@ -91,8 +91,20 @@ public class PropertyRepository : IPropertyRepository
     {
         return null;
     }
-    public async Task DeleteProperty()
+    public async Task<bool> DeleteProperty(string propertyId)
     {
+        try
+        {
+            var collection = _context.GetCollection<Property>("Property");
+            var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+            var result = await collection.DeleteOneAsync(filter);
 
+            return result.DeletedCount > 0;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, "Error delete property in MongoDb.");
+            return false;
+        }
     }
 }

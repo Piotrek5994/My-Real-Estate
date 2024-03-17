@@ -45,8 +45,5 @@ public class PhotoService : IPhotoService
 
         return result;
     }
-    public async Task DeleteAvatar(string userId)
-    {
-        await _photoRepository.DeleteAvatarPhoto(userId);
-    }
+    public async Task DeleteAvatar(string userId) => await _photoRepository.DeleteAvatarPhoto(userId);
 }

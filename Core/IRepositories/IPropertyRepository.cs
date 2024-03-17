@@ -13,4 +13,5 @@ public interface IPropertyRepository
 {
     Task<List<Property>> GetProperty(PropertyFilter filter);
     Task<string> CreateProperty(CreateProperty property);
+    Task<bool> DeleteProperty(string propertyId);
 }
