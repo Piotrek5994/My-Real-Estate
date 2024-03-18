@@ -37,5 +37,10 @@ public class CreateMapper : Profile
                 })
                 .ForMember(dest => dest.RentStart, opt => opt.MapFrom(src => DateHelper.GetDate(src.RentStart)))
                 .ForMember(dest => dest.RentEnd, opt => opt.MapFrom(src => DateHelper.GetDate(src.RentEnd)));
+        CreateMap<CreatePropertyTypeDto, CreatePropertyType>()
+                .AfterMap((src, dest) =>
+                {
+                    src.PropertyTypeName = dest.PropertyTypeName;
+                });
     }
 }

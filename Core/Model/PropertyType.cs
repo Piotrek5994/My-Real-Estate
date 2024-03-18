@@ -17,5 +17,5 @@ public class PropertyType
     public string PropertyTypeName { get; set; }
     [BsonElement("property_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string PropertyId { get; set; } //FK
+    public string PropertyId { get; set; }
 }

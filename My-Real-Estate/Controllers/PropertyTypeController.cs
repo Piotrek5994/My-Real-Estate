@@ -1,5 +1,5 @@
-﻿using Infrastracture.Service.IService;
-using Microsoft.AspNetCore.Http;
+﻿using Core.CommendDto;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -20,9 +20,14 @@ public class PropertyTypeController : ControllerBase
         return Ok();
     }
     [HttpPost]
-    public async Task<IActionResult> CreatePropertyType()
+    public async Task<IActionResult> CreatePropertyType([FromBody] CreatePropertyTypeDto propertyTypeDto, string propertyId)
     {
-        return Ok();
+        var propertyTypeId = await _propertyTypeService.CreatePropertyTypeDto(propertyTypeDto, propertyId);
+        if (propertyTypeId == null)
+        {
+            return BadRequest(new { message = "Create property type fail" });
+        }
+        return Ok(new { PropertyTypeId = propertyTypeId });
     }
     [HttpPut]
     public async Task<IActionResult> UpdatePropertyType()
