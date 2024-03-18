@@ -23,9 +23,11 @@ public class PropertyTypeService : IPropertyTypeService
         _propertyTypeRepository = propertyTypeRepository;
         _mapper = mapper;
     }
-    public async Task<PropertyTypeDto> GetPropertyTypeDto(PropertyTypeFilter filter)
+    public async Task<List<PropertyTypeDto>> GetPropertyTypeDto(PropertyTypeFilter filter)
     {
-        return null;
+        var result = await _propertyTypeRepository.GetPropertyType(filter);
+        var propertyTypeDto = _mapper.Map<List<PropertyTypeDto>>(result);
+        return propertyTypeDto;
     }
     public async Task<string> CreatePropertyTypeDto(CreatePropertyTypeDto propertyTypeDto, string propertyId)
     {

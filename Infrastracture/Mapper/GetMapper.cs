@@ -37,5 +37,12 @@ public class GetMapper : Profile
                     src.RentEnd = dest.RentEnd;
                 })
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => Convert.ToInt32(src.State)));
+        CreateMap<PropertyType, PropertyTypeDto>()
+                .AfterMap((src, dest) =>
+                {
+                    src.Id = dest.Id;
+                    src.PropertyTypeName = dest.PropertyTypeName;
+                    src.PropertyId = dest.PropertyId;
+                });
     }
 }

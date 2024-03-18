@@ -6,7 +6,7 @@ namespace My_Real_Estate.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PaymentController : ControllerBase
+public class PaymentController : Controller
 {
     private readonly IPaymentService _paymentService;
 

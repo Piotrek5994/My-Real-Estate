@@ -13,5 +13,6 @@ namespace Core.Filter
         public int Page { get; set; } = 1;
         public string SortBy { get; set; } = "property_type_name";
         public bool SortDescending { get; set; } = false;
+        public string? PropertyId { get; set; }
     }
 }
