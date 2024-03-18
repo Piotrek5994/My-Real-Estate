@@ -29,7 +29,7 @@ public class PhotoController : Controller
     {
         if (userId == null || string.IsNullOrEmpty(userId))
         {
-            return BadRequest(new { Message = "User ID is requaierd." });
+            return BadRequest(new { Message = "User ID is required." });
         }
 
         string result = await _photoService.UploadPhoto(formFile, userId, "Avatar");
@@ -62,7 +62,7 @@ public class PhotoController : Controller
     }
     [HttpPost]
     [Route("/Photo")]
-    public async Task<IActionResult> UploudPropertyPhoto()
+    public async Task<IActionResult> UploadPropertyPhoto()
     {
         return Ok(new { Success = true });
     }

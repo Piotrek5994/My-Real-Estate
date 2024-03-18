@@ -17,8 +17,7 @@ namespace Core.Validation
         {
             if (value == null) return true;
 
-            decimal dValue;
-            if (decimal.TryParse(value.ToString(), out dValue))
+            if (decimal.TryParse(value.ToString(), out decimal dValue))
             {
                 decimal scaleFactor = (decimal)Math.Pow(10, _precision);
                 decimal roundedValue = Math.Round(dValue * scaleFactor) / scaleFactor;
