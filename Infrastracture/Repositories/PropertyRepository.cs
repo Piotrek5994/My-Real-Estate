@@ -87,9 +87,49 @@ public class PropertyRepository : IPropertyRepository
             return null;
         }
     }
-    public async Task<UpdateProperty> UpdateProperty()
+    public async Task<bool> UpdateProperty(UpdateProperty updateProperty, string propertyId)
     {
-        return null;
+        try
+        {
+            var collection = _context.GetCollection<Property>("Property");
+            var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+
+            var updates = new List<UpdateDefinition<Property>>();
+
+            if (!string.IsNullOrEmpty(updateProperty.Name))
+                updates.Add(Builders<Property>.Update.Set(u => u.Name, updateProperty.Name));
+            if(!string.IsNullOrEmpty(updateProperty.Description))
+                updates.Add(Builders<Property>.Update.Set(u => u.Description, updateProperty.Description));
+            if (updateProperty.Price != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.Price, updateProperty.Price));
+            if (updateProperty.Size != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.Size, updateProperty.Size));
+            if (updateProperty.NumberOfRooms != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.NumberOfRooms, updateProperty.NumberOfRooms));
+            if (updateProperty.NumberOfPeople != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.NumberOfPeople, updateProperty.NumberOfPeople));
+            if(updateProperty.RentStart != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.RentStart, updateProperty.RentStart));
+            if (updateProperty.RentEnd != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.RentEnd, updateProperty.RentEnd));
+            if (updateProperty.State != null)
+                updates.Add(Builders<Property>.Update.Set(u => u.State, updateProperty.State.ToString()));
+
+            if (updates.Count == 0)
+            {
+                return false;
+            }
+
+            var combinedUpdate = Builders<Property>.Update.Combine(updates);
+            var result = await collection.UpdateOneAsync(filter, combinedUpdate);
+
+            return result.ModifiedCount > 0;
+        }
+        catch(MongoException ex)
+        {
+            _log.LogError(ex, "Error updating property in MongoDB.");
+            return false;
+        }
     }
     public async Task<bool> DeleteProperty(string propertyId)
     {

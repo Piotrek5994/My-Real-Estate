@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Commend.Create;
+using Core.Commend.Update;
 using Core.CommendDto;
 using Core.Filter;
 using Core.IRepositories;
@@ -35,5 +36,6 @@ public class PropertyService : IPropertyService
         var result = await _propertyRepository.CreateProperty(property);
         return result;
     }
+    public async Task<bool> UpdateProperty(UpdateProperty property, string propertyId) => await _propertyRepository.UpdateProperty(property, propertyId);
     public async Task<bool> DeleteProperty(string propertyId) => await _propertyRepository.DeleteProperty(propertyId);
 }

@@ -32,7 +32,7 @@ public class PhotoController : Controller
             return BadRequest(new { Message = "User ID is requaierd." });
         }
 
-        var result = await _photoService.UploadPhoto(formFile, userId, "Avatar");
+        string result = await _photoService.UploadPhoto(formFile, userId, "Avatar");
         if (result == null)
         {
             return BadRequest(new { Message = "Error loading image." });
@@ -44,7 +44,7 @@ public class PhotoController : Controller
     [Route("/Avatar")]
     public async Task<IActionResult> UpdateAvatarPhoto(IFormFile formFile,string userId)
     {
-        var result = await _photoService.ChangePhoto(formFile,userId, "ChangeAvatar");
+        string result = await _photoService.ChangePhoto(formFile,userId, "ChangeAvatar");
         return Ok(new { AvatarId = result });
     }
     [HttpDelete]

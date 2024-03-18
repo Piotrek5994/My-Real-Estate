@@ -1,4 +1,5 @@
-﻿using Core.CommendDto;
+﻿using Core.Commend.Update;
+using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ public class PropertyController : Controller
         {
             return Json(new { result = property });
         }
-        return NotFound(new {message = "Property of Propertys don't found"});
+        return NotFound(new { message = "Property of Propertys don't found" });
     }
     [HttpPost]
     public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto propertyDto)
@@ -37,14 +38,23 @@ public class PropertyController : Controller
         return Ok(new { PropertyId = propertyId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateProperty()
+    public async Task<IActionResult> UpdateProperty([FromBody] UpdateProperty property, string properyId)
     {
-        return Ok();
+        bool update = await _propertyService.UpdateProperty(property, properyId);
+        if (!update)
+        {
+            return BadRequest(new { message = "Property update fail" });
+        }
+        return Ok(new { result = update });
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteProperty(string propertyId)
     {
-        var result = await _propertyService.DeleteProperty(propertyId);
-        return Ok(new {Success = result });
+        bool delete = await _propertyService.DeleteProperty(propertyId);
+        if (!delete)
+        {
+            return BadRequest(new { message = "Property does not exist." });
+        }
+        return Ok(new { result = delete });
     }
 }
