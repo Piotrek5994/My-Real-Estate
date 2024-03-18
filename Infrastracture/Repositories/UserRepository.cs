@@ -48,7 +48,7 @@ public class UserRepository : IUserRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error getting user(s)");
+            _log.LogError(ex, $"Error getting user(s) : Message - {ex.Message}");
             return null;
         }
     }
@@ -60,6 +60,7 @@ public class UserRepository : IUserRepository
             var existingUser = await collection.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
             if (existingUser != null)
             {
+                _log.LogWarning("Warning : email adress is already registered");
                 return "The user with the provided email address is already registered.";
             }
             user.Role = "User";
@@ -68,7 +69,7 @@ public class UserRepository : IUserRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error creating user in MongoDB.");
+            _log.LogError(ex, $"Error creating user in MongoDB : Message - {ex.Message}");
             return "failed";
         }
     }
@@ -80,6 +81,7 @@ public class UserRepository : IUserRepository
             var existingUser = await collection.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
             if (existingUser != null)
             {
+                _log.LogWarning("Warning : email adress is already registered");
                 return "The user with the provided email address is already registered.";
             }
             user.Role = "Admin";
@@ -88,7 +90,7 @@ public class UserRepository : IUserRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error creating user in MongoDB.");
+            _log.LogError(ex, $"Error creating user in MongoDB : Message - {ex.Message}");
             return "faile";
         }
     }
@@ -128,7 +130,7 @@ public class UserRepository : IUserRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error updating user in MongoDB.");
+            _log.LogError(ex, $"Error updating user in MongoDB : Message - {ex.Message}");
             return false;
         }
     }
@@ -146,7 +148,7 @@ public class UserRepository : IUserRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error delete user in MongoDb.");
+            _log.LogError(ex, $"Error delete user in MongoDb : Message - {ex.Message}");
             return false;
         }
     }

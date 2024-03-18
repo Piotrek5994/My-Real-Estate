@@ -32,7 +32,7 @@ public class PhotoRepository : IPhotoRepository
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
             if (chackUser == null)
             {
-                _log.LogError("Error: chosen user does not exist");
+                _log.LogWarning("Warning: chosen user does not exist");
                 return null;
             }
 
@@ -40,7 +40,7 @@ public class PhotoRepository : IPhotoRepository
             var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
             if (userFilter == null)
             {
-                _log.LogError("Error: user does not have an avatar");
+                _log.LogWarning("Warning: user does not have an avatar");
             }
 
             var stream = await _bunnyContext.DownloadObjectAsStreamAsync(userFilter.AvatarScr);
@@ -65,7 +65,7 @@ public class PhotoRepository : IPhotoRepository
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
             if (chackUser == null)
             {
-                _log.LogError("Error: chosen user does not exist");
+                _log.LogWarning("Warning: chosen user does not exist");
                 return "Chosen user does not exist";
             }
 
@@ -75,7 +75,7 @@ public class PhotoRepository : IPhotoRepository
             var userAvatar = await collection.Find(u => u.AvatarScr == fileName).FirstOrDefaultAsync();
             if (userAvatar != null)
             {
-                _log.LogError("Error: user already has an avatar");
+                _log.LogWarning("Warning: user already has an avatar");
                 return "The user already has an avatar";
             }
 
@@ -112,7 +112,7 @@ public class PhotoRepository : IPhotoRepository
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
             if (chackUser == null)
             {
-                _log.LogError("Error: chosen user does not exist");
+                _log.LogWarning("Warning: chosen user does not exist");
                 return "Chosen user does not exist";
             }
 
@@ -162,7 +162,7 @@ public class PhotoRepository : IPhotoRepository
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
             if (chackUser == null)
             {
-                _log.LogError("Error: chosen user does not exist");
+                _log.LogWarning("Warning: chosen user does not exist");
             }
 
             var collection = _context.GetCollection<Avatar>("Avatar");

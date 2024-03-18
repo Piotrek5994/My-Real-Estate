@@ -55,7 +55,7 @@ public class PropertyRepository : IPropertyRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error getting property(s)");
+            _log.LogError(ex, $"Error getting property(s) : Message {ex.Message}");
             return null;
         }
     }
@@ -68,7 +68,7 @@ public class PropertyRepository : IPropertyRepository
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = property.UserId });
             if (chackUser == null)
             {
-                _log.LogError("Error: chosen user does not exist");
+                _log.LogWarning("Warning: chosen user does not exist");
                 return "The chosen user not exist";
             }
             await collection.InsertOneAsync(property);
@@ -127,7 +127,7 @@ public class PropertyRepository : IPropertyRepository
         }
         catch(MongoException ex)
         {
-            _log.LogError(ex, "Error updating property in MongoDB.");
+            _log.LogError(ex, $"Error updating property in MongoDB : Message {ex.Message}");
             return false;
         }
     }
@@ -158,7 +158,7 @@ public class PropertyRepository : IPropertyRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error deleting property in MongoDB.");
+            _log.LogError(ex, $"Error deleting property in MongoDB : Message {ex.Message}");
             return false;
         }
     }

@@ -57,7 +57,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error getting property(s) type");
+            _log.LogError(ex, $"Error getting property(s) type : Message - {ex.Message}");
             return null;
         }
     }
@@ -68,7 +68,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
             var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
             if (chackProperty == null)
             {
-                _log.LogError("Error: chosen property does not exist");
+                _log.LogWarning("Warning: chosen property does not exist");
                 return "The chosen property not exist";
             }
             propertyType.PropertyId = propertyId;
@@ -77,7 +77,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
             var chackPropeert = await collection.Find(p => p.PropertyId == propertyId).FirstOrDefaultAsync();
             if (chackPropeert != null)
             {
-                _log.LogError("Error: Property already has an property type");
+                _log.LogWarning("Warning: Property already has an property type");
                 return "The property already has an propertyType";
             }
 

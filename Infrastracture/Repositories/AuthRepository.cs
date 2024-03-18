@@ -36,6 +36,7 @@ public class AuthRepository : IAuthRepository
 
             if (user == null)
             {
+                _log.LogWarning("Warning : user not found");
                 return "Authentication failed. User not found.";
             }
             else
@@ -46,13 +47,14 @@ public class AuthRepository : IAuthRepository
                 }
                 else
                 {
+                    _log.LogWarning("Warning : user password incorrect");
                     return "Authentication failed. Password incorrect.";
                 }
             }
         }
         catch (Exception ex)
         {
-            _log.LogError(ex, "Error logging in user.");
+            _log.LogError(ex, $"Error logging in user : Message {ex.Message}");
             return null;
         }
     }
@@ -64,7 +66,7 @@ public class AuthRepository : IAuthRepository
         }
         catch (Exception ex)
         {
-            _log.LogError(ex, "Error logging in refresh token.");
+            _log.LogError(ex, $"Error logging in refresh token : Message {ex.Message}");
             return null;
         }
     }
@@ -78,7 +80,7 @@ public class AuthRepository : IAuthRepository
             bool userExists = await collection.Find(filter).AnyAsync();
             if (!userExists)
             {
-                _log.LogError($"User not exist by id : {userId}.");
+                _log.LogWarning($"Warninng : user not exist by id : {userId}.");
                 return false;
             }
 
@@ -99,7 +101,7 @@ public class AuthRepository : IAuthRepository
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error change user role.");
+            _log.LogError(ex, $"Error change user role : Message {ex.Message}");
             return false;
         }
     }
@@ -113,7 +115,7 @@ public class AuthRepository : IAuthRepository
             var user = await collection.Find(filter).FirstOrDefaultAsync();
             if (user == null)
             {
-                _log.LogError($"User not exist by id : {password.userId}.");
+                _log.LogWarning($"Warning : user not exist by id : {password.userId}.");
                 return false;
             }
             else
@@ -128,14 +130,14 @@ public class AuthRepository : IAuthRepository
                 }
                 else
                 {
-                    _log.LogError($"Change password attempt failed for user ID: {password.userId}. Incorrect password provided.");
+                    _log.LogWarning($"Warning : change password attempt failed for user ID: {password.userId}. Incorrect password provided.");
                     return false;
                 }
             }
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, "Error change user password.");
+            _log.LogError(ex, $"Error change user password : Message {ex.Message}");
             return false;
         }
     }
