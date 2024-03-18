@@ -33,9 +33,9 @@ public class CreateMapper : Profile
                     src.Size = dest.Size;
                     src.NumberOfPeople = dest.NumberOfPeople;
                     src.NumberOfPeople = dest.NumberOfPeople;
-                    src.RentStart = dest.RentStart;
-                    src.RentEnd = dest.RentEnd;
                     src.State = Convert.ToInt32(dest.State);
-                });
+                })
+                .ForMember(dest => dest.RentStart, opt => opt.MapFrom(src => DateHelper.GetDate(src.RentStart)))
+                .ForMember(dest => dest.RentEnd, opt => opt.MapFrom(src => DateHelper.GetDate(src.RentEnd)));
     }
 }

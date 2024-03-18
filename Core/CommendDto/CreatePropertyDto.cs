@@ -21,8 +21,8 @@ namespace Core.CommendDto
         [JsonProperty(Required = Required.Always)]
         public int NumberOfRooms { get; set; }
         public int NumberOfPeople { get; set; }
-        public DateTime? RentStart { get; set; }
-        public DateTime? RentEnd { get; set; }
+        public string? RentStart { get; set; }
+        public string? RentEnd { get; set; }
         [Required]
         [JsonProperty(Required = Required.Always)]
         public int State { get; set; }
@@ -41,8 +41,8 @@ namespace Core.CommendDto
                     Size = 120,
                     NumberOfRooms = 3,
                     NumberOfPeople = 6,
-                    RentStart = new DateTime(2024, 6, 1),
-                    RentEnd = new DateTime(2024, 8, 31),
+                    RentStart = "2024-03-18",
+                    RentEnd = "2024-03-18",
                     State = 0,
                     UserId = "user123"
                 };
