@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Command.Update;
 using Core.Commend.Create;
 using Core.CommendDto;
 using Core.Filter;
@@ -35,4 +36,5 @@ public class PropertyTypeService : IPropertyTypeService
         var result = await _propertyTypeRepository.CreatePropertyType(propertyType,propertyId);
         return result;
     }
+    public async Task<bool> UpdatePropertyType(UpdatePropertyType propertyType, string propertyId) => await _propertyTypeRepository.UpdatePropertyType(propertyType, propertyId);
 }

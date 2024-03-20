@@ -1,4 +1,5 @@
-﻿using Core.Commend.Create;
+﻿using Core.Command.Update;
+using Core.Commend.Create;
 using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
@@ -66,7 +67,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
         try
         {
             var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
-            if (chackProperty == null)
+            if (chackProperty == null || !chackProperty.Any())
             {
                 _log.LogWarning("Warning: chosen property does not exist");
                 return "The chosen property not exist";
@@ -90,12 +91,31 @@ public class PropertyTypeRepository : IPropertyTypeRepository
             return null;
         }
     }
-    public async Task<bool> UpdatePropertyType(string propertyTypeName, string propertyId)
+    public async Task<bool> UpdatePropertyType(UpdatePropertyType propertyType, string propertyId)
     {
-        return false;
-    }
-    public async Task<bool> DeletePropertyType(string propertyId)
-    {
-        return false;
+        try
+        {
+            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (chackProperty == null || !chackProperty.Any())
+            {
+                _log.LogWarning("Warning: Property is not exist");
+                return false;
+            }
+
+            var collection = _context.GetCollection<PropertyType>("PropertyType");
+            var findPropertyType = await collection.Find(p => p.PropertyId == propertyId).FirstOrDefaultAsync();
+
+            var filter = Builders<PropertyType>.Filter.Eq("_id", ObjectId.Parse(findPropertyType.Id));
+            var update = Builders<PropertyType>.Update.Set(p => p.PropertyTypeName, propertyType.propertyTypeName);
+
+            await collection.UpdateOneAsync(filter, update);
+
+            return false;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error update property type Message : {ex.Message}");
+            return false;
+        }
     }
 }

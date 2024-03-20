@@ -1,4 +1,5 @@
-﻿using Core.CommendDto;
+﻿using Core.Command.Update;
+using Core.CommendDto;
 using Core.Filter;
 using Core.ModelDto;
 using System;
@@ -13,4 +14,5 @@ public interface IPropertyTypeService
 {
     Task<List<PropertyTypeDto>> GetPropertyTypeDto(PropertyTypeFilter filter);
     Task<string> CreatePropertyTypeDto(CreatePropertyTypeDto propertyTypeDto, string propertyId);
+    Task<bool> UpdatePropertyType(UpdatePropertyType propertyType, string propertyId);
 }

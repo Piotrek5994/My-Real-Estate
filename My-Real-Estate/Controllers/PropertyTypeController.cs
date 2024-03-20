@@ -1,4 +1,5 @@
-﻿using Core.CommendDto;
+﻿using Core.Command.Update;
+using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public class PropertyTypeController : Controller
         _propertyTypeService = propertyTypeService;
     }
     [HttpGet]
-    public async Task<IActionResult> GetPropertyType([FromQuery]PropertyTypeFilter filter)
+    public async Task<IActionResult> GetPropertyType([FromQuery] PropertyTypeFilter filter)
     {
         var propertyType = await _propertyTypeService.GetPropertyTypeDto(filter);
         if (propertyType != null)
@@ -36,13 +37,9 @@ public class PropertyTypeController : Controller
         return Ok(new { PropertyTypeId = propertyTypeId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdatePropertyType()
+    public async Task<IActionResult> UpdatePropertyType([FromBody]UpdatePropertyType propertyType, string propertyId)
     {
-        return Ok();
-    }
-    [HttpDelete]
-    public async Task<IActionResult> DeletePropertyType()
-    {
-        return Ok();
+        bool propertyTypeUpdate = await _propertyTypeService.UpdatePropertyType(propertyType, propertyId);
+        return Ok(new { PropertyTypeUpdate = propertyTypeUpdate });
     }
 }

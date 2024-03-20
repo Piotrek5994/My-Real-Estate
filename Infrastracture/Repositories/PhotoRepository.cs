@@ -30,7 +30,7 @@ public class PhotoRepository : IPhotoRepository
         try
         {
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
-            if (chackUser == null)
+            if (chackUser == null || !chackUser.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
                 return null;
@@ -63,7 +63,7 @@ public class PhotoRepository : IPhotoRepository
         try
         {
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
-            if (chackUser == null)
+            if (chackUser == null || !chackUser.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
                 return "Chosen user does not exist";
@@ -110,7 +110,7 @@ public class PhotoRepository : IPhotoRepository
         try
         {
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
-            if (chackUser == null)
+            if (chackUser == null || !chackUser.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
                 return "Chosen user does not exist";
@@ -160,7 +160,7 @@ public class PhotoRepository : IPhotoRepository
         try
         {
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
-            if (chackUser == null)
+            if (chackUser == null || !chackUser.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
             }

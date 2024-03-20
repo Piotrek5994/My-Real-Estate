@@ -1,4 +1,5 @@
-﻿using Core.Commend.Create;
+﻿using Core.Command.Update;
+using Core.Commend.Create;
 using Core.Filter;
 using Core.Model;
 using System;
@@ -13,4 +14,5 @@ public interface IPropertyTypeRepository
 {
     Task<List<PropertyType>> GetPropertyType(PropertyTypeFilter filter);
     Task<string> CreatePropertyType(CreatePropertyType propertyType, string propertyId);
+    Task<bool> UpdatePropertyType(UpdatePropertyType propertyType, string propertyId);
 }

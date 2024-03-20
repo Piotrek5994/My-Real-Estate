@@ -66,7 +66,7 @@ public class PropertyRepository : IPropertyRepository
 
             var collection = _context.GetCollection<CreateProperty>("Property");
             var chackUser = await _userRepository.GetUser(new UserFilter { Id = property.UserId });
-            if (chackUser == null)
+            if (chackUser == null || !chackUser.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
                 return "The chosen user not exist";
