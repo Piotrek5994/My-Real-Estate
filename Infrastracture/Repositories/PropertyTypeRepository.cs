@@ -110,7 +110,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
 
             await collection.UpdateOneAsync(filter, update);
 
-            return false;
+            return true;
         }
         catch (MongoException ex)
         {
