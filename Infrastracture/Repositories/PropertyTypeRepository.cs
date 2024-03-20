@@ -106,7 +106,7 @@ public class PropertyTypeRepository : IPropertyTypeRepository
             var findPropertyType = await collection.Find(p => p.PropertyId == propertyId).FirstOrDefaultAsync();
 
             var filter = Builders<PropertyType>.Filter.Eq("_id", ObjectId.Parse(findPropertyType.Id));
-            var update = Builders<PropertyType>.Update.Set(p => p.PropertyTypeName, propertyType.propertyTypeName);
+            var update = Builders<PropertyType>.Update.Set(p => p.PropertyTypeName, propertyType.PropertyTypeName);
 
             await collection.UpdateOneAsync(filter, update);
 
