@@ -13,6 +13,7 @@ namespace Core.CommendDto
     {
         [Required]
         [JsonProperty(Required = Required.Always)]
+        [RegularExpression("^(Garage|Room|Apartment|garage|room|apartment)$", ErrorMessage = "Invalid property name : Garage, Room, Apartment, garage, room, apartment")]
         public string PropertyTypeName { get; set; } = string.Empty;
     }
     public class CreatePropertyTypeDtoExample : IExamplesProvider<CreatePropertyTypeDto>
