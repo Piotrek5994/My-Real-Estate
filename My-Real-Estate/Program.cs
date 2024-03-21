@@ -96,6 +96,10 @@ public class Program
                     "UpdatePassword" => "Change-Auth",
                     "CreateUserDto" => "Register-User",
                     "UpdateUser" => "Update-User",
+                    "CreatePropertyDto" => "Create-Property",
+                    "CreatePropertyTypeDto" => "Create-Propert-Type",
+                    "UpdateProperty" => "Update-Property",
+                    "UpdatePropertyType" => "Update-Property-Type",
                     _ => type.Name
                 };
             });

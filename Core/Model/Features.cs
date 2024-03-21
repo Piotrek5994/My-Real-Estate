@@ -17,5 +17,5 @@ public class Features
     public string FeatureName { get; set; }
     [BsonElement("user_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string UserId { get; set; }//FK
+    public string UserId { get; set; }
 }
