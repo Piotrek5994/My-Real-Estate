@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Command.Update;
+namespace Core.ModelDto;
 
-public class UpdateFeature
+public class FeaturesDto
 {
+    public string Id { get; set; }
     public string FeatureName { get; set; }
+    public string UserId { get; set; }
 }

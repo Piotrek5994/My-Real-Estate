@@ -1,5 +1,10 @@
 ﻿using AutoMapper;
+using Core.CommandDto;
+using Core.Commend.Create;
+using Core.Filter;
 using Core.IRepositories;
+using Core.Model;
+using Core.ModelDto;
 using Infrastracture.Service.IService;
 using System;
 using System.Collections.Generic;
@@ -18,5 +23,15 @@ public class FeaturesService : IFeaturesService
     {
         _featuresRepository = featuresRepository;
         _mapper = mapper;
+    }
+    public async Task<List<FeaturesDto>> GetFeaturesDto(FeaturesFilter filter)
+    {
+        return null;
+    }
+    public async Task<List<string>> CreateFeaturesDto(List<CreateFeaturesDto> featuresDto, string propertyId)
+    {
+        List<CreateFeatures> features = _mapper.Map<List<CreateFeatures>>(featuresDto);
+        var result = await _featuresRepository.CreateFeatures(features, propertyId);
+        return result;
     }
 }

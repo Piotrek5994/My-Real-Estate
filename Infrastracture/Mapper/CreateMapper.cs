@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.CommandDto;
 using Core.Commend.Create;
 using Core.CommendDto;
 using Infrastracture.Helper;
@@ -41,6 +42,11 @@ public class CreateMapper : Profile
                 .AfterMap((src, dest) =>
                 {
                     src.PropertyTypeName = dest.PropertyTypeName;
+                });
+        CreateMap<CreateFeaturesDto, CreateFeatures>()
+                .AfterMap((src, dest) =>
+                {
+                    src.FeatureName = dest.FeatureName;
                 });
     }
 }

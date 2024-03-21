@@ -5,6 +5,7 @@ using Core.IRepositories;
 using Core.Model;
 using Infrastructure.Db;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastracture.Repositories;
@@ -33,20 +34,32 @@ public class FeaturesRepository : IFeaturesRepository
             return null;
         }
     }
-    public async Task<List<string>> CreateFeatures(CreateFeatures features, string propertyId)
+    public async Task<List<string>> CreateFeatures(List<CreateFeatures> features, string propertyId)
     {
         var resultMessages = new List<string>();
         try
         {
 
-            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
-            if (chackProperty == null || !chackProperty.Any())
+            var checkProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (checkProperty == null || !checkProperty.Any())
             {
                 _log.LogWarning("Warning: chosen property does not exist");
                 resultMessages.Add("The chosen property not exist");
                 return resultMessages;
             }
-            return null;
+
+            foreach (var feature in features)
+            {
+                feature.Id = ObjectId.GenerateNewId().ToString();
+                feature.PropertyId = propertyId;
+            }
+
+            var collection = _context.GetCollection<CreateFeatures>("Features");
+
+            await collection.InsertManyAsync(features);
+
+            var createdFeatures = features.Select(feature => feature.Id).ToList();
+            return createdFeatures;
         }
         catch (MongoException ex)
         {

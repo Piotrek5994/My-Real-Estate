@@ -1,4 +1,6 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.CommandDto;
+using Core.ModelDto;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -19,9 +21,16 @@ public class FeaturesController : Controller
         return Ok();
     }
     [HttpPost]
-    public async Task<IActionResult> CreateFeatures()
+    public async Task<IActionResult> CreateFeatures([FromBody] List<CreateFeaturesDto> featuresDto, string propertyId)
     {
-        return Ok();
+        var featuresId = await _featuresService.CreateFeaturesDto(featuresDto, propertyId);
+
+        if (featuresId == null)
+        {
+            return BadRequest(new { message = "Create property fail" });
+        }
+
+        return Ok(new { FeaturesId = featuresId });
     }
     [HttpPut]
     public async Task<IActionResult> UpdateFeatures()

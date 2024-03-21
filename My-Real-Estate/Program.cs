@@ -1,3 +1,4 @@
+using Core.CommandDto;
 using Core.CommendDto;
 using Core.IRepositories;
 using Infrastracture.Db;
@@ -100,6 +101,7 @@ public class Program
                     "CreatePropertyTypeDto" => "Create-Propert-Type",
                     "UpdateProperty" => "Update-Property",
                     "UpdatePropertyType" => "Update-Property-Type",
+                    "CreateFeaturesDto" => "Create-Features",
                     _ => type.Name
                 };
             });

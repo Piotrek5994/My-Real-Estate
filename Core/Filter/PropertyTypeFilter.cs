@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Filter
+namespace Core.Filter;
+
+public class PropertyTypeFilter
 {
-    public class PropertyTypeFilter
-    {
-        public string? Id { get; set; }
-        public int Limit { get; set; } = 10;
-        public int Page { get; set; } = 1;
-        public string SortBy { get; set; } = "property_type_name";
-        public bool SortDescending { get; set; } = false;
-        public string? PropertyId { get; set; }
-    }
+    public string? Id { get; set; }
+    public int Limit { get; set; } = 10;
+    public int Page { get; set; } = 1;
+    public string SortBy { get; set; } = "property_type_name";
+    public bool SortDescending { get; set; } = false;
+    public string? PropertyId { get; set; }
 }

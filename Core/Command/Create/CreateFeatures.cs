@@ -16,7 +16,7 @@ public class CreateFeatures
     [BsonElement("features_name")]
     public string FeatureName { get; set; } = string.Empty;
     [BsonRequired]
-    [BsonElement("user_id")]
+    [BsonElement("property_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string UserId { get; set; }//FK
+    public string PropertyId { get; set; }
 }
