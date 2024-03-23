@@ -3,7 +3,7 @@ using Infrastructure.Db;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace Infrastructure_IntegrationTest.Db
+namespace Infrastructure_Test.Db
 {
     public class MongoDbContextTests
     {
