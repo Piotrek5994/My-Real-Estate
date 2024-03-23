@@ -12,11 +12,14 @@ namespace Infrastructure_IntegrationTest.Repositories;
 public class UserTest
 {
     private readonly Mock<MongoDbContext> _mockContext;
+    private readonly Mock<ILogger<UserRepository>> _mockLogger;
 
     public UserTest()
     {
+        _mockLogger = new Mock<ILogger<UserRepository>>();
         var mockOptions = new Mock<IOptions<MongoDbSettings>>();
-        var mockSettings = new MongoDbSettings {
+        var mockSettings = new MongoDbSettings
+        {
             ConnectionUri = "mongodb+srv://piotrek5994:usgNgqaDcZimqGVi@piotrek.ybmunwo.mongodb.net/",
             DatabaseName = "My_Real_Estate"
         };
@@ -25,28 +28,28 @@ public class UserTest
     }
 
     [Fact]
-    public async Task CreateUser_Powodzenie()
+    public async Task CreateUser_UserExists_ReturnsErrorMessage()
     {
         // Arrange
-        var repository = new UserRepository(_mockContext.Object, new Mock<ILogger<UserRepository>>().Object);
-        var user = new CreateUser
-        {
-            FirstName = "Jan",
-            LastName = "Kowalski",
-            Gender = "Male",
-            PESEL = "12345678901",
-            Role = "User",
-            Email = "jan.kowalski@example.com",
-            Password = "password123",
-            PhoneNumber = "123-456-789",
-            Properties = new List<string> { "property1", "property2" },
-            Payments = new List<string> { "payment1", "payment2" }
-        };
+        var repository = new UserRepository(_mockContext.Object, _mockLogger.Object);
+        var user = new CreateUser { Email = "john.doe@example.com" };
 
         // Act
         var result = await repository.CreateUser(user);
 
         // Assert
-        Assert.NotNull(result);
+        Assert.Equal("The user with the provided email address is already registered.", result);
+    }
+    [Fact]
+    public async Task CreateAdmin_AdminExists_ReturnErrorMessage()
+    {
+        var repository = new UserRepository(_mockContext.Object, _mockLogger.Object);
+        var user = new CreateUser { Email = "john.doe@example.com" };
+
+        // Act
+        var result = await repository.CreateAdmin(user);
+
+        // Assert
+        Assert.Equal("The user with the provided email address is already registered.", result);
     }
 }
