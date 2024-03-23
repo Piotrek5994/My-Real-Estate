@@ -1,3 +1,5 @@
+using Core.Commend.Create;
+using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.ModelDto;
 using Infrastracture.Service.IService;
@@ -6,11 +8,11 @@ using Moq;
 using My_Real_Estate.Controllers;
 using System.Text.Json;
 
-public class User
+public class UserControllerTest
 {
     private readonly Mock<IUserService> _userServiceMock;
     private readonly UserController _userControllerMock;
-    public User()
+    public UserControllerTest()
     {
         _userServiceMock = new Mock<IUserService>();
         _userControllerMock = new UserController(_userServiceMock.Object);
@@ -61,6 +63,40 @@ public class User
         string message;
         resultValue.TryGetValue("message", out message);
         Assert.Equal("User or Users don't found.", message);
+    }
+    [Fact]
+    public async Task CreateUser_ReturnStringUserId()
+    {
+        // Arrange
+        var createUserDto = new CreateUserDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+        var expectedUserId = "someUserId";
+
+        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(),It.IsAny<string>())).ReturnsAsync(expectedUserId);
+
+        // Act
+        var controller = new UserController(_userServiceMock.Object);
+
+        var result = await controller.CreateUser(createUserDto, "User");
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("UserId"));
+        Assert.Equal(expectedUserId, dictionary["UserId"]);
     }
 }
 
