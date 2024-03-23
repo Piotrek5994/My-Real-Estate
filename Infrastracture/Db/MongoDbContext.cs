@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using Infrastracture.Settings;
+using MongoDB.Bson;
 
 namespace Infrastructure.Db;
 
@@ -17,5 +18,11 @@ public class MongoDbContext
     public IMongoCollection<T> GetCollection<T>(string name)
     {
         return _database.GetCollection<T>(name);
+    }
+    public bool CollectionExists(string name)
+    {
+        var filter = new BsonDocument("name", name);
+        var collections = _database.ListCollections(new ListCollectionsOptions { Filter = filter });
+        return collections.Any();
     }
 }

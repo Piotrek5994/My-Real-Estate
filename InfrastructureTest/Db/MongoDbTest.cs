@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Core.Model;
+using Infrastracture.Settings;
 using Infrastructure.Db;
 using Microsoft.Extensions.Options;
-using Infrastracture.Settings;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using Moq;
 
 namespace InfrastructureTest
 {
@@ -25,40 +27,30 @@ namespace InfrastructureTest
         }
 
         [Test]
-        public void GetCollection_ReturnUserCollection()
+        public void GetCollection_CheckingTheExistence()
         {
             // Arrange
-            string collectionName = "User";
+            HashSet<string> collectionNames = new HashSet<string>
+            {
+                "Address",
+                "Avatar",
+                "Features",
+                "Payment",
+                "Photo",
+                "Property",
+                "PropertyType",
+                "User"
+            };
 
-            // Act
-            var collection = _mongoDbContext.GetCollection<object>(collectionName);
+            // Act & Assert
+            foreach (var name in collectionNames)
+            {
+                // Act
+                var exists = _mongoDbContext.CollectionExists(name);
 
-            // Assert
-            Assert.That(collection, Is.Not.Null);
-        }
-        [Test]
-        public void GetCollection_ReturnsPropertyTypeCollection()
-        {
-            // Arrange
-            string collectionName = "PropertyType";
-
-            // Act 
-            var collection = _mongoDbContext.GetCollection<object>(collectionName);
-
-            //Assert
-            Assert.True(collection != null);
-        }
-        [Test]
-        public void GetCollection_ReturnsPropertyCollection()
-        {
-            // Arrange
-            string collectionName = "Property";
-
-            // Act
-            var collection = _mongoDbContext.GetCollection<object>(collectionName);
-
-            // Assert
-            Assert.IsInstanceOf<IMongoCollection<object>>(collection);
+                // Assert
+                Assert.IsTrue(exists, $"Collection '{name}' does not exist.");
+            }
         }
     }
 }
