@@ -15,7 +15,7 @@ public class MongoDbContext
         var client = new MongoClient(mongoSettings.Value.ConnectionUri);
         _database = client.GetDatabase(mongoSettings.Value.DatabaseName);
     }
-    public IMongoCollection<T> GetCollection<T>(string name)
+    public virtual IMongoCollection<T> GetCollection<T>(string name)
     {
         return _database.GetCollection<T>(name);
     }
