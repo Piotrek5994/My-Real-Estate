@@ -31,7 +31,6 @@ public class User
         var jsonResult = Assert.IsType<JsonResult>(actionResult);
         Assert.NotNull(jsonResult.Value);
 
-        // Convert jsonResult.Value to JSON string and then deserialize to the expected structure
         var json = JsonSerializer.Serialize(jsonResult.Value);
         var deserializedResult = JsonSerializer.Deserialize<Dictionary<string, List<UserDto>>>(json);
 
@@ -40,6 +39,28 @@ public class User
         var users = deserializedResult["result"];
         Assert.NotNull(users);
         Assert.Single(users);
+    }
+    [Fact]
+    public async Task GetUser_ReturnNotFound_WithErrorMessage()
+    {
+        // Arrange
+        var userFilter = new UserFilter();
+        _userServiceMock.Setup(s => s.GetUserDto(It.IsAny<UserFilter>()))
+                              .ReturnsAsync((List<UserDto>)null);
+        var controller = new UserController(_userServiceMock.Object);
+
+        // Act
+        var result = await controller.GetUser(userFilter);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.NotNull(notFoundResult.Value);
+
+        var resultValue = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(notFoundResult.Value));
+        Assert.NotNull(resultValue);
+        string message;
+        resultValue.TryGetValue("message", out message);
+        Assert.Equal("User or Users don't found.", message);
     }
 }
 
