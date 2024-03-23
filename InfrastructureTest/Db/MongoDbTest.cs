@@ -1,19 +1,15 @@
-﻿using Core.Model;
 using Infrastracture.Settings;
 using Infrastructure.Db;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Moq;
+using Xunit;
 
-namespace InfrastructureTest
+namespace Infrastructure_IntegrationTest.Db
 {
     public class MongoDbContextTests
     {
-        private MongoDbContext _mongoDbContext;
+        private readonly MongoDbContext _mongoDbContext;
 
-        [SetUp]
-        public void Setup()
+        public MongoDbContextTests()
         {
             var mongoDbSettings = new MongoDbSettings
             {
@@ -26,11 +22,11 @@ namespace InfrastructureTest
             _mongoDbContext = new MongoDbContext(options);
         }
 
-        [Test]
+        [Fact]
         public void GetCollection_CheckingTheExistence()
         {
             // Arrange
-            HashSet<string> collectionNames = new HashSet<string>
+            var collectionNames = new[]
             {
                 "Address",
                 "Avatar",
@@ -49,7 +45,7 @@ namespace InfrastructureTest
                 var exists = _mongoDbContext.CollectionExists(name);
 
                 // Assert
-                Assert.IsTrue(exists, $"Collection '{name}' does not exist.");
+                Assert.True(exists, $"Collection '{name}' does not exist.");
             }
         }
     }
