@@ -1,4 +1,3 @@
-using Core.Commend.Create;
 using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.ModelDto;
@@ -78,9 +77,9 @@ public class UserControllerTest
             Password = "Password1234!",
             PhoneNumber = "123456789"
         };
-        var expectedUserId = "someUserId";
+        string expectedUserId = "someUserId";
 
-        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(),It.IsAny<string>())).ReturnsAsync(expectedUserId);
+        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(), It.IsAny<string>())).ReturnsAsync(expectedUserId);
 
         // Act
         var controller = new UserController(_userServiceMock.Object);
@@ -97,6 +96,108 @@ public class UserControllerTest
         Assert.NotNull(dictionary);
         Assert.True(dictionary.ContainsKey("UserId"));
         Assert.Equal(expectedUserId, dictionary["UserId"]);
+    }
+    [Fact]
+    public async Task CreateAdmin_ReturnStringUserId()
+    {
+        // Arrange
+        var createUserDto = new CreateUserDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+        string expectedAdminId = "someAdminId";
+
+        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(),It.IsAny<string>())).ReturnsAsync(expectedAdminId);
+
+        // Act
+        var controller = new UserController(_userServiceMock.Object);
+
+        var result = await controller.CreateUser(createUserDto, "Admin");
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string,string>>(json);
+
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("UserId"));
+        Assert.Equal(expectedAdminId, dictionary["UserId"]);
+    }
+    [Fact]
+    public async Task CreateUser_ReturnBadRequest_WithMessage()
+    {
+        // Arrange
+        var createUserDto = new CreateUserDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+        string expectedResult = "failed";
+
+        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(), It.IsAny<string>())).ReturnsAsync(expectedResult);
+
+        // Act
+        var controller = new UserController(_userServiceMock.Object);
+
+        var result = await controller.CreateUser(createUserDto, "User");
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        string message;
+        dictionary.TryGetValue("message", out message);
+        Assert.Equal("Registration failed.", message);
+    }
+    [Fact]
+    public async Task CreateUserAdmin_ReturnBadRequest_WithMessage()
+    {
+        // Arrange
+        var createUserDto = new CreateUserDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+        string expectedResult = "failed";
+
+        _userServiceMock.Setup(s => s.Register(It.IsAny<CreateUserDto>(), It.IsAny<string>())).ReturnsAsync(expectedResult);
+
+        // Act
+        var controller = new UserController(_userServiceMock.Object);
+
+        var result = await controller.CreateUser(createUserDto, "Admin");
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        string message;
+        dictionary.TryGetValue("message", out message);
+        Assert.Equal("Registration failed.", message);
     }
 }
 
