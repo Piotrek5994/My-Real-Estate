@@ -25,6 +25,7 @@ public class Program
 
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+        // Access point for CORS
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: MyAllowSpecificOrigins,
