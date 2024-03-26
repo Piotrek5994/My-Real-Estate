@@ -28,11 +28,11 @@ public class AuthController : Controller
 
         if (token == "Authentication failed. User not found.")
         {
-            return BadRequest(new { messgae = token });
+            return BadRequest(new { Messgae = token });
         }
         if(token == "Authentication failed. Password incorrect.")
         {
-            return BadRequest(new { messgae = token });
+            return BadRequest(new { Messgae = token });
         }
 
         return Ok(new { Token = token });
@@ -59,12 +59,12 @@ public class AuthController : Controller
 
         if (role != null && !validRoles.Contains(role))
         {
-            return BadRequest(new { message = $"Invalid role. Only the following roles are allowed: {string.Join(", ", validRoles)}" });
+            return BadRequest(new { Message = $"Invalid role. Only the following roles are allowed: {string.Join(", ", validRoles)}" });
         }
         bool result = await _authService.UpdateUserRole(userId, role);
         if (!result)
         {
-            return BadRequest(new { message = $"Incorrect role change for user : {userId}" });
+            return BadRequest(new { Message = $"Incorrect role change for user : {userId}" });
         }
         return Ok(new { ChangeRole = role });
     }
