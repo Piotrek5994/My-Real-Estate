@@ -28,11 +28,11 @@ public class AuthController : Controller
 
         if (token == "Authentication failed. User not found.")
         {
-            return BadRequest(new { Messgae = token });
+            return BadRequest(new { Message = token });
         }
         if(token == "Authentication failed. Password incorrect.")
         {
-            return BadRequest(new { Messgae = token });
+            return BadRequest(new { Message = token });
         }
 
         return Ok(new { Token = token });
