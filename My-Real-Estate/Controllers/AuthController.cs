@@ -24,11 +24,15 @@ public class AuthController : Controller
             return BadRequest(ModelState);
         }
 
-        var token = await _authService.Login(login);
+        string token = await _authService.Login(login);
 
-        if (token == null)
+        if (token == "Authentication failed. User not found.")
         {
-            return NotFound(new { messgae = "Login failed." });
+            return BadRequest(new { messgae = token });
+        }
+        if(token == "Authentication failed. Password incorrect.")
+        {
+            return BadRequest(new { messgae = token });
         }
 
         return Ok(new { Token = token });
