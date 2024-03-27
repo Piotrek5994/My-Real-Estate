@@ -23,9 +23,9 @@ public class PropertyController : Controller
         var property = await _propertyService.GetPropertyDto(filter);
         if (property != null)
         {
-            return Json(new { result = property });
+            return Json(new { Result = property });
         }
-        return NotFound(new { message = "Property of Propertys don't found" });
+        return NotFound(new { Message = "Property of Propertys don't found" });
     }
     [HttpPost]
     public async Task<IActionResult> CreateProperty([FromBody] CreatePropertyDto propertyDto)
@@ -33,7 +33,7 @@ public class PropertyController : Controller
         var propertyId = await _propertyService.CreatePropertyDto(propertyDto);
         if (propertyId == null)
         {
-            return BadRequest(new { message = "Create property fail" });
+            return BadRequest(new { Message = "Create property fail" });
         }
         return Ok(new { PropertyId = propertyId });
     }
@@ -43,9 +43,9 @@ public class PropertyController : Controller
         bool update = await _propertyService.UpdateProperty(property, properyId);
         if (!update)
         {
-            return BadRequest(new { message = "Property update fail" });
+            return BadRequest(new { Message = "Property update fail" });
         }
-        return Ok(new { result = update });
+        return Ok(new { Result = update });
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteProperty(string propertyId)
@@ -53,8 +53,8 @@ public class PropertyController : Controller
         bool delete = await _propertyService.DeleteProperty(propertyId);
         if (!delete)
         {
-            return BadRequest(new { message = "Property does not exist." });
+            return BadRequest(new { Message = "Property does not exist." });
         }
-        return Ok(new { result = delete });
+        return Ok(new { Result = delete });
     }
 }

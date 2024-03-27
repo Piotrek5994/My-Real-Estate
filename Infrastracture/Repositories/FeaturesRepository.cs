@@ -26,7 +26,32 @@ public class FeaturesRepository : IFeaturesRepository
     {
         try
         {
-            return null;
+            var collection = _context.GetCollection<Features>("Features");
+            var filterDefinitions = new List<FilterDefinition<Features>>();
+            filterDefinitions.Add(Builders<Features>.Filter.Empty);
+
+            if (!string.IsNullOrEmpty(filter.Id))
+            {
+                filterDefinitions.Add(Builders<Features>.Filter.Eq("_id", ObjectId.Parse(filter.Id)));
+            }
+            if (!string.IsNullOrEmpty(filter.PropertyId))
+            {
+                filterDefinitions.Add(Builders<Features>.Filter.Eq("property_id", ObjectId.Parse(filter.PropertyId)));
+            }
+
+            var combinedFilter = Builders<Features>.Filter.And(filterDefinitions);
+
+            var sortDefinition = filter.SortDescending ?
+                                 Builders<Features>.Sort.Descending(filter.SortBy) :
+                                 Builders<Features>.Sort.Ascending(filter.SortBy);
+
+            var properties = await collection.Find(combinedFilter)
+                                             .Sort(sortDefinition)
+                                             .Skip((filter.Page - 1) * filter.Limit)
+                                             .Limit(filter.Limit)
+                                             .ToListAsync();
+
+            return properties;
         }
         catch (MongoException ex)
         {

@@ -26,7 +26,9 @@ public class FeaturesService : IFeaturesService
     }
     public async Task<List<FeaturesDto>> GetFeaturesDto(FeaturesFilter filter)
     {
-        return null;
+        var result = await _featuresRepository.GetFeatures(filter);
+        var propertyDto = _mapper.Map<List<FeaturesDto>>(result);
+        return propertyDto;
     }
     public async Task<List<string>> CreateFeaturesDto(List<CreateFeaturesDto> featuresDto, string propertyId)
     {
