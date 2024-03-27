@@ -1,5 +1,7 @@
-﻿using Core.CommandDto;
+﻿using Core.Command.Update;
+using Core.CommandDto;
 using Core.Filter;
+using Infrastracture.Service;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,9 +40,14 @@ public class FeaturesController : Controller
         return Ok(new { FeaturesId = featuresId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateFeatures()
+    public async Task<IActionResult> UpdateFeatures([FromBody]UpdateFeature updateFeature, string featuresId)
     {
-        return Ok();
+        bool update = await _featuresService.UpdateFeatures(updateFeature, featuresId);
+        if (!update)
+        {
+            return BadRequest(new { Message = "Features update fail" });
+        }
+        return Ok(new { Result = update });
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteFeatures()

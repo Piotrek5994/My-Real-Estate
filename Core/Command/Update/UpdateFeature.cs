@@ -10,5 +10,6 @@ namespace Core.Command.Update;
 
 public class UpdateFeature
 {
+    [BsonElement("features_name")]
     public string FeatureName { get; set; }
 }

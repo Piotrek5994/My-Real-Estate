@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
+using Core.Command.Update;
 using Core.CommandDto;
 using Core.Commend.Create;
 using Core.Filter;
 using Core.IRepositories;
-using Core.Model;
 using Core.ModelDto;
 using Infrastracture.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Service;
 
@@ -36,4 +31,5 @@ public class FeaturesService : IFeaturesService
         var result = await _featuresRepository.CreateFeatures(features, propertyId);
         return result;
     }
+    public async Task<bool> UpdateFeatures(UpdateFeature updateFeature, string featuresId) => await _featuresRepository.UpdateFeature(updateFeature, featuresId);
 }

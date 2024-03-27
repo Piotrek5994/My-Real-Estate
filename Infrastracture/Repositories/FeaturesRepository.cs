@@ -1,5 +1,6 @@
 ﻿using Core.Command.Update;
 using Core.Commend.Create;
+using Core.Commend.Update;
 using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
@@ -83,7 +84,14 @@ public class FeaturesRepository : IFeaturesRepository
 
             await collection.InsertManyAsync(features);
 
+
             var createdFeatures = features.Select(feature => feature.Id).ToList();
+
+            var collectionUser = _context.GetCollection<Property>("Property");
+            var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+            var update = Builders<Property>.Update.AddToSetEach(p => p.Features, createdFeatures);
+            await collectionUser.UpdateOneAsync(filter, update);
+
             return createdFeatures;
         }
         catch (MongoException ex)
@@ -93,11 +101,22 @@ public class FeaturesRepository : IFeaturesRepository
             return resultMessages;
         }
     }
-    public async Task<bool> UpdateFeature(UpdateFeature feature, string propertyId)
+    public async Task<bool> UpdateFeature(UpdateFeature updatefeature, string featuresId)
     {
         try
         {
-            return true;
+            var collection = _context.GetCollection<Features>("Features");
+            var filter = Builders<Features>.Filter.Eq("_id", ObjectId.Parse(featuresId));
+
+            if (!string.IsNullOrEmpty(updatefeature.FeatureName))
+            {
+                var updates = Builders<Features>.Update.Set(u => u.FeatureName, updatefeature.FeatureName);
+                var result = await collection.UpdateOneAsync(filter, updates);
+                return result.ModifiedCount > 0;
+            }
+            _log.LogError($"Error update feature(s) type feature name is null or empty");
+            return false;
+
         }
         catch (MongoException ex)
         {
