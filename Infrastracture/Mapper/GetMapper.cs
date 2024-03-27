@@ -49,7 +49,7 @@ public class GetMapper : Profile
                 {
                     src.Id = dest.Id;
                     src.FeatureName = dest.FeatureName;
-                    src.UserId = dest.UserId;
+                    src.PropertyId = dest.PropertyId;
                 });
     }
 }

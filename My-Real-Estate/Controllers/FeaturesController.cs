@@ -50,8 +50,13 @@ public class FeaturesController : Controller
         return Ok(new { Result = update });
     }
     [HttpDelete]
-    public async Task<IActionResult> DeleteFeatures()
+    public async Task<IActionResult> DeleteFeatures(string featuresId)
     {
-        return Ok();
+        bool delete = await _featuresService.DeleteFeatures(featuresId);
+        if (!delete)
+        {
+            return BadRequest(new { Message = "Features does not exist." });
+        }
+        return Ok(new { Result = delete });
     }
 }

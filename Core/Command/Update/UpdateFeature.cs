@@ -1,10 +1,6 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Core.Command.Update;
 
@@ -12,4 +8,14 @@ public class UpdateFeature
 {
     [BsonElement("features_name")]
     public string FeatureName { get; set; }
+}
+public class UpdateFeatureExample : IExamplesProvider<UpdateFeature>
+{
+    public UpdateFeature GetExamples()
+    {
+        return new UpdateFeature
+        {
+            FeatureName = "Tv"
+        };
+    }
 }

@@ -140,9 +140,12 @@ public class PropertyRepository : IPropertyRepository
             var property = await collection.Find(propertyFilter).FirstOrDefaultAsync();
 
             if (property == null)
+            {
+                _log.LogWarning($"Property with ID {propertyId} not found.");
                 return false;
+            }
 
-            var userId = property.UserId;
+            string userId = property.UserId;
 
             var result = await collection.DeleteOneAsync(propertyFilter);
 

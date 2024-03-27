@@ -32,4 +32,6 @@ public class FeaturesService : IFeaturesService
         return result;
     }
     public async Task<bool> UpdateFeatures(UpdateFeature updateFeature, string featuresId) => await _featuresRepository.UpdateFeature(updateFeature, featuresId);
+
+    public async Task<bool> DeleteFeatures(string featuresId) => await _featuresRepository.DeleteFeature(featuresId);
 }

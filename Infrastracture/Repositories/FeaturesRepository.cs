@@ -124,4 +124,38 @@ public class FeaturesRepository : IFeaturesRepository
             return false;
         }
     }
+    public async Task<bool> DeleteFeature(string featureId)
+    {
+        try
+        {
+            var collection = _context.GetCollection<Features>("Features");
+            var featureFilter = Builders<Features>.Filter.Eq("_id", ObjectId.Parse(featureId));
+            var feature = await collection.Find(featureFilter).FirstOrDefaultAsync();
+
+            if (feature == null)
+            {
+                _log.LogWarning($"Feature with ID {featureId} not found.");
+                return false;
+            }
+
+            string propertyId = feature.PropertyId;
+            var result = await collection.DeleteOneAsync(featureFilter);
+
+            if (result.DeletedCount > 0)
+            {
+                var propertyCollection = _context.GetCollection<Property>("Property");
+                var propertyFilter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+                var update = Builders<Property>.Update.Pull(p => p.Features, featureId);
+                var updateResult = await propertyCollection.UpdateOneAsync(propertyFilter, update);
+            }
+
+            return result.DeletedCount > 0;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error deleting feature with ID {featureId}: {ex.Message}");
+            return false;
+        }
+    }
+
 }

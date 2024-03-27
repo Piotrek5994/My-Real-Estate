@@ -10,5 +10,6 @@ namespace Infrastracture.Service.IService
         Task<List<FeaturesDto>> GetFeaturesDto(FeaturesFilter filter);
         Task<List<string>> CreateFeaturesDto(List<CreateFeaturesDto> featuresDto, string propertyId);
         Task<bool> UpdateFeatures(UpdateFeature updateFeature, string featuresId);
+        Task<bool> DeleteFeatures(string featuresId);
     }
 }

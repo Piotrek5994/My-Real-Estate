@@ -38,7 +38,7 @@ public class Property
     [BsonRepresentation(BsonType.ObjectId)]
     public string UserId { get; set; } //FK
     [BsonElement("photos")]
-    public List<string>? Photos { get; set; }
+    public List<string> Photos { get; set; }
     [BsonElement("features")]
-    public List<string>? Features { get; set; }
+    public List<string> Features { get; set; }
 }
