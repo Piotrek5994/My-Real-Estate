@@ -6,8 +6,11 @@ using Core.Model;
 using Infrastracture.Db;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using SharpCompress.Writers.Zip;
 
 namespace Infrastracture.Repositories;
 
@@ -15,15 +18,17 @@ public class PhotoRepository : IPhotoRepository
 {
     private readonly MongoDbContext _context;
     private readonly IUserRepository _userRepository;
+    private readonly IPropertyRepository _propertyRepository;
     private readonly ILogger _log;
     private readonly BunnyCdnContext _bunnyContext;
 
-    public PhotoRepository(MongoDbContext context, ILogger<PhotoRepository> log, IUserRepository userRepository, BunnyCdnContext bunnyContext)
+    public PhotoRepository(MongoDbContext context, ILogger<PhotoRepository> log, IUserRepository userRepository, BunnyCdnContext bunnyContext, IPropertyRepository propertyRepository)
     {
         _context = context;
         _log = log;
         _userRepository = userRepository;
         _bunnyContext = bunnyContext;
+        _propertyRepository = propertyRepository;
     }
     public async Task<Stream> GetAvatarPhoto(string userId)
     {
@@ -206,15 +211,56 @@ public class PhotoRepository : IPhotoRepository
     {
         try
         {
-            return null;
+            List<CreatePhoto> photos = new List<CreatePhoto>();
+            List<string> message = new List<string>();
+            List<string> photoIds = new List<string>();
+
+            var checkProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (checkProperty == null || !checkProperty.Any())
+            {
+                _log.LogWarning("Warning: chosen property does not exist");
+                message.Add("Chosen property does not exist");
+                return message;
+            }
+
+            var collection = _context.GetCollection<CreatePhoto>("Photo");
+
+            foreach (var file in formFilesCollection)
+            {
+                if (file.Length > 0)
+                {
+                    var photo = new CreatePhoto();
+                    photo.Id = ObjectId.GenerateNewId().ToString();
+                    string fileName = $"/myrealestate/{photo.Id}_photo{file.FileName}";
+                    photo.PhotoSrc = fileName;
+                    photo.PropertyId = propertyId;
+
+                    photos.Add(photo);
+                    photoIds.Add(photo.Id);
+
+                    using (var stream = file.OpenReadStream())
+                    {
+                        await _bunnyContext.UploadObjectAsync(stream, fileName);
+                    }
+                }
+            }
+
+            if (photos.Any())
+            {
+                await collection.InsertManyAsync(photos);
+            }
+
+            return photoIds;
         }
         catch (BunnyCDNStorageException ex)
         {
-            return null;
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+            return new List<string> { $"Error with BunnyCDN Storage: {ex.Message}" };
         }
         catch (MongoException ex)
         {
-            return null;
+            _log.LogError(ex, $"Error with CreatePhotoforProperty in MongoDb :: {ex.Message}");
+            return new List<string> { $"Error with CreatePhotoforProperty in MongoDb :: {ex.Message}" };
         }
     }
     public async Task<List<string>> ChangesPropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId)
@@ -252,6 +298,17 @@ public class PhotoRepository : IPhotoRepository
     }
     public async Task<bool> DeletePropertyPhotos(List<string> photoId)
     {
-        return false;
+        try
+        {
+            return true;
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            return false;
+        }
+        catch (MongoException ex)
+        {
+            return false;
+        }
     }
 }
