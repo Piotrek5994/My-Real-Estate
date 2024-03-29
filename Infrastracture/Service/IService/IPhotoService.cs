@@ -13,5 +13,6 @@ public interface IPhotoService
     Task<string> UploadPhoto(IFormFile formFile, string userId, string operationName);
     Task<string> ChangePhoto(IFormFile formFile, string userId, string operationName);
     Task DeleteAvatar(string userId);
+    Task<Stream> GetPropertyPhotos(string propertyId, string photoId);
     Task<List<string>> UploadsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId);
 }

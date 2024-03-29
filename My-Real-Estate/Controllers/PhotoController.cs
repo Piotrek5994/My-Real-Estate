@@ -1,6 +1,4 @@
-﻿using Core.Command.Update;
-using Infrastracture.Service.IService;
-using Microsoft.AspNetCore.Http;
+﻿using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -57,16 +55,18 @@ public class PhotoController : Controller
     }
     [HttpGet]
     [Route("/Photo")]
-    public async Task<IActionResult> GetPropertyPhotos()
+    [Produces("image/jpeg", "image/png")]
+    public async Task<IActionResult> GetPropertyPhoto(string propertyId, string photoId)
     {
-        return Ok(new { Success = true });
+        var photo = await _photoService.GetPropertyPhotos(propertyId,photoId);
+        return Ok(photo);
     }
     [HttpPost]
     [Route("/Photo")]
     public async Task<IActionResult> UploadPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId)
     {
         var photoIdList = await _photoService.UploadsPropertyPhotos(formFilesCollection, propertyId);
-        if(photoIdList == null || !photoIdList.Any())
+        if (photoIdList == null || !photoIdList.Any())
         {
             return BadRequest(new { Message = "Create photo for property fail" });
         }
@@ -74,7 +74,7 @@ public class PhotoController : Controller
     }
     [HttpPut]
     [Route("/Photo")]
-    public async Task<IActionResult> UpdatePropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId )
+    public async Task<IActionResult> UpdatePropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId)
     {
 
         return Ok(new { Success = true });

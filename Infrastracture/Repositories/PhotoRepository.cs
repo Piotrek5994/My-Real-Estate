@@ -191,18 +191,35 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
         }
     }
-    public async Task<List<Stream>> GetPropertyPhoto(string propertyId)
+    public async Task<Stream> GetPropertyPhoto(string propertyId,string photoId)
     {
         try
         {
-            return null;
+            var checkProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (checkProperty == null || !checkProperty.Any())
+            {
+                _log.LogWarning("Warning: chosen property does not exist");
+                return null;
+            }
+
+            var collection = _context.GetCollection<Photo>("Photo");
+            var userFilter = await collection.Find(u => u.PropertyId == propertyId && u.Id == photoId).FirstOrDefaultAsync();
+            if (userFilter == null)
+            {
+                _log.LogWarning("Warning: user does not have an avatar");
+            }
+
+            var stream = await _bunnyContext.DownloadObjectAsStreamAsync(userFilter.PhotoSrc);
+            return stream;
         }
         catch (BunnyCDNStorageException ex)
         {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
             return null;
         }
         catch (MongoException ex)
         {
+            _log.LogError(ex, $"Error with GetPropertyPhoto in MongoDb : {ex.Message}");
             return null;
         }
     }

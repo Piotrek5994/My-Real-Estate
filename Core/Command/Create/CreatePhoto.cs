@@ -18,5 +18,5 @@ public class CreatePhoto
     [BsonRequired]
     [BsonElement("property_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string PropertyId { get; set; } //FK
+    public string PropertyId { get; set; }
 }
