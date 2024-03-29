@@ -187,4 +187,71 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
         }
     }
+    public async Task<List<Stream>> GetPropertyPhoto(string propertyId)
+    {
+        try
+        {
+            return null;
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            return null;
+        }
+        catch (MongoException ex)
+        {
+            return null;
+        }
+    }
+    public async Task<List<string>> UploudsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId)
+    {
+        try
+        {
+            return null;
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            return null;
+        }
+        catch (MongoException ex)
+        {
+            return null;
+        }
+    }
+    public async Task<List<string>> ChangesPropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId)
+    {
+        try
+        {
+
+            List<string> uploadedFiles = new List<string>();
+
+            foreach (var file in formFilesCollection)
+            {
+                if (file.Length > 0)
+                {
+                    string pathInStorageZone = $"/{propertyId}/{photoId}_{file.FileName}";
+
+                    using (var stream = file.OpenReadStream())
+                    {
+                        await _bunnyContext.UploadObjectAsync(stream, pathInStorageZone);
+
+                        uploadedFiles.Add(pathInStorageZone);
+                    }
+                }
+            }
+
+            return uploadedFiles;
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            return null;
+        }
+        catch (MongoException ex)
+        {
+            return null;
+        }
+    }
+    public async Task<bool> DeletePropertyPhotos(List<string> photoId)
+    {
+        return false;
+    }
 }

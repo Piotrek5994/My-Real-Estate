@@ -1,4 +1,5 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.Command.Update;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,25 +57,32 @@ public class PhotoController : Controller
     }
     [HttpGet]
     [Route("/Photo")]
-    public async Task<IActionResult> GetPropertyPhoto()
+    public async Task<IActionResult> GetPropertyPhotos()
     {
         return Ok(new { Success = true });
     }
     [HttpPost]
     [Route("/Photo")]
-    public async Task<IActionResult> UploadPropertyPhoto()
+    public async Task<IActionResult> UploadPropertyPhotos()
     {
         return Ok(new { Success = true });
     }
     [HttpPut]
     [Route("/Photo")]
-    public async Task<IActionResult> UpdatePropertyPhoto()
+    public async Task<IActionResult> UpdatePropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId )
     {
+        // Tutaj logika przetwarzania przesłanych danych
+        // Przykład:
+        // foreach (var photoUpdate in propertyPhotos)
+        // {
+        //     // aktualizuj zdjęcia dla photoUpdate.propertyId, itd.
+        // }
+
         return Ok(new { Success = true });
     }
     [HttpDelete]
     [Route("/Photo")]
-    public async Task<IActionResult> DeletePropertyPhoto()
+    public async Task<IActionResult> DeletePropertyPhotos()
     {
         return Ok(new { Success = true });
     }
