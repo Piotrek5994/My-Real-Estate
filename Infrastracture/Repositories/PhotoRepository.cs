@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Runtime.Intrinsics.X86;
 
 namespace Infrastracture.Repositories;
 
@@ -241,6 +242,14 @@ public class PhotoRepository : IPhotoRepository
                         await _bunnyContext.UploadObjectAsync(stream, fileName);
                     }
                 }
+            }
+            foreach (var photoId in photoIds)
+            {
+                var collectionProperty = _context.GetCollection<Property>("Property");
+                var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+                var update = Builders<Property>.Update.AddToSet(a => a.Photos, photoId);
+
+                await collectionProperty.UpdateOneAsync(filter, update);
             }
 
             if (photos.Any())
