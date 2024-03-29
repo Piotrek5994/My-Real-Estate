@@ -6,11 +6,9 @@ using Core.Model;
 using Infrastracture.Db;
 using Infrastructure.Db;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using SharpCompress.Writers.Zip;
 
 namespace Infrastracture.Repositories;
 

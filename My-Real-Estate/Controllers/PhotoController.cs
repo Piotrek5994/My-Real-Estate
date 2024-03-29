@@ -63,20 +63,19 @@ public class PhotoController : Controller
     }
     [HttpPost]
     [Route("/Photo")]
-    public async Task<IActionResult> UploadPropertyPhotos()
+    public async Task<IActionResult> UploadPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId)
     {
-        return Ok(new { Success = true });
+        var photoIdList = await _photoService.UploadsPropertyPhotos(formFilesCollection, propertyId);
+        if(photoIdList == null || !photoIdList.Any())
+        {
+            return BadRequest(new { Message = "Create photo for property fail" });
+        }
+        return Ok(new { PhotoId = photoIdList });
     }
     [HttpPut]
     [Route("/Photo")]
     public async Task<IActionResult> UpdatePropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId )
     {
-        // Tutaj logika przetwarzania przesłanych danych
-        // Przykład:
-        // foreach (var photoUpdate in propertyPhotos)
-        // {
-        //     // aktualizuj zdjęcia dla photoUpdate.propertyId, itd.
-        // }
 
         return Ok(new { Success = true });
     }

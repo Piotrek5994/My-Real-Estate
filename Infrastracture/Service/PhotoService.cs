@@ -46,4 +46,6 @@ public class PhotoService : IPhotoService
         return result;
     }
     public async Task DeleteAvatar(string userId) => await _photoRepository.DeleteAvatarPhoto(userId);
+
+    public async Task<List<string>> UploadsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId) => await _photoRepository.UploudsPropertyPhotos(formFilesCollection,propertyId);
 }
