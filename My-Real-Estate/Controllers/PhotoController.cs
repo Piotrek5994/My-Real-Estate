@@ -1,4 +1,5 @@
-﻿using Infrastracture.Service.IService;
+﻿using Core.Model;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -81,8 +82,9 @@ public class PhotoController : Controller
     }
     [HttpDelete]
     [Route("/Photo")]
-    public async Task<IActionResult> DeletePropertyPhotos()
+    public async Task<IActionResult> DeletePropertyPhotos([FromBody]List<string> photoId, string propertyId)
     {
-        return Ok(new { Success = true });
+        bool result = await _photoService.DeletePropertyPhotos(photoId,propertyId);
+        return Ok(new { Success = result });
     }
 }

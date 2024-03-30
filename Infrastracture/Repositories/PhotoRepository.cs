@@ -320,18 +320,43 @@ public class PhotoRepository : IPhotoRepository
             return null;
         }
     }
-    public async Task<bool> DeletePropertyPhotos(List<string> photoId)
+    public async Task<bool> DeletePropertyPhotos(List<string> photoIds, string propertyId)
     {
         try
         {
+            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (chackProperty == null || !chackProperty.Any())
+            {
+                _log.LogWarning("Warning: chosen property does not exist");
+                return false;
+            }
+
+            var collection = _context.GetCollection<Photo>("Photo");
+            foreach (var photo in photoIds)
+            {
+
+                var userFilter = await collection.FindOneAndDeleteAsync(u => u.Id == photo);
+                if (userFilter != null && userFilter.PhotoSrc != null)
+                {
+                    await _bunnyContext.DeleteObjectAsync(userFilter.PhotoSrc);
+                }
+
+                var propertyCollection = _context.GetCollection<Property>("Property");
+                var propertyFilter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+                var update = Builders<Property>.Update.Pull(p => p.Photos, photo);
+                var updateResult = await propertyCollection.UpdateOneAsync(propertyFilter, update);
+
+            }
             return true;
         }
         catch (BunnyCDNStorageException ex)
         {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
             return false;
         }
         catch (MongoException ex)
         {
+            _log.LogError(ex, $"Error with DeletePhotoforProperty in MongoDb :: {ex.Message}");
             return false;
         }
     }

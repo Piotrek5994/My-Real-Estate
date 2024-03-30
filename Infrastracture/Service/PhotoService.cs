@@ -44,4 +44,5 @@ public class PhotoService : IPhotoService
 
     public async Task<Stream> GetPropertyPhotos(string propertyId,string photoId) => await _photoRepository.GetPropertyPhoto(propertyId,photoId);
     public async Task<List<string>> UploadsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId) => await _photoRepository.UploudsPropertyPhotos(formFilesCollection, propertyId);
+    public async Task<bool> DeletePropertyPhotos(List<string> photoId, string propertyId) => await _photoRepository.DeletePropertyPhotos(photoId, propertyId);
 }

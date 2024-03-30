@@ -15,4 +15,5 @@ public interface IPhotoRepository
     Task DeleteAvatarPhoto(string userId);
     Task<Stream> GetPropertyPhoto(string propertyId, string photoId);
     Task<List<string>> UploudsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId);
+    Task<bool> DeletePropertyPhotos(List<string> photoIds, string propertyId);
 }
