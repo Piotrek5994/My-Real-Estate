@@ -287,27 +287,12 @@ public class PhotoRepository : IPhotoRepository
             return new List<string> { $"Error with CreatePhotoforProperty in MongoDb :: {ex.Message}" };
         }
     }
-    public async Task<List<string>> ChangesPropertyPhotos(IFormFileCollection formFilesCollection, string photoId, string propertyId)
+    public async Task<List<string>> ChangesPropertyPhotos(IFormFile formFile, string photoId, string propertyId)
     {
         try
         {
 
             List<string> uploadedFiles = new List<string>();
-
-            foreach (var file in formFilesCollection)
-            {
-                if (file.Length > 0)
-                {
-                    string pathInStorageZone = $"/{propertyId}/{photoId}_{file.FileName}";
-
-                    using (var stream = file.OpenReadStream())
-                    {
-                        await _bunnyContext.UploadObjectAsync(stream, pathInStorageZone);
-
-                        uploadedFiles.Add(pathInStorageZone);
-                    }
-                }
-            }
 
             return uploadedFiles;
         }
