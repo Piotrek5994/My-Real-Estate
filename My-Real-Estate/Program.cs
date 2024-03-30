@@ -115,6 +115,7 @@ public class Program
                     "UpdateProperty" => "Update-Property",
                     "UpdatePropertyType" => "Update-Property-Type",
                     "CreateFeaturesDto" => "Create-Features",
+                    "UpdateFeature" => "Update-Feature",
                     _ => type.Name
                 };
             });
