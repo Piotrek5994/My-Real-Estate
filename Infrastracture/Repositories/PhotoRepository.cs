@@ -291,7 +291,7 @@ public class PhotoRepository : IPhotoRepository
         try
         {
             List<string> message = new List<string>();
-            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = photoId });
+            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
             if (chackProperty == null || !chackProperty.Any())
             {
                 _log.LogWarning("Warning: chosen user does not exist");
@@ -302,11 +302,11 @@ public class PhotoRepository : IPhotoRepository
             var collection = _context.GetCollection<Photo>("Photo");
             var propertyPhoto = await collection.Find(u => u.Id == photoId).FirstOrDefaultAsync();
 
-            string fileName = $"/myrealestate/{photoId}_photo{Path.GetExtension(formFile.FileName)}";
+            string fileName = $"/myrealestate/{photoId}_photo{formFile.FileName}";
 
             await _bunnyContext.DeleteObjectAsync(propertyPhoto.PhotoSrc);
 
-            var filter = Builders<Photo>.Filter.Eq("_id", photoId);
+            var filter = Builders<Photo>.Filter.Eq("_id", ObjectId.Parse(photoId));
             var update = Builders<Photo>.Update.Set(a => a.PhotoSrc, fileName);
             await collection.UpdateOneAsync(filter, update);
 
