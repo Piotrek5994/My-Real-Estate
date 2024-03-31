@@ -321,12 +321,12 @@ public class PhotoRepository : IPhotoRepository
         catch (BunnyCDNStorageException ex)
         {
             _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
-            return null;
+            return new List<string> { $"Error with BunnyCDN Storage: {ex.Message}" };
         }
         catch (MongoException ex)
         {
             _log.LogError(ex, $"Error with ChangePropertyPhoto in MongoDb : {ex.Message}");
-            return null;
+            return new List<string> { $"Error with ChangePropertyPhoto in MongoDb : {ex.Message}" };
         }
     }
     public async Task<bool> DeletePropertyPhotos(List<string> photoIds, string propertyId)
