@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Runtime.Intrinsics.X86;
 
 namespace Infrastracture.Repositories;
 
@@ -191,7 +190,7 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
         }
     }
-    public async Task<Stream> GetPropertyPhoto(string propertyId,string photoId)
+    public async Task<Stream> GetPropertyPhoto(string propertyId, string photoId)
     {
         try
         {
@@ -291,17 +290,42 @@ public class PhotoRepository : IPhotoRepository
     {
         try
         {
+            List<string> message = new List<string>();
+            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = photoId });
+            if (chackProperty == null || !chackProperty.Any())
+            {
+                _log.LogWarning("Warning: chosen user does not exist");
+                message.Add("Chosen user does not exist");
+                return message;
+            }
 
-            List<string> uploadedFiles = new List<string>();
+            var collection = _context.GetCollection<Photo>("Photo");
+            var propertyPhoto = await collection.Find(u => u.Id == photoId).FirstOrDefaultAsync();
 
-            return uploadedFiles;
+            string fileName = $"/myrealestate/{photoId}_photo{Path.GetExtension(formFile.FileName)}";
+
+            await _bunnyContext.DeleteObjectAsync(propertyPhoto.PhotoSrc);
+
+            var filter = Builders<Photo>.Filter.Eq("_id", photoId);
+            var update = Builders<Photo>.Update.Set(a => a.PhotoSrc, fileName);
+            await collection.UpdateOneAsync(filter, update);
+
+            using (var stream = formFile.OpenReadStream())
+            {
+                await _bunnyContext.UploadObjectAsync(stream, fileName);
+            };
+
+            message.Add("Change propery photo success");
+            return message;
         }
         catch (BunnyCDNStorageException ex)
         {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
             return null;
         }
         catch (MongoException ex)
         {
+            _log.LogError(ex, $"Error with ChangePropertyPhoto in MongoDb : {ex.Message}");
             return null;
         }
     }
