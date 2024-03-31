@@ -100,12 +100,12 @@ public class PhotoRepository : IPhotoRepository
         catch (BunnyCDNStorageException ex)
         {
             _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
-            return null;
+            return $"Error with BunnyCDN Storage: {ex.Message}";
         }
         catch (MongoException ex)
         {
             _log.LogError(ex, $"Error with UploudAvatarPhoto in MongoDb : {ex.Message}");
-            return null;
+            return $"Error with UploudAvatarPhoto in MongoDb : {ex.Message}";
         }
     }
     public async Task<string> ChangeAvatarPhoto(IFormFile formFile, string userId)
@@ -150,12 +150,12 @@ public class PhotoRepository : IPhotoRepository
         catch (BunnyCDNStorageException ex)
         {
             _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
-            return null;
+            return $"Error with BunnyCDN Storage: {ex.Message}";
         }
         catch (MongoException ex)
         {
             _log.LogError(ex, $"Error with ChangeAvatarPhoto in MongoDb : {ex.Message}");
-            return null;
+            return $"Error with ChangeAvatarPhoto in MongoDb : {ex.Message}";
         }
     }
     public async Task DeleteAvatarPhoto(string userId)
