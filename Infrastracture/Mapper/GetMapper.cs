@@ -44,6 +44,13 @@ public class GetMapper : Profile
                     src.PropertyTypeName = dest.PropertyTypeName;
                     src.PropertyId = dest.PropertyId;
                 });
+        CreateMap<Features, FeaturesDto>()
+                .AfterMap((src, dest) =>
+                {
+                    src.Id = dest.Id;
+                    src.FeatureName = dest.FeatureName;
+                    src.PropertyId = dest.PropertyId;
+                });
         CreateMap<Address, AddressDto>()
             .AfterMap((src, dest) =>
             {

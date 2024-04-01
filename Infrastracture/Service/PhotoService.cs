@@ -2,11 +2,6 @@
 using Core.IRepositories;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Service;
 
@@ -35,15 +30,20 @@ public class PhotoService : IPhotoService
 
         return result;
     }
-    public async Task<string> ChangePhoto(IFormFile formFile, string userId,string operationName)
+    public async Task<string> ChangePhoto(IFormFile formFile, string userId, string operationName)
     {
         string result = operationName switch
         {
-            string r when r.Contains("ChangeAvatar") => await _photoRepository.ChangeAvatarPhoto(formFile,userId),
+            string r when r.Contains("ChangeAvatar") => await _photoRepository.ChangeAvatarPhoto(formFile, userId),
             _ => "Invalid operation"
         };
 
         return result;
     }
     public async Task DeleteAvatar(string userId) => await _photoRepository.DeleteAvatarPhoto(userId);
+
+    public async Task<Stream> GetPropertyPhotos(string propertyId,string photoId) => await _photoRepository.GetPropertyPhoto(propertyId,photoId);
+    public async Task<List<string>> UploadsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId) => await _photoRepository.UploudsPropertyPhotos(formFilesCollection, propertyId);
+    public async Task<List<string>> ChangePropertyPhoto(IFormFile formFile, string photoId, string propertyId) => await _photoRepository.ChangesPropertyPhotos(formFile, photoId, propertyId);
+    public async Task<bool> DeletePropertyPhotos(List<string> photoId, string propertyId) => await _photoRepository.DeletePropertyPhotos(photoId, propertyId);
 }

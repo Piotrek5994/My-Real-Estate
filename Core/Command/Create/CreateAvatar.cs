@@ -18,5 +18,5 @@ public class CreateAvatar
     [BsonRequired]
     [BsonElement("user_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string UserId { get; set; } //FK
+    public string UserId { get; set; }
 }

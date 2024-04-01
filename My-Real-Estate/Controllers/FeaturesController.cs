@@ -1,5 +1,7 @@
-﻿using Core.CommandDto;
-using Core.ModelDto;
+﻿using Core.Command.Update;
+using Core.CommandDto;
+using Core.Filter;
+using Infrastracture.Service;
 using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +18,14 @@ public class FeaturesController : Controller
         _featuresService = featuresService;
     }
     [HttpGet]
-    public async Task<IActionResult> GetFeatures()
+    public async Task<IActionResult> GetFeatures([FromQuery] FeaturesFilter filter)
     {
-        return Ok();
+        var features = await _featuresService.GetFeaturesDto(filter);
+        if (features == null)
+        {
+            return NotFound(new { Message = "Feature of Features don't found" });
+        }
+        return Json(new { Result = features });
     }
     [HttpPost]
     public async Task<IActionResult> CreateFeatures([FromBody] List<CreateFeaturesDto> featuresDto, string propertyId)
@@ -27,19 +34,29 @@ public class FeaturesController : Controller
 
         if (featuresId == null)
         {
-            return BadRequest(new { message = "Create property fail" });
+            return BadRequest(new { Message = "Create property fail" });
         }
 
         return Ok(new { FeaturesId = featuresId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateFeatures()
+    public async Task<IActionResult> UpdateFeatures([FromBody]UpdateFeature updateFeature, string featuresId)
     {
-        return Ok();
+        bool update = await _featuresService.UpdateFeatures(updateFeature, featuresId);
+        if (!update)
+        {
+            return BadRequest(new { Message = "Features update fail" });
+        }
+        return Ok(new { Result = update });
     }
     [HttpDelete]
-    public async Task<IActionResult> DeleteFeatures()
+    public async Task<IActionResult> DeleteFeatures(string featuresId)
     {
-        return Ok();
+        bool delete = await _featuresService.DeleteFeatures(featuresId);
+        if (!delete)
+        {
+            return BadRequest(new { Message = "Features does not exist." });
+        }
+        return Ok(new { Result = delete });
     }
 }

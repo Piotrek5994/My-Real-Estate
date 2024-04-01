@@ -22,9 +22,9 @@ public class UserController : Controller
         var user = await _userService.GetUserDto(filter);
         if (user != null)
         {
-            return Json(new { result = user });
+            return Json(new { Result = user });
         }
-        return NotFound(new { message = "User or Users don't found." }); ;
+        return NotFound(new { Message = "User or Users don't found." }); ;
     }
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto, string role)
@@ -37,7 +37,7 @@ public class UserController : Controller
         }
         else
         {
-            return BadRequest(new { message = "Registration failed." });
+            return BadRequest(new { Message = "Registration failed." });
         }
     }
     [HttpPut]
@@ -46,7 +46,7 @@ public class UserController : Controller
         bool update = await _userService.UserUpdate(user, userId);
         if (!update)
         {
-            return BadRequest(new { message = "User update fail" });
+            return BadRequest(new { Message = "User update fail" });
         }
         return Ok(new { result = update });
     }
@@ -56,8 +56,8 @@ public class UserController : Controller
         bool delete = await _userService.UserDelete(userId);
         if (!delete)
         {
-            return BadRequest(new { message = "User does not exist." });
+            return BadRequest(new { Message = "User does not exist." });
         }
-        return Ok(new { result = delete });
+        return Ok(new { Result = delete });
     }
 }

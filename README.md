@@ -10,7 +10,7 @@
 - Swashbuckle.AspNetCore.Filters
 - Swashbuckle.AspNetCore.Swagger
 - Swashbuckle.AspNetCore.Annotations
-- AutoMapper.Extensions.Microsoft.DependencyInjection
+- AutoMapper
 - BunnyCDN.Net.Storage
 ## Api Documentation :battery:
 - Swagger

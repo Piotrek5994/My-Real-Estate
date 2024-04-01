@@ -115,6 +115,7 @@ public class Program
                     "UpdateProperty" => "Update-Property",
                     "UpdatePropertyType" => "Update-Property-Type",
                     "CreateFeaturesDto" => "Create-Features",
+                    "UpdateFeature" => "Update-Feature",
                     "CreateAddressDto" => "Create-Address",
                     "UpdateAddress" => "Update-Address",
                     _ => type.Name

@@ -1,5 +1,4 @@
 ﻿using Infrastracture.Service.IService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -45,7 +44,7 @@ public class PhotoController : Controller
     public async Task<IActionResult> UpdateAvatarPhoto(IFormFile formFile, string userId)
     {
         string result = await _photoService.ChangePhoto(formFile, userId, "ChangeAvatar");
-        return Ok(new { AvatarId = result });
+        return Ok(new { ChangeAvatar = result });
     }
     [HttpDelete]
     [Route("/Avatar")]
@@ -56,26 +55,35 @@ public class PhotoController : Controller
     }
     [HttpGet]
     [Route("/Photo")]
-    public async Task<IActionResult> GetPropertyPhoto()
+    [Produces("image/jpeg", "image/png")]
+    public async Task<IActionResult> GetPropertyPhoto(string propertyId, string photoId)
     {
-        return Ok(new { Success = true });
+        var photo = await _photoService.GetPropertyPhotos(propertyId, photoId);
+        return Ok(photo);
     }
     [HttpPost]
     [Route("/Photo")]
-    public async Task<IActionResult> UploadPropertyPhoto()
+    public async Task<IActionResult> UploadPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId)
     {
-        return Ok(new { Success = true });
+        var photoIdList = await _photoService.UploadsPropertyPhotos(formFilesCollection, propertyId);
+        if (photoIdList == null || !photoIdList.Any())
+        {
+            return BadRequest(new { Message = "Create photo for property fail" });
+        }
+        return Ok(new { PhotoId = photoIdList });
     }
     [HttpPut]
     [Route("/Photo")]
-    public async Task<IActionResult> UpdatePropertyPhoto()
+    public async Task<IActionResult> UpdatePropertyPhotos(IFormFile formFile, string photoId, string propertyId)
     {
-        return Ok(new { Success = true });
+        var result = await _photoService.ChangePropertyPhoto(formFile, photoId, propertyId);
+        return Ok(new { ChangePropertyPhoto = result });
     }
     [HttpDelete]
     [Route("/Photo")]
-    public async Task<IActionResult> DeletePropertyPhoto()
+    public async Task<IActionResult> DeletePropertyPhotos([FromBody] List<string> photoId, string propertyId)
     {
-        return Ok(new { Success = true });
+        bool result = await _photoService.DeletePropertyPhotos(photoId, propertyId);
+        return Ok(new { Success = result });
     }
 }
