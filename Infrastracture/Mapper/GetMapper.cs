@@ -51,5 +51,19 @@ public class GetMapper : Profile
                     src.FeatureName = dest.FeatureName;
                     src.PropertyId = dest.PropertyId;
                 });
+        CreateMap<Address, AddressDto>()
+            .AfterMap((src, dest) =>
+            {
+                src.Id = dest.Id;
+                src.Country = dest.Country;
+                src.Region = dest.Region;
+                src.ZipCode = dest.ZipCode;
+                src.City = dest.City;
+                src.StreetName = dest.StreetName;
+                src.StreetNumber = dest.StreetNumber;
+                src.State = dest.State;
+                src.UserId = dest.UserId;
+                src.PropertyId = dest.PropertyId;
+            });
     }
 }

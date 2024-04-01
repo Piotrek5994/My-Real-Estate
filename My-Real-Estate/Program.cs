@@ -116,12 +116,16 @@ public class Program
                     "UpdatePropertyType" => "Update-Property-Type",
                     "CreateFeaturesDto" => "Create-Features",
                     "UpdateFeature" => "Update-Feature",
+                    "CreateAddressDto" => "Create-Address",
+                    "UpdateAddress" => "Update-Address",
                     _ => type.Name
                 };
             });
         });
         // Add Swegger Example
         builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateUserDto>();
+        builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateAddressDto>();
+
 
         // Configure JWT authentication for the application.
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

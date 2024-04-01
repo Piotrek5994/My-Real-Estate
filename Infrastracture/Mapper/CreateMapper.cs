@@ -48,5 +48,18 @@ public class CreateMapper : Profile
                 {
                     src.FeatureName = dest.FeatureName;
                 });
+        CreateMap<CreateAddressDto, CreateAddress>()
+               .AfterMap((src, dest) =>
+               {
+                   src.Country = dest.Country;
+                   src.Region = dest.Region;
+                   src.City = dest.City;
+                   src.ZipCode = dest.ZipCode;
+                   src.StreetNumber = dest.StreetNumber;
+                   src.StreetName = dest.StreetName;
+                   src.State = dest.State;
+                   src.UserId = dest.UserId;
+                   src.PropertyId = dest.PropertyId;
+               });
     }
 }
