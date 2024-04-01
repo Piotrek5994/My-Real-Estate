@@ -40,7 +40,6 @@ public class AddressRepository : IAddressRepository
         try
         {
             var collection = _context.GetCollection<Address>("Address");
-            Console.WriteLine($"Collection length: {collection.EstimatedDocumentCount}");
             var filterDefinitions = new List<FilterDefinition<Address>>
             {
                 Builders<Address>.Filter.Empty
@@ -71,7 +70,7 @@ public class AddressRepository : IAddressRepository
                 .ToListAsync();
             return address;
         }
-        catch (Exception ex)
+        catch (MongoException ex)
         {
             _log.LogError(ex, $"Error getting address : Message - {ex.Message}");
             return null;
@@ -88,7 +87,6 @@ public class AddressRepository : IAddressRepository
             if (checkProperty == null && checkUser != null)
             {
                 var filterUser = Builders<CreateAddress>.Filter.Eq("user_id", ObjectId.Parse(address.UserId));
-                Console.WriteLine(collection.CountDocuments(filterUser));
                 if (collection.CountDocuments(filterUser) != 0)
                 {
                     _log.LogWarning("Warning: User already has an address, update already existing one instead of creating a new one!");
@@ -120,10 +118,15 @@ public class AddressRepository : IAddressRepository
                 _log.LogWarning("Warning: UserId and propertyId can't be null at the same time!");
                 return "UserId and propertyId can't be null at the same time!";
             }
+            else if (checkUser != null && checkProperty != null)
+            {
+                _log.LogWarning("Warning: UserId and propertyId can't have value at the same time!");
+                return "UserId and propertyId can't have value at the same time!";
+            }
             await collection.InsertOneAsync(address);
             return address.Id;
         }
-        catch (Exception ex) 
+        catch (MongoException ex) 
         {
             _log.LogError(ex, $"Error create address, Message : {ex.Message}");
             return null;
@@ -162,7 +165,7 @@ public class AddressRepository : IAddressRepository
 
             return result.ModifiedCount > 0;
         }
-        catch (Exception ex)
+        catch (MongoException ex)
         {
             _log.LogError(ex, $"Error updating address : Message - {ex.Message}");
             return false;
@@ -178,7 +181,7 @@ public class AddressRepository : IAddressRepository
             var result = await collection.DeleteOneAsync(filter);
             return result.DeletedCount > 0;
         }
-        catch (Exception ex)
+        catch (MongoException ex)
         {
             _log.LogError(ex, $"Error deleting address : Message - {ex.Message}");
             return false;
