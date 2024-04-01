@@ -6,6 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Commend.Create;
+using Core.Filter;
+using Core.ModelDto;
+using Core.CommandDto;
+using Infrastracture.Repositories;
+using Core.Command.Update;
 
 namespace Infrastracture.Service;
 
@@ -19,4 +25,22 @@ public class AddressService : IAddressService
         _addressRepository = addressRepository;
         _mapper = mapper;
     }
+
+    public async Task<List<AddressDto>> GetAddressDto(AddressFilter filter)
+    {
+        var result = await _addressRepository.GetAddress(filter);
+        var addressDto = _mapper.Map<List<AddressDto>>(result);
+        return addressDto;
+    }
+
+    public async Task<string> CreateAddressDto(CreateAddressDto addressDto)
+    {
+        CreateAddress address = _mapper.Map<CreateAddress>(addressDto);
+        var result = await _addressRepository.CreateAddress(address);
+        return result;
+    }
+
+    public async Task<bool> UpdateAddress(UpdateAddress updateAddress , string addressId) => await _addressRepository.UpdateAddress(updateAddress, addressId);
+    public async Task<bool> DeleteAddress(string addressId) => await _addressRepository.DeleteAddress(addressId);
+
 }

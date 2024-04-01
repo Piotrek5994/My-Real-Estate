@@ -121,6 +121,8 @@ public class Program
         });
         // Add Swegger Example
         builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateUserDto>();
+        builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateAddressDto>();
+
 
         // Configure JWT authentication for the application.
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
