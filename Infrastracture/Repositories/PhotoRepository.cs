@@ -390,7 +390,7 @@ public class PhotoRepository : IPhotoRepository
             return false;
         }
     }
-    public async Task DeletePhotoPhotoHead(List<string> photoIds, string propertyId)
+    public async Task DeletePropertyPhotoHead(List<string> photoIds, string propertyId)
     {
         try
         {

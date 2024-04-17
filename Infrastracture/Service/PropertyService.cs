@@ -42,6 +42,7 @@ public class PropertyService : IPropertyService
     public async Task<bool> UpdateProperty(UpdateProperty property, string propertyId) => await _propertyRepository.UpdateProperty(property, propertyId);
     public async Task<bool> DeleteProperty(string propertyId)
     {
+        await AutomateDeleteProperty(propertyId);
         var result = await _propertyRepository.DeleteProperty(propertyId);
         return result;
     }
@@ -49,6 +50,8 @@ public class PropertyService : IPropertyService
     {
         await AutomateDeletePropertyAdress(propertyId);
         await AutomateDeletePropertyPropertyType(propertyId);
+        await AutomateDeletePropertyFeatures(propertyId);
+        await AutomateDeletePropertyPhotos(propertyId);
     }
     private async Task AutomateDeletePropertyAdress(string propertyId)
     {
@@ -71,11 +74,19 @@ public class PropertyService : IPropertyService
         var propertyPhotos = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
         foreach (var propertyPhoto in propertyPhotos)
         {
-            //propertyPhoto.Photos;
+            await _photoRepository.DeletePropertyPhotos(propertyPhoto.Photos, propertyId);
+            await _photoRepository.DeletePropertyPhotoHead(propertyPhoto.Photos, propertyId);
         }
     }
     private async Task AutomateDeletePropertyFeatures(string propertyId)
     {
-
+        var features = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+        foreach (var propertyFeatures in features)
+        {
+            foreach (var propertyFeature in propertyFeatures.Features)
+            {
+                await _featuresRepository.DeleteFeature(propertyFeature);
+            }
+        }
     }
 }

@@ -59,12 +59,12 @@ public class UserService : IUserService
     }
     private async Task AutomateDeleteUserPropertys(string id)
     {
-        var user = await _userRepository.GetUser(new UserFilter { Id = id });
-        foreach (var userProperty in user)
+        var property = await _userRepository.GetUser(new UserFilter { Id = id });
+        foreach (var userPropertes in property)
         {
-            foreach (var PropertyUserId in userProperty.Properties)
+            foreach (var userPropertyId in userPropertes.Properties)
             {
-                 await _propertyRepository.DeleteProperty(PropertyUserId);
+                await _propertyRepository.DeleteProperty(userPropertyId);
             }
         }
     }
@@ -73,7 +73,7 @@ public class UserService : IUserService
         var address = await _addressRepository.GetAddress(new AddressFilter { UserId = id });
         foreach (var userAdress in address)
         {
-             await _addressRepository.DeleteAddress(userAdress.Id);
+            await _addressRepository.DeleteAddress(userAdress.Id);
         }
     }
     private async Task AutomateDeleteUserAvatar(string id)
