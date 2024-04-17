@@ -6,22 +6,25 @@ using Core.Filter;
 using Core.IRepositories;
 using Core.ModelDto;
 using Infrastracture.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastracture.Service;
 
 public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _propertyRepository;
+    private readonly IAddressRepository _addressRepository;
+    private readonly IPropertyTypeRepository _typeRepository;
+    private readonly IPhotoRepository _photoRepository;
+    private readonly IFeaturesRepository _featuresRepository;
     private readonly IMapper _mapper;
 
-    public PropertyService(IPropertyRepository propertyRepository, IMapper mapper)
+    public PropertyService(IPropertyRepository propertyRepository, IMapper mapper, IAddressRepository addressRepository, IPropertyTypeRepository typeRepository, IPhotoRepository photoRepository, IFeaturesRepository featuresRepository)
     {
         _propertyRepository = propertyRepository;
+        _addressRepository = addressRepository;
+        _typeRepository = typeRepository;
+        _photoRepository = photoRepository;
+        _featuresRepository = featuresRepository;
         _mapper = mapper;
     }
     public async Task<List<PropertyDto>> GetPropertyDto(PropertyFilter filter)
@@ -37,5 +40,9 @@ public class PropertyService : IPropertyService
         return result;
     }
     public async Task<bool> UpdateProperty(UpdateProperty property, string propertyId) => await _propertyRepository.UpdateProperty(property, propertyId);
-    public async Task<bool> DeleteProperty(string propertyId) => await _propertyRepository.DeleteProperty(propertyId);
+    public async Task<bool> DeleteProperty(string propertyId)
+    {
+       var result = await _propertyRepository.DeleteProperty(propertyId);
+       return result;
+    }
 }

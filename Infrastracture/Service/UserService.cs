@@ -20,10 +20,10 @@ public class UserService : IUserService
     public UserService(IUserRepository userRepository, IMapper mapper, IAddressRepository addressRepository, IPhotoRepository photoRepository, IPropertyRepository propertyRepository)
     {
         _userRepository = userRepository;
-        _mapper = mapper;
         _addressRepository = addressRepository;
         _photoRepository = photoRepository;
         _propertyRepository = propertyRepository;
+        _mapper = mapper;
     }
     public async Task<List<UserDto>> GetUserDto(UserFilter filter)
     {
