@@ -190,6 +190,29 @@ public class PhotoRepository : IPhotoRepository
             _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
         }
     }
+    public async Task DeleteAvatarPhotoHead(string userId)
+    {
+        try
+        {
+            var chackUser = await _userRepository.GetUser(new UserFilter { Id = userId });
+            if (chackUser == null || !chackUser.Any())
+            {
+                _log.LogWarning("Warning: chosen user does not exist");
+            }
+
+            var collection = _context.GetCollection<Avatar>("Avatar");
+            var filter = Builders<Avatar>.Filter.Eq(a => a.UserId, userId);
+            var result = await collection.DeleteOneAsync(filter);
+        }
+        catch (BunnyCDNStorageException ex)
+        {
+            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
+        }
+    }
     public async Task<Stream> GetPropertyPhoto(string propertyId, string photoId)
     {
         try

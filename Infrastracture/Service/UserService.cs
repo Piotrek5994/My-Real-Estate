@@ -70,11 +70,15 @@ public class UserService : IUserService
     }
     private async Task AutomateDeleteUserAdress(string id)
     {
-        var address = await _addressRepository.GetAddress(new AddressFilter { Id = id });
+        var address = await _addressRepository.GetAddress(new AddressFilter { UserId = id });
         foreach (var userAdress in address)
         {
              await _addressRepository.DeleteAddress(userAdress.Id);
         }
     }
-    private async Task AutomateDeleteUserAvatar(string id) => await _photoRepository.DeleteAvatarPhoto(id);
+    private async Task AutomateDeleteUserAvatar(string id)
+    {
+        await _photoRepository.DeleteAvatarPhoto(id);
+        await _photoRepository.DeleteAvatarPhotoHead(id);
+    }
 }
