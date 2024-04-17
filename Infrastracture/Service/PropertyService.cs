@@ -13,16 +13,16 @@ public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _propertyRepository;
     private readonly IAddressRepository _addressRepository;
-    private readonly IPropertyTypeRepository _typeRepository;
+    private readonly IPropertyTypeRepository _propertyTypeRepository;
     private readonly IPhotoRepository _photoRepository;
     private readonly IFeaturesRepository _featuresRepository;
     private readonly IMapper _mapper;
 
-    public PropertyService(IPropertyRepository propertyRepository, IMapper mapper, IAddressRepository addressRepository, IPropertyTypeRepository typeRepository, IPhotoRepository photoRepository, IFeaturesRepository featuresRepository)
+    public PropertyService(IPropertyRepository propertyRepository, IMapper mapper, IAddressRepository addressRepository, IPropertyTypeRepository propertyTypeRepository, IPhotoRepository photoRepository, IFeaturesRepository featuresRepository)
     {
         _propertyRepository = propertyRepository;
         _addressRepository = addressRepository;
-        _typeRepository = typeRepository;
+        _propertyTypeRepository = propertyTypeRepository;
         _photoRepository = photoRepository;
         _featuresRepository = featuresRepository;
         _mapper = mapper;
@@ -47,15 +47,24 @@ public class PropertyService : IPropertyService
     }
     private async Task AutomateDeleteProperty(string propertyId)
     {
-
+        await AutomateDeletePropertyAdress(propertyId);
+        await AutomateDeletePropertyPropertyType(propertyId);
     }
     private async Task AutomateDeletePropertyAdress(string propertyId)
     {
-
+        var adress = await _addressRepository.GetAddress(new AddressFilter { PropertyId = propertyId });
+        foreach (var propertyAdress in adress)
+        {
+            await _addressRepository.DeleteAddress(propertyAdress.Id);
+        }
     }
     private async Task AutomateDeletePropertyPropertyType(string propertyId)
     {
-
+        var propertyType = await _propertyTypeRepository.GetPropertyType(new PropertyTypeFilter { PropertyId = propertyId });
+        foreach(var propertyPropertyType in propertyType)
+        {
+            await _propertyTypeRepository.DeletePropertyType(propertyPropertyType.Id);
+        }
     }
     private async Task AutomateDeletePropertyPhotos(string propertyId)
     {

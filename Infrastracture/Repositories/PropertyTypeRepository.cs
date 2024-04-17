@@ -118,4 +118,19 @@ public class PropertyTypeRepository : IPropertyTypeRepository
             return false;
         }
     }
+    public async Task<bool> DeletePropertyType(string propertyTypeId)
+    {
+        try
+        {
+            var collection = _context.GetCollection<PropertyType>("PropertyType");
+            var filter = Builders<PropertyType>.Filter.Eq("_id", ObjectId.Parse(propertyTypeId));
+            var result = await collection.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error deleting DeletePropertyType : Message - {ex.Message}");
+            return false;
+        }
+    }
 }
