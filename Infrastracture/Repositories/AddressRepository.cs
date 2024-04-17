@@ -76,60 +76,56 @@ public class AddressRepository : IAddressRepository
             return null;
         }
     }
-
-    public async Task<string> CreateAddress(CreateAddress address)
+    public async Task<string> CreateAddressProperty(CreateAddress address)
     {
         try
         {
             var collection = _context.GetCollection<CreateAddress>("Address");
-            var checkProperty = address.PropertyId == null ? null : await _propertyRepository.GetProperty(new PropertyFilter { Id = address.PropertyId });
-            var checkUser = address.UserId == null ? null : await _userRepository.GetUser(new UserFilter { Id = address.UserId });
-            if (checkProperty == null && checkUser != null)
+            var checkProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = address.PropertyId });
+            if (checkProperty.Count == 0)
             {
-                var filterUser = Builders<CreateAddress>.Filter.Eq("user_id", ObjectId.Parse(address.UserId));
-                if (collection.CountDocuments(filterUser) != 0)
-                {
-                    _log.LogError("Warning: User already has an address, update already existing one instead of creating a new one!");
-                    return "User already has an address, update already existing one instead of creating a new one!";
-                }
-                else if (checkUser.Count == 0)
-                {
-                    _log.LogError("Warning: Chosen user does not exist");
-                    return "The chosen user not exist";
-                }
+                _log.LogError("Warning: Chosen property does not exist");
+                return "The chosen property not exist";
             }
-            else if (checkUser == null && checkProperty != null)
+            var filterAddress = Builders<CreateAddress>.Filter.Eq("property_id", ObjectId.Parse(address.PropertyId));
+            if (collection.CountDocuments(filterAddress) != 0)
             {
-                var filterProperty = Builders<CreateAddress>.Filter.Eq("property_id", ObjectId.Parse(address.PropertyId));
-                if (collection.CountDocuments(filterProperty) != 0)
-                {
-                    _log.LogError("Warning: Property already has an address, update already existing one instead of creating a new one!");
-                    return "Property already has an address, update already existing one instead of creating a new one!";
-                }
-                else if (checkProperty.Count == 0)
-                {
-                    _log.LogError("Warning: Chosen property does not exist");
-                    return "The chosen property not exist";
-                }
-
-            }
-            else if (checkUser == null && checkProperty == null)
-            {
-                _log.LogError("Warning: UserId and propertyId can't be null at the same time!");
-                return "UserId and propertyId can't be null at the same time!";
-            }
-            else if (checkUser != null && checkProperty != null)
-            {
-                _log.LogError("Warning: UserId and propertyId can't have value at the same time!");
-                return "UserId and propertyId can't have value at the same time!";
+                _log.LogError("Warning: Property already has an address, update already existing one instead of creating a new one!");
+                return "Property already has an address, update already existing one instead of creating a new one!";
             }
             await collection.InsertOneAsync(address);
             return address.Id;
         }
-        catch (MongoException ex) 
+        catch (MongoException ex)
         {
-            _log.LogError(ex, $"Error create address, Message : {ex.Message}");
-            return null;
+            _log.LogError(ex, $"Error create property address, Message : {ex.Message}");
+            return "failed";
+        }
+    }
+    public async Task<string> CreateAddressUser(CreateAddress address)
+    {
+        try
+        {
+            var collection = _context.GetCollection<CreateAddress>("Address");
+            var checkUser = await _userRepository.GetUser(new UserFilter { Id = address.UserId });
+            if (checkUser.Count == 0)
+            {
+                _log.LogError("Warning: Chosen user does not exist");
+                return "The chosen user not exist";
+            }
+            var filterAddress = Builders<CreateAddress>.Filter.Eq("user_id", ObjectId.Parse(address.UserId));
+            if (collection.CountDocuments(filterAddress) != 0)
+            {
+                _log.LogError("Warning: User already has an address, update already existing one instead of creating a new one!");
+                return "User already has an address, update already existing one instead of creating a new one!";
+            }
+            await collection.InsertOneAsync(address);
+            return address.Id;
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error create property address, Message : {ex.Message}");
+            return "failed";
         }
     }
 

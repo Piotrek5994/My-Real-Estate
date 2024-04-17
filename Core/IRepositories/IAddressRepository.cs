@@ -13,7 +13,8 @@ namespace Core.IRepositories;
 public interface IAddressRepository
 {
     Task<List<Address>> GetAddress(AddressFilter filter);
-    Task<string> CreateAddress(CreateAddress address);
+    Task<string> CreateAddressUser(CreateAddress address);
+    Task<string> CreateAddressProperty(CreateAddress address);
     Task<bool> UpdateAddress(UpdateAddress address, string addressId);
     Task<bool> DeleteAddress(string propertyId);
 }
