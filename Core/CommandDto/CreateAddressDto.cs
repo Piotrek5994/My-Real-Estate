@@ -34,10 +34,6 @@ public class CreateAddressDto
     [JsonProperty(Required = Required.Always)]
     public string StreetNumber { get; set; }
 
-    [Required]
-    [JsonProperty(Required = Required.Always)]
-    public int State { get; set; }
-
     [JsonProperty(Required = Required.Default)]
     public string? PropertyId { get; set; } //FK
 
@@ -56,7 +52,6 @@ public class CreateAddressDto
                 City = "Kraków",
                 StreetName = "Kolorowa",
                 StreetNumber = "12",
-                State = 1,
                 PropertyId = "65f82029010a574fe727cbc4"
             };
         }

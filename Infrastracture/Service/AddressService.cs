@@ -35,8 +35,21 @@ public class AddressService : IAddressService
 
     public async Task<string> CreateAddressDto(CreateAddressDto addressDto)
     {
+        switch (addressDto.PropertyId, addressDto.UserId)
+        {
+            case (null, null):
+                return "Address can't have both UserId and PropertyId set to null";
+            case (not null,not null):
+                return "Address can't have both UserId and PropertyId";
+        }
         CreateAddress address = _mapper.Map<CreateAddress>(addressDto);
-        var result = await _addressRepository.CreateAddress(address);
+        address.State = address.PropertyId != null ? 1 : 0;
+        string result = address.State switch
+        {
+            int when address.State == 0 => await _addressRepository.CreateAddressUser(address),
+            int when address.State == 1 => await _addressRepository.CreateAddressProperty(address),
+            _ => "Invalid state!"
+        };
         return result;
     }
 

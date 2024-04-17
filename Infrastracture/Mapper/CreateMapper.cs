@@ -57,7 +57,6 @@ public class CreateMapper : Profile
                    src.ZipCode = dest.ZipCode;
                    src.StreetNumber = dest.StreetNumber;
                    src.StreetName = dest.StreetName;
-                   src.State = dest.State;
                    src.UserId = dest.UserId;
                    src.PropertyId = dest.PropertyId;
                });
