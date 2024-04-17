@@ -71,6 +71,7 @@ public class PropertyRepository : IPropertyRepository
                 _log.LogWarning("Warning: chosen user does not exist");
                 return "The chosen user not exist";
             }
+            property.Id = ObjectId.GenerateNewId().ToString();
             await collection.InsertOneAsync(property);
 
             var collectionUser = _context.GetCollection<User>("User");
@@ -98,7 +99,7 @@ public class PropertyRepository : IPropertyRepository
 
             if (!string.IsNullOrEmpty(updateProperty.Name))
                 updates.Add(Builders<Property>.Update.Set(u => u.Name, updateProperty.Name));
-            if(!string.IsNullOrEmpty(updateProperty.Description))
+            if (!string.IsNullOrEmpty(updateProperty.Description))
                 updates.Add(Builders<Property>.Update.Set(u => u.Description, updateProperty.Description));
             if (updateProperty.Price != null)
                 updates.Add(Builders<Property>.Update.Set(u => u.Price, updateProperty.Price));
@@ -108,7 +109,7 @@ public class PropertyRepository : IPropertyRepository
                 updates.Add(Builders<Property>.Update.Set(u => u.NumberOfRooms, updateProperty.NumberOfRooms));
             if (updateProperty.NumberOfPeople != null)
                 updates.Add(Builders<Property>.Update.Set(u => u.NumberOfPeople, updateProperty.NumberOfPeople));
-            if(updateProperty.RentStart != null)
+            if (updateProperty.RentStart != null)
                 updates.Add(Builders<Property>.Update.Set(u => u.RentStart, updateProperty.RentStart));
             if (updateProperty.RentEnd != null)
                 updates.Add(Builders<Property>.Update.Set(u => u.RentEnd, updateProperty.RentEnd));
@@ -125,7 +126,7 @@ public class PropertyRepository : IPropertyRepository
 
             return result.ModifiedCount > 0;
         }
-        catch(MongoException ex)
+        catch (MongoException ex)
         {
             _log.LogError(ex, $"Error updating property in MongoDB : Message {ex.Message}");
             return false;
