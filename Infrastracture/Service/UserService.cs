@@ -47,11 +47,11 @@ public class UserService : IUserService
 
     public async Task<bool> UserDelete(string id)
     {
-        await AutomateDelete(id);
+        await AutomateDeleteUser(id);
         bool result = await _userRepository.DeleteUser(id);
         return result;
     }
-    private async Task AutomateDelete(string id)
+    private async Task AutomateDeleteUser(string id)
     {
         await AutomateDeleteUserAvatar(id);
         await AutomateDeleteUserAdress(id);

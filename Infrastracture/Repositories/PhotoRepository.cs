@@ -203,14 +203,12 @@ public class PhotoRepository : IPhotoRepository
             var collection = _context.GetCollection<Avatar>("Avatar");
             var filter = Builders<Avatar>.Filter.Eq(a => a.UserId, userId);
             var result = await collection.DeleteOneAsync(filter);
-        }
-        catch (BunnyCDNStorageException ex)
-        {
-            _log.LogError(ex, $"Error with BunnyCDN Storage: {ex.Message}");
+
+            _log.LogInformation($"{result.DeletedCount} avatar have been deleted.");
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, $"Error with DeleteAvatarPhoto in MongoDb : {ex.Message}");
+            _log.LogError(ex, $"Error with DeleteAvatarPhotoHead in MongoDb : {ex.Message}");
         }
     }
     public async Task<Stream> GetPropertyPhoto(string propertyId, string photoId)
@@ -390,6 +388,28 @@ public class PhotoRepository : IPhotoRepository
         {
             _log.LogError(ex, $"Error with DeletePhotoforProperty in MongoDb :: {ex.Message}");
             return false;
+        }
+    }
+    public async Task DeletePhotoPhotoHead(List<string> photoIds, string propertyId)
+    {
+        try
+        {
+            var chackProperty = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+            if (chackProperty == null || !chackProperty.Any())
+            {
+                _log.LogWarning("Warning: chosen property does not exist");
+            }
+
+            var collection = _context.GetCollection<Photo>("Photo");
+            var filters = photoIds.Select(id => Builders<Photo>.Filter.Eq("_id", ObjectId.Parse(id))).ToList();
+            var combinedFilter = Builders<Photo>.Filter.Or(filters);
+            var result = await collection.DeleteManyAsync(combinedFilter);
+
+            _log.LogInformation($"{result.DeletedCount} photos have been deleted.");
+        }
+        catch (MongoException ex)
+        {
+            _log.LogError(ex, $"Error with DeletePhotoPhotoHead in MongoDb : {ex.Message}");
         }
     }
 }

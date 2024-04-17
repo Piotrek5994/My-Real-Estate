@@ -18,4 +18,5 @@ public interface IPhotoRepository
     Task<List<string>> UploudsPropertyPhotos(IFormFileCollection formFilesCollection, string propertyId);
     Task<List<string>> ChangesPropertyPhotos(IFormFile formFile, string photoId, string propertyId);
     Task<bool> DeletePropertyPhotos(List<string> photoIds, string propertyId);
+    Task DeletePhotoPhotoHead(List<string> photoIds, string propertyId);
 }

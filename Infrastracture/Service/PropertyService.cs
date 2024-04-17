@@ -42,7 +42,27 @@ public class PropertyService : IPropertyService
     public async Task<bool> UpdateProperty(UpdateProperty property, string propertyId) => await _propertyRepository.UpdateProperty(property, propertyId);
     public async Task<bool> DeleteProperty(string propertyId)
     {
-       var result = await _propertyRepository.DeleteProperty(propertyId);
-       return result;
+        var result = await _propertyRepository.DeleteProperty(propertyId);
+        return result;
+    }
+    private async Task AutomateDeleteProperty(string propertyId)
+    {
+
+    }
+    private async Task AutomateDeletePropertyAdress(string propertyId)
+    {
+
+    }
+    private async Task AutomateDeletePropertyPropertyType(string propertyId)
+    {
+
+    }
+    private async Task AutomateDeletePropertyPhotos(string propertyId)
+    {
+
+    }
+    private async Task AutomateDeletePropertyFeatures(string propertyId)
+    {
+
     }
 }
