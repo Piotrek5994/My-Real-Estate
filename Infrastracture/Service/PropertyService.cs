@@ -61,14 +61,18 @@ public class PropertyService : IPropertyService
     private async Task AutomateDeletePropertyPropertyType(string propertyId)
     {
         var propertyType = await _propertyTypeRepository.GetPropertyType(new PropertyTypeFilter { PropertyId = propertyId });
-        foreach(var propertyPropertyType in propertyType)
+        foreach (var propertyPropertyType in propertyType)
         {
             await _propertyTypeRepository.DeletePropertyType(propertyPropertyType.Id);
         }
     }
     private async Task AutomateDeletePropertyPhotos(string propertyId)
     {
-
+        var propertyPhotos = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
+        foreach (var propertyPhoto in propertyPhotos)
+        {
+            //propertyPhoto.Photos;
+        }
     }
     private async Task AutomateDeletePropertyFeatures(string propertyId)
     {
