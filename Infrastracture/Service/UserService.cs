@@ -4,7 +4,6 @@ using Core.Commend.Update;
 using Core.CommendDto;
 using Core.Filter;
 using Core.IRepositories;
-using Core.Model;
 using Infrastracture.ModelDto;
 using Infrastracture.Service.IService;
 
@@ -13,12 +12,18 @@ namespace Infrastracture.Service;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IAddressRepository _addressRepository;
+    private readonly IPhotoRepository _photoRepository;
+    private readonly IPropertyRepository _propertyRepository;
     private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IMapper mapper, IAddressRepository addressRepository, IPhotoRepository photoRepository, IPropertyRepository propertyRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _addressRepository = addressRepository;
+        _photoRepository = photoRepository;
+        _propertyRepository = propertyRepository;
     }
     public async Task<List<UserDto>> GetUserDto(UserFilter filter)
     {
@@ -38,7 +43,38 @@ public class UserService : IUserService
 
         return result;
     }
-    public async Task<bool> UserUpdate(UpdateUser user,string userId) => await _userRepository.UpdateUser(user, userId);
+    public async Task<bool> UserUpdate(UpdateUser user, string userId) => await _userRepository.UpdateUser(user, userId);
 
-    public async Task<bool> UserDelete(string id) => await _userRepository.DeleteUser(id);
+    public async Task<bool> UserDelete(string id)
+    {
+        await AutomateDelete(id);
+        bool result = await _userRepository.DeleteUser(id);
+        return result;
+    }
+    private async Task AutomateDelete(string id)
+    {
+        await AutomateDeleteUserAvatar(id);
+        await AutomateDeleteUserAdress(id);
+        await AutomateDeleteUserPropertys(id);
+    }
+    private async Task AutomateDeleteUserPropertys(string id)
+    {
+        var user = await _userRepository.GetUser(new UserFilter { Id = id });
+        foreach (var userProperty in user)
+        {
+            foreach (var PropertyUserId in userProperty.Properties)
+            {
+                 await _propertyRepository.DeleteProperty(PropertyUserId);
+            }
+        }
+    }
+    private async Task AutomateDeleteUserAdress(string id)
+    {
+        var address = await _addressRepository.GetAddress(new AddressFilter { Id = id });
+        foreach (var userAdress in address)
+        {
+             await _addressRepository.DeleteAddress(userAdress.Id);
+        }
+    }
+    private async Task AutomateDeleteUserAvatar(string id) => await _photoRepository.DeleteAvatarPhoto(id);
 }
