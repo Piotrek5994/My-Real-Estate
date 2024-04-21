@@ -19,6 +19,10 @@ public class PhotoController : Controller
     public async Task<IActionResult> GetAvatarPhoto(string userId)
     {
         var result = await _photoService.GetAvatar(userId);
+        if (result == null)
+        {
+            return NotFound(new { Message = "The user does not exist or does not have an avatar" });
+        }
         return Ok(result);
     }
 

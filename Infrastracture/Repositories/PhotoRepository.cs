@@ -41,9 +41,10 @@ public class PhotoRepository : IPhotoRepository
 
             var collection = _context.GetCollection<Avatar>("Avatar");
             var userFilter = await collection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
-            if (userFilter == null)
+            if (userFilter.AvatarScr == null)
             {
                 _log.LogWarning("Warning: user does not have an avatar");
+                return null;
             }
 
             var stream = await _bunnyContext.DownloadObjectAsStreamAsync(userFilter.AvatarScr);
