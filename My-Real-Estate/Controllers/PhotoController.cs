@@ -63,6 +63,10 @@ public class PhotoController : Controller
     public async Task<IActionResult> GetPropertyPhoto(string propertyId, string photoId)
     {
         var photo = await _photoService.GetPropertyPhotos(propertyId, photoId);
+        if (photo == null)
+        {
+            return NotFound(new { Message = "The property does not exist or does not have an photo" });
+        }
         return Ok(photo);
     }
     [HttpPost]
