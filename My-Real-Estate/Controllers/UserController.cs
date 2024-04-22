@@ -48,7 +48,7 @@ public class UserController : Controller
         {
             return BadRequest(new { Message = "User update fail" });
         }
-        return Ok(new { result = update });
+        return Ok(new { Result = update });
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteUser(string userId)

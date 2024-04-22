@@ -1,3 +1,4 @@
+using Core.Commend.Update;
 using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.ModelDto;
@@ -36,8 +37,8 @@ public class UserControllerTest
         var deserializedResult = JsonSerializer.Deserialize<Dictionary<string, List<UserDto>>>(json);
 
         Assert.NotNull(deserializedResult);
-        Assert.True(deserializedResult.ContainsKey("result"));
-        var users = deserializedResult["result"];
+        Assert.True(deserializedResult.ContainsKey("Result"));
+        var users = deserializedResult["Result"];
         Assert.NotNull(users);
         Assert.Single(users);
     }
@@ -60,7 +61,7 @@ public class UserControllerTest
         var resultValue = JsonSerializer.Deserialize<Dictionary<string, string>>(JsonSerializer.Serialize(notFoundResult.Value));
         Assert.NotNull(resultValue);
         string message;
-        resultValue.TryGetValue("message", out message);
+        resultValue.TryGetValue("Message", out message);
         Assert.Equal("User or Users don't found.", message);
     }
     [Fact]
@@ -162,7 +163,7 @@ public class UserControllerTest
         var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
         Assert.NotNull(dictionary);
         string message;
-        dictionary.TryGetValue("message", out message);
+        dictionary.TryGetValue("Message", out message);
         Assert.Equal("Registration failed.", message);
     }
     [Fact]
@@ -196,8 +197,68 @@ public class UserControllerTest
         var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
         Assert.NotNull(dictionary);
         string message;
-        dictionary.TryGetValue("message", out message);
+        dictionary.TryGetValue("Message", out message);
         Assert.Equal("Registration failed.", message);
+    }
+    [Fact]
+    public async Task UpdateUser_ReturnsBadRequest_OnFailedUpdate()
+    {
+
+        // Arrange
+        var updateUser = new UpdateUser
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+        string userId = "some-user-id";
+        _userServiceMock.Setup(s => s.UserUpdate(updateUser, userId)).ReturnsAsync(false);
+
+        // Act
+        var result = await _userControllerMock.UpdateUser(updateUser, userId);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string,string>>(json);
+        string message;
+        dictionary.TryGetValue("Message",out message);
+        Assert.Equal("User update fail", message);
+    }
+    [Fact]
+    public async Task UpdateUser_ReturnsOkResult_OnSuccessfulUpdate()
+    {
+        // Arrange
+        var updateUser = new UpdateUser
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Gender = "Male",
+            PESEL = "12345678901",
+            Email = "john.doe@example.com",
+            Password = "Password1234!",
+            PhoneNumber = "123456789"
+        };
+
+        string userId = "some-user-id";
+        _userServiceMock.Setup(s => s.UserUpdate(updateUser, userId)).ReturnsAsync(true);
+
+        // Act
+        var result = await _userControllerMock.UpdateUser(updateUser, userId);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+        bool message;
+        dictionary.TryGetValue("Result", out message);
+        Assert.True(message);
     }
 }
 
