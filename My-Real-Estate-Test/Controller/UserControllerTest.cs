@@ -260,5 +260,47 @@ public class UserControllerTest
         dictionary.TryGetValue("Result", out message);
         Assert.True(message);
     }
+    [Fact]
+    public async Task DeleteUser_ReturnsOkResult_OnSuccessDelete()
+    {
+        // Arrange
+        string userId = "some-user-Id";
+        _userServiceMock.Setup(s => s.UserDelete(userId)).ReturnsAsync(true);
+
+        // Act
+        var result = await _userControllerMock.DeleteUser(userId);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+
+        // Check that the response includes the expected result of the deletion
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Result"));
+        Assert.True(dictionary["Result"]);
+    }
+    [Fact]
+    public async Task DeleteUser_ReturnsBadRequestResult_OnFaildDelete()
+    {
+        // Arrange
+        string userId = "some-user-Id";
+        _userServiceMock.Setup(s => s.UserDelete(userId)).ReturnsAsync(false);
+
+        // Act
+        var result = await _userControllerMock.DeleteUser(userId);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+
+        // Check that the response includes the expected error message
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Message"));
+        Assert.Equal("User does not exist.", dictionary["Message"]);
+    }
 }
 
