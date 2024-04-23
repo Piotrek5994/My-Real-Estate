@@ -9,5 +9,13 @@ using My_Real_Estate.Controllers;
 using System.Text.Json;
 public class PhotoControllerTest
 {
+    private readonly Mock<IPhotoService> _photoServiceMock;
+    private readonly PhotoController _photoController;
+
+    public PhotoControllerTest(Mock<IPhotoService> photoServiceMock, PhotoController photoController)
+    {
+        _photoServiceMock = new Mock<IPhotoService>();
+        _photoController = new PhotoController(_photoServiceMock.Object);
+    }
 }
 
