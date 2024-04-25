@@ -12,7 +12,7 @@ public class PhotoControllerTest
     private readonly Mock<IPhotoService> _photoServiceMock;
     private readonly PhotoController _photoController;
 
-    public PhotoControllerTest(Mock<IPhotoService> photoServiceMock, PhotoController photoController)
+    public PhotoControllerTest()
     {
         _photoServiceMock = new Mock<IPhotoService>();
         _photoController = new PhotoController(_photoServiceMock.Object);

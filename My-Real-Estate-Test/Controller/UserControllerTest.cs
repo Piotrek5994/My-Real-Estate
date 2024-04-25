@@ -20,9 +20,9 @@ public class UserControllerTest
     [Fact]
     public async Task GetUser_ReturnsJsonResult_WithUser()
     {
-        // Arrange specific to this test
+        // Arrange
         var userFilter = new UserFilter();
-        var expectedUser = new UserDto(); // Populate as needed for comparison
+        var expectedUser = new UserDto();
         _userServiceMock.Setup(s => s.GetUserDto(It.IsAny<UserFilter>()))
                         .ReturnsAsync(new List<UserDto> { expectedUser });
 

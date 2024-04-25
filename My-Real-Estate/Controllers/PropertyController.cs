@@ -38,9 +38,9 @@ public class PropertyController : Controller
         return Ok(new { PropertyId = propertyId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateProperty([FromBody] UpdateProperty property, string featuresId)
+    public async Task<IActionResult> UpdateProperty([FromBody] UpdateProperty property, string propertyId)
     {
-        bool update = await _propertyService.UpdateProperty(property, featuresId);
+        bool update = await _propertyService.UpdateProperty(property, propertyId);
         if (!update)
         {
             return BadRequest(new { Message = "Property update fail" });

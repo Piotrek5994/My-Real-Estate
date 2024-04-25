@@ -12,7 +12,7 @@ public class PropertyTypeControllerTest
     private readonly Mock<IPropertyTypeService> _propertyTypeServiceMock;
     private readonly PropertyTypeController _propertyTypeController;
 
-    public PropertyTypeControllerTest(Mock<IPropertyTypeService> propertyTypeServiceMock, PropertyTypeController propertyTypeController)
+    public PropertyTypeControllerTest()
     {
         _propertyTypeServiceMock = new Mock<IPropertyTypeService>();
         _propertyTypeController = new PropertyTypeController(_propertyTypeServiceMock.Object);

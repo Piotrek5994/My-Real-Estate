@@ -12,7 +12,7 @@ public class FeaturesControllerTest
     private readonly Mock<IFeaturesService> _featuresServiceMock;
     private readonly FeaturesController _featuresController;
 
-    public FeaturesControllerTest(Mock<IFeaturesService> featuresServiceMock, FeaturesController featuresController)
+    public FeaturesControllerTest()
     {
         _featuresServiceMock = new Mock<IFeaturesService>();
         _featuresController = new FeaturesController(_featuresServiceMock.Object);
