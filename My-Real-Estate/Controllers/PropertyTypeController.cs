@@ -24,7 +24,7 @@ public class PropertyTypeController : Controller
         {
             return Json(new { Result = propertyType });
         }
-        return NotFound(new { Message = "PropertyType don't found" });
+        return NotFound(new { Message = "PropertyType don't found." });
     }
     [HttpPost]
     public async Task<IActionResult> CreatePropertyType([FromBody] CreatePropertyTypeDto propertyTypeDto, string propertyId)
@@ -32,7 +32,7 @@ public class PropertyTypeController : Controller
         var propertyTypeId = await _propertyTypeService.CreatePropertyTypeDto(propertyTypeDto, propertyId);
         if (propertyTypeId == null)
         {
-            return BadRequest(new { Message = "Create property type fail" });
+            return BadRequest(new { Message = "Create property type fail." });
         }
         return Ok(new { PropertyTypeId = propertyTypeId });
     }
@@ -40,6 +40,10 @@ public class PropertyTypeController : Controller
     public async Task<IActionResult> UpdatePropertyType([FromBody]UpdatePropertyType propertyType, string propertyId)
     {
         bool propertyTypeUpdate = await _propertyTypeService.UpdatePropertyType(propertyType, propertyId);
+        if (!propertyTypeUpdate)
+        {
+            return BadRequest(new {Message = "Update property type fail."});
+        }
         return Ok(new { PropertyTypeUpdate = propertyTypeUpdate });
     }
 }

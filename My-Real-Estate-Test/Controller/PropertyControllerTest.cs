@@ -19,6 +19,7 @@ public class PropertyControllerTest
         _propertyServiceMock = new Mock<IPropertyService>();
         _propertyController = new PropertyController(_propertyServiceMock.Object);
     }
+
     [Fact]
     public async Task GetProperty_ReturnJsonResult()
     {

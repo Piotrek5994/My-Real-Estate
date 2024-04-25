@@ -17,6 +17,7 @@ public class UserControllerTest
         _userServiceMock = new Mock<IUserService>();
         _userControllerMock = new UserController(_userServiceMock.Object);
     }
+
     [Fact]
     public async Task GetUser_ReturnsJsonResult_WithUser()
     {
