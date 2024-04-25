@@ -17,7 +17,8 @@
 ## Database :performing_arts:
 - MongoDb
 ## Database Diagram :bomb:
-![My-Real-Estate ](https://github.com/Piotrek5994/My-Real-Estate/assets/93675867/a66c03d7-2de9-47c2-b5f5-311ffa24fb3c)
+![My-Real-Estate](https://github.com/Piotrek5994/My-Real-Estate/assets/93675867/0a9aada6-5b79-47ca-b29c-3dccbcd3b483)
+
 
 
 ## About Program :ocean:
