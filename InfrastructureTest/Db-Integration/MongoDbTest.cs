@@ -30,7 +30,6 @@ namespace Infrastructure_Test.Db
             {
                 "Address",
                 "Avatar",
-                "Features",
                 "Payment",
                 "Photo",
                 "Property",
