@@ -1,8 +1,4 @@
-﻿using Core.Command.Update;
-using Core.CommandDto;
-using Core.Filter;
-using Infrastracture.Service;
-using Infrastracture.Service.IService;
+﻿using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace My_Real_Estate.Controllers;
@@ -17,18 +13,8 @@ public class FeaturesController : Controller
     {
         _featuresService = featuresService;
     }
-    [HttpGet]
-    public async Task<IActionResult> GetFeatures([FromQuery] FeaturesFilter filter)
-    {
-        var features = await _featuresService.GetFeaturesDto(filter);
-        if (features == null)
-        {
-            return NotFound(new { Message = "Feature of Features don't found" });
-        }
-        return Json(new { Result = features });
-    }
     [HttpPost]
-    public async Task<IActionResult> CreateFeatures([FromBody] List<CreateFeaturesDto> featuresDto, string propertyId)
+    public async Task<IActionResult> CreateFeatures([FromBody] List<string> featuresDto, string propertyId)
     {
         var featuresId = await _featuresService.CreateFeaturesDto(featuresDto, propertyId);
 
@@ -40,9 +26,9 @@ public class FeaturesController : Controller
         return Ok(new { FeaturesId = featuresId });
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateFeatures([FromBody]UpdateFeature updateFeature, string featuresId)
+    public async Task<IActionResult> UpdateFeatures([FromQuery] string updateFeature, int featuresId, string propertyId)
     {
-        bool update = await _featuresService.UpdateFeatures(updateFeature, featuresId);
+        bool update = await _featuresService.UpdateFeatures(updateFeature, featuresId, propertyId);
         if (!update)
         {
             return BadRequest(new { Message = "Features update fail" });
@@ -50,9 +36,9 @@ public class FeaturesController : Controller
         return Ok(new { Result = update });
     }
     [HttpDelete]
-    public async Task<IActionResult> DeleteFeatures(string featuresId)
+    public async Task<IActionResult> DeleteFeatures([FromQuery] int featuresId, string propertyId)
     {
-        bool delete = await _featuresService.DeleteFeatures(featuresId);
+        bool delete = await _featuresService.DeleteFeatures(featuresId, propertyId);
         if (!delete)
         {
             return BadRequest(new { Message = "Features does not exist." });

@@ -50,7 +50,6 @@ public class PropertyService : IPropertyService
     {
         await AutomateDeletePropertyAdress(propertyId);
         await AutomateDeletePropertyPropertyType(propertyId);
-        await AutomateDeletePropertyFeatures(propertyId);
         await AutomateDeletePropertyPhotos(propertyId);
     }
     private async Task AutomateDeletePropertyAdress(string propertyId)
@@ -76,17 +75,6 @@ public class PropertyService : IPropertyService
         {
             await _photoRepository.DeletePropertyPhotos(propertyPhoto.Photos, propertyId);
             await _photoRepository.DeletePropertyPhotoHead(propertyPhoto.Photos, propertyId);
-        }
-    }
-    private async Task AutomateDeletePropertyFeatures(string propertyId)
-    {
-        var features = await _propertyRepository.GetProperty(new PropertyFilter { Id = propertyId });
-        foreach (var propertyFeatures in features)
-        {
-            foreach (var propertyFeature in propertyFeatures.Features)
-            {
-                await _featuresRepository.DeleteFeature(propertyFeature);
-            }
         }
     }
 }

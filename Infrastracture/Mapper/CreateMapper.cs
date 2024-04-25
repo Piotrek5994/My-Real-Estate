@@ -43,11 +43,6 @@ public class CreateMapper : Profile
                 {
                     src.PropertyTypeName = dest.PropertyTypeName;
                 });
-        CreateMap<CreateFeaturesDto, CreateFeatures>()
-                .AfterMap((src, dest) =>
-                {
-                    src.FeatureName = dest.FeatureName;
-                });
         CreateMap<CreateAddressDto, CreateAddress>()
                .AfterMap((src, dest) =>
                {

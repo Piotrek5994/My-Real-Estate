@@ -1,7 +1,4 @@
-﻿using Core.Command.Update;
-using Core.Commend.Create;
-using Core.Commend.Update;
-using Core.Filter;
+﻿using Core.Filter;
 using Core.IRepositories;
 using Core.Model;
 using Infrastructure.Db;
@@ -23,44 +20,7 @@ public class FeaturesRepository : IFeaturesRepository
         _log = log;
         _propertyRepository = propertyRepository;
     }
-    public async Task<List<Features>> GetFeatures(FeaturesFilter filter)
-    {
-        try
-        {
-            var collection = _context.GetCollection<Features>("Features");
-            var filterDefinitions = new List<FilterDefinition<Features>>();
-            filterDefinitions.Add(Builders<Features>.Filter.Empty);
-
-            if (!string.IsNullOrEmpty(filter.Id))
-            {
-                filterDefinitions.Add(Builders<Features>.Filter.Eq("_id", ObjectId.Parse(filter.Id)));
-            }
-            if (!string.IsNullOrEmpty(filter.PropertyId))
-            {
-                filterDefinitions.Add(Builders<Features>.Filter.Eq("property_id", ObjectId.Parse(filter.PropertyId)));
-            }
-
-            var combinedFilter = Builders<Features>.Filter.And(filterDefinitions);
-
-            var sortDefinition = filter.SortDescending ?
-                                 Builders<Features>.Sort.Descending(filter.SortBy) :
-                                 Builders<Features>.Sort.Ascending(filter.SortBy);
-
-            var properties = await collection.Find(combinedFilter)
-                                             .Sort(sortDefinition)
-                                             .Skip((filter.Page - 1) * filter.Limit)
-                                             .Limit(filter.Limit)
-                                             .ToListAsync();
-
-            return properties;
-        }
-        catch (MongoException ex)
-        {
-            _log.LogError(ex, $"Error getting feature(s) type : Message - {ex.Message}");
-            return null;
-        }
-    }
-    public async Task<List<string>> CreateFeatures(List<CreateFeatures> features, string propertyId)
+    public async Task<List<string>> CreateFeatures(List<string> features, string propertyId)
     {
         var resultMessages = new List<string>();
         try
@@ -74,25 +34,13 @@ public class FeaturesRepository : IFeaturesRepository
                 return resultMessages;
             }
 
-            foreach (var feature in features)
-            {
-                feature.Id = ObjectId.GenerateNewId().ToString();
-                feature.PropertyId = propertyId;
-            }
-
-            var collection = _context.GetCollection<CreateFeatures>("Features");
-
-            await collection.InsertManyAsync(features);
-
-
-            var createdFeatures = features.Select(feature => feature.Id).ToList();
-
             var collectionUser = _context.GetCollection<Property>("Property");
             var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
-            var update = Builders<Property>.Update.AddToSetEach(p => p.Features, createdFeatures);
+            var update = Builders<Property>.Update.AddToSetEach(p => p.Features, features);
             await collectionUser.UpdateOneAsync(filter, update);
 
-            return createdFeatures;
+            resultMessages.Add("Features added successfully.");
+            return resultMessages;
         }
         catch (MongoException ex)
         {
@@ -101,55 +49,60 @@ public class FeaturesRepository : IFeaturesRepository
             return resultMessages;
         }
     }
-    public async Task<bool> UpdateFeature(UpdateFeature updatefeature, string featuresId)
+    public async Task<bool> UpdateFeature(string updatefeature, int featuresId, string propertyId)
     {
         try
         {
-            var collection = _context.GetCollection<Features>("Features");
-            var filter = Builders<Features>.Filter.Eq("_id", ObjectId.Parse(featuresId));
+            var collection = _context.GetCollection<Property>("Property");
+            var filter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
 
-            if (!string.IsNullOrEmpty(updatefeature.FeatureName))
+            var update = Builders<Property>.Update.Set($"Features.{featuresId}", updatefeature);
+            var result = await collection.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount > 0)
             {
-                var updates = Builders<Features>.Update.Set(u => u.FeatureName, updatefeature.FeatureName);
-                var result = await collection.UpdateOneAsync(filter, updates);
-                return result.ModifiedCount > 0;
+                return true;
             }
-            _log.LogError($"Error update feature(s) type feature name is null or empty");
-            return false;
+            else
+            {
+                _log.LogWarning("No update made, check the propertyId and feature index.");
+                return false;
+            }
 
         }
         catch (MongoException ex)
         {
-            _log.LogError(ex, $"Error create feature(s) type : Message - {ex.Message}");
+            _log.LogError(ex, $"Error update feature type : Message - {ex.Message}");
             return false;
         }
     }
-    public async Task<bool> DeleteFeature(string featureId)
+    public async Task<bool> DeleteFeature(int featureId, string propertyId)
     {
         try
         {
-            var collection = _context.GetCollection<Features>("Features");
-            var featureFilter = Builders<Features>.Filter.Eq("_id", ObjectId.Parse(featureId));
-            var feature = await collection.Find(featureFilter).FirstOrDefaultAsync();
+            var propertyCollection = _context.GetCollection<Property>("Property");
+            var propertyFilter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
+            var property = await propertyCollection.Find(propertyFilter).FirstOrDefaultAsync();
 
-            if (feature == null)
+            if (property != null && property.Features.Count > featureId)
             {
-                _log.LogWarning($"Feature with ID {featureId} not found.");
+                property.Features.RemoveAt(featureId);
+                var replaceResult = await propertyCollection.ReplaceOneAsync(propertyFilter, property);
+                if (replaceResult.ModifiedCount > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    _log.LogWarning("No update made, check the propertyId and index.");
+                    return false;
+                }
+            }
+            else
+            {
+                _log.LogWarning($"No property found or index {featureId} out of range.");
                 return false;
             }
-
-            string propertyId = feature.PropertyId;
-            var result = await collection.DeleteOneAsync(featureFilter);
-
-            if (result.DeletedCount > 0)
-            {
-                var propertyCollection = _context.GetCollection<Property>("Property");
-                var propertyFilter = Builders<Property>.Filter.Eq("_id", ObjectId.Parse(propertyId));
-                var update = Builders<Property>.Update.Pull(p => p.Features, featureId);
-                var updateResult = await propertyCollection.UpdateOneAsync(propertyFilter, update);
-            }
-
-            return result.DeletedCount > 0;
         }
         catch (MongoException ex)
         {
@@ -157,5 +110,4 @@ public class FeaturesRepository : IFeaturesRepository
             return false;
         }
     }
-
 }

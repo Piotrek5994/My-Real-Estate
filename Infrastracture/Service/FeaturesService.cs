@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
-using Core.Command.Update;
-using Core.CommandDto;
-using Core.Commend.Create;
-using Core.Filter;
 using Core.IRepositories;
-using Core.ModelDto;
 using Infrastracture.Service.IService;
 
 namespace Infrastracture.Service;
@@ -19,19 +14,12 @@ public class FeaturesService : IFeaturesService
         _featuresRepository = featuresRepository;
         _mapper = mapper;
     }
-    public async Task<List<FeaturesDto>> GetFeaturesDto(FeaturesFilter filter)
+    public async Task<List<string>> CreateFeaturesDto(List<string> featuresDto, string propertyId)
     {
-        var result = await _featuresRepository.GetFeatures(filter);
-        var propertyDto = _mapper.Map<List<FeaturesDto>>(result);
-        return propertyDto;
-    }
-    public async Task<List<string>> CreateFeaturesDto(List<CreateFeaturesDto> featuresDto, string propertyId)
-    {
-        List<CreateFeatures> features = _mapper.Map<List<CreateFeatures>>(featuresDto);
-        var result = await _featuresRepository.CreateFeatures(features, propertyId);
+        var result = await _featuresRepository.CreateFeatures(featuresDto, propertyId);
         return result;
     }
-    public async Task<bool> UpdateFeatures(UpdateFeature updateFeature, string featuresId) => await _featuresRepository.UpdateFeature(updateFeature, featuresId);
+    public async Task<bool> UpdateFeatures(string updatefeature, int featuresId, string propertyId) => await _featuresRepository.UpdateFeature(updatefeature, featuresId, propertyId);
 
-    public async Task<bool> DeleteFeatures(string featuresId) => await _featuresRepository.DeleteFeature(featuresId);
+    public async Task<bool> DeleteFeatures(int featureId, string propertyId) => await _featuresRepository.DeleteFeature(featureId, propertyId);
 }

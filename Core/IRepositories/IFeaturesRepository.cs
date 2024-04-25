@@ -7,8 +7,7 @@ namespace Core.IRepositories;
 
 public interface IFeaturesRepository
 {
-    Task<List<Features>> GetFeatures(FeaturesFilter filter);
-    Task<List<string>> CreateFeatures(List<CreateFeatures> features, string propertyId);
-    Task<bool> UpdateFeature(UpdateFeature updatefeature, string featuresId);
-    Task<bool> DeleteFeature(string featureId);
+    Task<List<string>> CreateFeatures(List<string> features, string propertyId);
+    Task<bool> UpdateFeature(string updatefeature, int featuresId, string propertyId);
+    Task<bool> DeleteFeature(int featureId, string propertyId);
 }
