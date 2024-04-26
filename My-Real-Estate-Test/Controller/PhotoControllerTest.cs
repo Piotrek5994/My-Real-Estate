@@ -23,15 +23,19 @@ public class PhotoControllerTest
     {
         //Arrange
         string userId = "Some-User-Id";
-        Stream bytePhoto = new MemoryStream(Encoding.UTF8.GetBytes("Some-Photo"));
+        byte[] photoBytes = Encoding.UTF8.GetBytes("Some-Photo");
+        Stream bytePhoto = new MemoryStream(photoBytes);
         _photoServiceMock.Setup(s => s.GetAvatar(userId))
                          .ReturnsAsync(bytePhoto);
 
-        //Act
+        // Act
         var controller = new PhotoController(_photoServiceMock.Object);
         var result = await controller.GetAvatarPhoto(userId);
 
         //Assert
+        var fileResult = Assert.IsType<FileContentResult>(result);
+        string resultContent = Encoding.UTF8.GetString(fileResult.FileContents); 
+        Assert.Equal("Some-Photo", resultContent);
     }
     [Fact]
     public async Task GetAvatarPhoto_ReturnBadRequestResult_WithMessage()
@@ -47,6 +51,7 @@ public class PhotoControllerTest
         var result = await controller.GetAvatarPhoto(userId);
 
         //Assert
+        var badRequestResult = Assert.IsType<BadRequestResult>(result);
     }
     [Fact]
     public async Task CreateAvatarPhoto_ReturnOkResult()
