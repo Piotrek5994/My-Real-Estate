@@ -104,19 +104,72 @@ public class PhotoControllerTest
     public async Task CreateAvatarPhoto_ReturnBadRequest_WithMessage_WhenUserIdIsNullOrEmpty()
     {
         //Arrange
+        string userId = "";
+        string errorMessage = "User ID is required.";
+        var formFile = new Mock<IFormFile>();
+        var phisicalFile = new FileInfo("test.jpg");
+        var memory = new MemoryStream();
+        var writer = new StreamWriter(memory);
+        writer.Write("Dumy immage data");
+        writer.Flush();
+        memory.Position = 0;
+        var fileName = phisicalFile.Name;
+        formFile.Setup(_ => _.FileName).Returns(fileName);
+        formFile.Setup(_ => _.Length).Returns(memory.Length);
+        formFile.Setup(_ => _.OpenReadStream()).Returns(memory);
+        _photoServiceMock.Setup(s => s.UploadPhoto(It.IsAny<IFormFile>(), userId, "Avatar"))
+                                .ReturnsAsync(errorMessage);
 
         //Act
+        var collection = new PhotoController(_photoServiceMock.Object);
+        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
+        var badRequestReslt = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestReslt.Value);
+        var json = JsonSerializer.Serialize(badRequestReslt.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal(errorMessage, message);
     }
     [Fact]
     public async Task CreateAvatarPhoto_ReturnBadRequest_WithMessage_WhenResultIsNull()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        string resultValue = null;
+        string errorMessage = "Error loading image.";
+        var formFile = new Mock<IFormFile>();
+        var phisicalFile = new FileInfo("test.jpg");
+        var memory = new MemoryStream();
+        var writer = new StreamWriter(memory);
+        writer.Write("Dumy immage data");
+        writer.Flush();
+        memory.Position = 0;
+        var fileName = phisicalFile.Name;
+        formFile.Setup(_ => _.FileName).Returns(fileName);
+        formFile.Setup(_ => _.Length).Returns(memory.Length);
+        formFile.Setup(_ => _.OpenReadStream()).Returns(memory);
+        _photoServiceMock.Setup(s => s.UploadPhoto(It.IsAny<IFormFile>(), userId, "Avatar"))
+                                .ReturnsAsync(resultValue);
 
         //Act
+        var collection = new PhotoController(_photoServiceMock.Object);
+        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
+        var badRequestReslt = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestReslt.Value);
+        var json = JsonSerializer.Serialize(badRequestReslt.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal(errorMessage, message);
     }
     [Fact]
     public async Task UpdateAvatarPhoto_ReturnOkResult()
