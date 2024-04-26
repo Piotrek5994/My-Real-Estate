@@ -40,7 +40,7 @@ public class PhotoController : Controller
     [Route("/Avatar")]
     public async Task<IActionResult> UploadAvatarPhoto(IFormFile formFile, string userId)
     {
-        if (userId == null || string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(userId))
         {
             return BadRequest(new { Message = "User ID is required." });
         }
