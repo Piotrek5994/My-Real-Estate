@@ -3,6 +3,7 @@ using Core.CommendDto;
 using Core.Filter;
 using Infrastracture.ModelDto;
 using Infrastracture.Service.IService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using My_Real_Estate.Controllers;
@@ -44,6 +45,7 @@ public class PhotoControllerTest
     {
         //Arrange
         string userId = "Some-User-Id";
+        string errorMessage = "The user does not exist or does not have an avatar.";
         Stream bytePhoto = null;
         _photoServiceMock.Setup(s => s.GetAvatar(userId))
                          .ReturnsAsync(bytePhoto);
@@ -53,16 +55,50 @@ public class PhotoControllerTest
         var result = await controller.GetAvatarPhoto(userId);
 
         //Assert
-        var badRequestResult = Assert.IsType<BadRequestResult>(result);
+        var badRequestResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal(errorMessage, message);
     }
     [Fact]
     public async Task CreateAvatarPhoto_ReturnOkResult()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        string collectionId = "Collection-Id";
+        var formFile = new Mock<IFormFile>();
+        var phisicalFile = new FileInfo("test.jpg");
+        var memory = new MemoryStream();
+        var writer = new StreamWriter(memory);
+        writer.Write("Dumy immage data");
+        writer.Flush();
+        memory.Position = 0;
+        var fileName = phisicalFile.Name;
+        formFile.Setup(_ => _.FileName).Returns(fileName);
+        formFile.Setup(_ => _.Length).Returns(memory.Length);
+        formFile.Setup(_ => _.OpenReadStream()).Returns(memory);
+        _photoServiceMock.Setup(s => s.UploadPhoto(It.IsAny<IFormFile>(),userId, "Avatar"))
+                                .ReturnsAsync(collectionId);
 
         //Act
+        var collection = new PhotoController(_photoServiceMock.Object);
+        var result = await collection.UploadAvatarPhoto(formFile.Object,userId);
 
         //Assert
+        var okReslt = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okReslt.Value);
+        var json = JsonSerializer.Serialize(okReslt.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("AvatarId"));
+        string message;
+        dictionary.TryGetValue("AvatarId", out message);
+        Assert.Equal(collectionId, message);
     }
     [Fact]
     public async Task CreateAvatarPhoto_ReturnBadRequest_WithMessage_WhenUserIdIsNullOrEmpty()

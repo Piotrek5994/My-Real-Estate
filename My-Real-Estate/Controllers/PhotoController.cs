@@ -21,7 +21,7 @@ public class PhotoController : Controller
         var streamResult = await _photoService.GetAvatar(userId);
         if (streamResult == null)
         {
-            return NotFound(new { Message = "The user does not exist or does not have an avatar" });
+            return NotFound(new { Message = "The user does not exist or does not have an avatar." });
         }
         using (var memoryStream = new MemoryStream())
         {
@@ -72,12 +72,22 @@ public class PhotoController : Controller
     [Produces("image/jpeg", "image/png")]
     public async Task<IActionResult> GetPropertyPhoto(string propertyId, string photoId)
     {
-        var photo = await _photoService.GetPropertyPhotos(propertyId, photoId);
-        if (photo == null)
+        var streamPhoto = await _photoService.GetPropertyPhotos(propertyId, photoId);
+        if (streamPhoto == null)
         {
-            return NotFound(new { Message = "The property does not exist or does not have an photo" });
+            return NotFound(new { Message = "The property does not exist or does not have an photo." });
         }
-        return Ok(photo);
+        using (var memoryStream = new MemoryStream())
+        {
+            await streamPhoto.CopyToAsync(memoryStream);
+            byte[] photoBytes = memoryStream.ToArray();
+            string contentType = "image/jpeg";
+            if (photoBytes.Length > 0 && photoBytes[0] == 0x89 && photoBytes[1] == 0x50)
+            {
+                contentType = "image/png";
+            }
+            return new FileContentResult(photoBytes, contentType);
+        }
     }
     [HttpPost]
     [Route("/Photo")]
