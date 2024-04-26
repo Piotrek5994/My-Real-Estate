@@ -6,6 +6,7 @@ using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using My_Real_Estate.Controllers;
+using System.Text;
 using System.Text.Json;
 public class PhotoControllerTest
 {
@@ -21,8 +22,14 @@ public class PhotoControllerTest
     public async Task GetAvatarPhoto_ReturnOkResult()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        Stream bytePhoto = new MemoryStream(Encoding.UTF8.GetBytes("Some-Photo"));
+        _photoServiceMock.Setup(s => s.GetAvatar(userId))
+                         .ReturnsAsync(bytePhoto);
 
         //Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.GetAvatarPhoto(userId);
 
         //Assert
     }
@@ -30,8 +37,14 @@ public class PhotoControllerTest
     public async Task GetAvatarPhoto_ReturnBadRequestResult_WithMessage()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        Stream bytePhoto = null;
+        _photoServiceMock.Setup(s => s.GetAvatar(userId))
+                         .ReturnsAsync(bytePhoto);
 
         //Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.GetAvatarPhoto(userId);
 
         //Assert
     }
