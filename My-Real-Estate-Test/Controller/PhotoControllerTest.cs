@@ -175,10 +175,36 @@ public class PhotoControllerTest
     public async Task UpdateAvatarPhoto_ReturnOkResult()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        string response = "Avatar changed successfully";
+        var formFile = new Mock<IFormFile>();
+        var phisicalFile = new FileInfo("test.jpg");
+        var memory = new MemoryStream();
+        var writer = new StreamWriter(memory);
+        writer.Write("Dumy immage data");
+        writer.Flush();
+        memory.Position = 0;
+        var fileName = phisicalFile.Name;
+        formFile.Setup(_ => _.FileName).Returns(fileName);
+        formFile.Setup(_ => _.Length).Returns(memory.Length);
+        formFile.Setup(_ => _.OpenReadStream()).Returns(memory);
+        _photoServiceMock.Setup(s => s.ChangePhoto(It.IsAny<IFormFile>(), userId, "ChangeAvatar"))
+                                .ReturnsAsync(response);
 
         //Act
+        var collection = new PhotoController(_photoServiceMock.Object);
+        var result = await collection.UpdateAvatarPhoto(formFile.Object, userId);
 
         //Assert
+        var okReslt = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okReslt.Value);
+        var json = JsonSerializer.Serialize(okReslt.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("ChangeAvatar"));
+        string message;
+        dictionary.TryGetValue("ChangeAvatar", out message);
+        Assert.Equal(response, message);
     }
     [Fact]
     public async Task DeleteAvatarPhoto_ReturnOkResult()
