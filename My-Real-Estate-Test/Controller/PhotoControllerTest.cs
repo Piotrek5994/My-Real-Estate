@@ -210,10 +210,20 @@ public class PhotoControllerTest
     public async Task DeleteAvatarPhoto_ReturnOkResult()
     {
         //Arrange
+        string userId = "Some-User-Id";
+        _photoServiceMock.Setup(s => s.DeleteAvatar(userId));
 
         //Act
+        var collection = new PhotoController(_photoServiceMock.Object);
+        var result = await collection.DeleteAvatarPhoto(userId);
 
         //Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string,bool>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Success"));
     }
     [Fact]
     public async Task GetPropertyPhoto_ReturnOkResult()
