@@ -34,6 +34,8 @@ public class PhotoControllerTest
 
         //Assert
         var fileResult = Assert.IsType<FileContentResult>(result);
+        Assert.NotNull(fileResult);
+        Assert.Equal("image/jpeg", fileResult.ContentType);
         string resultContent = Encoding.UTF8.GetString(fileResult.FileContents); 
         Assert.Equal("Some-Photo", resultContent);
     }
