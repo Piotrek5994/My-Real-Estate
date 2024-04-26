@@ -1,4 +1,5 @@
-﻿using Infrastracture.Service.IService;
+﻿using AutoMapper.Features;
+using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using My_Real_Estate.Controllers;
@@ -136,6 +137,14 @@ public class FeaturesControllerTest
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string,bool>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Result"));
+        bool message;
+        dictionary.TryGetValue("Result",out message);
+        Assert.True(message);
+        Assert.Equal(true, message);
     }
     [Fact]
     public async Task DeleteFeatures_ReturnBadRequest_WithMessage()
@@ -151,6 +160,15 @@ public class FeaturesControllerTest
         var result = await controller.DeleteFeatures(featuresIndex, proprtyId);
 
         //Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal("Features does not exist.", message);
     }
 }
 
