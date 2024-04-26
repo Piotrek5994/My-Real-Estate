@@ -20,7 +20,7 @@ public class FeaturesController : Controller
 
         if (featuresId == null)
         {
-            return BadRequest(new { Message = "Create property fail" });
+            return BadRequest(new { Message = "Create property fail." });
         }
 
         return Ok(new { FeaturesId = featuresId });
@@ -31,7 +31,7 @@ public class FeaturesController : Controller
         bool update = await _featuresService.UpdateFeatures(updateFeature, featuresId, propertyId);
         if (!update)
         {
-            return BadRequest(new { Message = "Features update fail" });
+            return BadRequest(new { Message = "Features update fail." });
         }
         return Ok(new { Result = update });
     }
