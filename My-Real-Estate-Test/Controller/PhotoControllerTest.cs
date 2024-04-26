@@ -230,7 +230,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
@@ -239,7 +241,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
@@ -248,7 +252,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
@@ -257,7 +263,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
@@ -266,7 +274,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
@@ -275,7 +285,9 @@ public class PhotoControllerTest
     {
         //Arrange
 
+
         //Act
+
 
         //Assert
     }
