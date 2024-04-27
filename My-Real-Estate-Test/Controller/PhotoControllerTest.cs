@@ -1,8 +1,4 @@
-﻿using Core.Commend.Update;
-using Core.CommendDto;
-using Core.Filter;
-using Infrastracture.ModelDto;
-using Infrastracture.Service.IService;
+﻿using Infrastracture.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -37,7 +33,7 @@ public class PhotoControllerTest
         var fileResult = Assert.IsType<FileContentResult>(result);
         Assert.NotNull(fileResult);
         Assert.Equal("image/jpeg", fileResult.ContentType);
-        string resultContent = Encoding.UTF8.GetString(fileResult.FileContents); 
+        string resultContent = Encoding.UTF8.GetString(fileResult.FileContents);
         Assert.Equal("Some-Photo", resultContent);
     }
     [Fact]
@@ -82,12 +78,12 @@ public class PhotoControllerTest
         formFile.Setup(_ => _.FileName).Returns(fileName);
         formFile.Setup(_ => _.Length).Returns(memory.Length);
         formFile.Setup(_ => _.OpenReadStream()).Returns(memory);
-        _photoServiceMock.Setup(s => s.UploadPhoto(It.IsAny<IFormFile>(),userId, "Avatar"))
+        _photoServiceMock.Setup(s => s.UploadPhoto(It.IsAny<IFormFile>(), userId, "Avatar"))
                                 .ReturnsAsync(collectionId);
 
         //Act
         var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.UploadAvatarPhoto(formFile.Object,userId);
+        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
         var okReslt = Assert.IsType<OkObjectResult>(result);
@@ -221,7 +217,7 @@ public class PhotoControllerTest
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
         var json = JsonSerializer.Serialize(okResult.Value);
-        var dictionary = JsonSerializer.Deserialize<Dictionary<string,bool>>(json);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
         Assert.NotNull(dictionary);
         Assert.True(dictionary.ContainsKey("Success"));
     }
@@ -229,23 +225,51 @@ public class PhotoControllerTest
     public async Task GetPropertyPhoto_ReturnOkResult()
     {
         //Arrange
+        string photoId = "Some-Photo-Id";
+        string propertyId = "Some-Property-Id";
+        byte[] photoBytes = Encoding.UTF8.GetBytes("Some-Photo");
+        Stream bytePhoto = new MemoryStream(photoBytes);
+        _photoServiceMock.Setup(s => s.GetPropertyPhotos(propertyId, photoId))
+                         .ReturnsAsync(bytePhoto);
 
-
-        //Act
-
+        // Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.GetPropertyPhoto(propertyId, photoId);
 
         //Assert
+        var fileResult = Assert.IsType<FileContentResult>(result);
+        Assert.NotNull(fileResult);
+        Assert.Equal("image/jpeg", fileResult.ContentType);
+        string resultContent = Encoding.UTF8.GetString(fileResult.FileContents);
+        Assert.Equal("Some-Photo", resultContent);
     }
     [Fact]
     public async Task GetPropertyPhoto_ReturnNotFoundResult_WithMessage()
     {
         //Arrange
+        string photoId = "Some-Photo-Id";
+        string propertyId = "Some-Property-Id";
+        Stream expectedResult = null;
+        string expectedErrorMessage = "The property does not exist or does not have an photo.";
+        byte[] photoBytes = Encoding.UTF8.GetBytes("Some-Photo");
+        Stream bytePhoto = new MemoryStream(photoBytes);
+        _photoServiceMock.Setup(s => s.GetPropertyPhotos(propertyId, photoId))
+                         .ReturnsAsync(expectedResult);
 
-
-        //Act
-
+        // Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.GetPropertyPhoto(propertyId, photoId);
 
         //Assert
+        var badRequestResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.NotNull(badRequestResult.Value);
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary.Values);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal(expectedErrorMessage, message);
     }
     [Fact]
     public async Task CreatePropertyPhoto_ReturnOkResult()
