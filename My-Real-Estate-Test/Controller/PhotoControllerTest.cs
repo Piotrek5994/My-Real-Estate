@@ -275,7 +275,17 @@ public class PhotoControllerTest
     public async Task CreatePropertyPhoto_ReturnOkResult()
     {
         //Arrange
+        string propertyId = "Property-Id";
+        var memoryStream1 = new MemoryStream(Encoding.UTF8.GetBytes("Fake file"));
+        var memoryStream2 = new MemoryStream(Encoding.UTF8.GetBytes("Fake file 2"));
+        var formFile1 = new FormFile(memoryStream1, 0, memoryStream1.Length, "file1", "test.pdf");
+        var formFile2 = new FormFile(memoryStream2, 0, memoryStream2.Length, "file2", "test2.pdf");
 
+        var formFiles = new FormFileCollection { formFile1, formFile2 };
+
+        var photoIds = new List<string> { "Photo1", "Photo2" };
+        _photoServiceMock.Setup(s => s.UploadsPropertyPhotos(It.IsAny<IFormFileCollection>(), propertyId))
+                         .ReturnsAsync(photoIds);
 
         //Act
 
