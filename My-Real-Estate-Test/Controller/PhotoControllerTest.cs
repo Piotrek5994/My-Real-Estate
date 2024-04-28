@@ -288,7 +288,8 @@ public class PhotoControllerTest
                          .ReturnsAsync(photoIds);
 
         //Act
-
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UploadPropertyPhotos(formFiles, propertyId);
 
         //Assert
     }
