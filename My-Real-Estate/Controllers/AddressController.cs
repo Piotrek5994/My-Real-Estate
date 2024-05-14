@@ -25,19 +25,18 @@ public class AddressController : Controller
         var address = await _addressService.GetAddressDto(filter);
         if (address != null)
         {
-            return Json(new { result = address });
+            return Json(new { Result = address });
         }
-        return NotFound(new { message = "Address or Addresses not found" });
+        return NotFound(new { Message = "Address or Addresses not found" });
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAddress([FromBody] CreateAddressDto addressDto)
     {
         var addressId = await _addressService.CreateAddressDto(addressDto);
-        Console.WriteLine(addressId);
         if (addressId == null)
         {
-            return BadRequest(new { message = "Create address fail" });
+            return BadRequest(new { Message = "Create address fail" });
         }
         return Ok(new { AddressId = addressId });
     }
@@ -48,9 +47,9 @@ public class AddressController : Controller
         bool update = await _addressService.UpdateAddress(updateAddress, addressId);
         if (!update)
         {
-            return BadRequest(new { message = "Address update fail" });
+            return BadRequest(new { Message = "Address update fail" });
         }
-        return Ok(new { result = update });
+        return Ok(new { Result = update });
     }
     [HttpDelete]
     public async Task<IActionResult> DeleteAddress(string addressId)
@@ -58,8 +57,8 @@ public class AddressController : Controller
         bool delete = await _addressService.DeleteAddress(addressId);
         if (!delete)
         {
-            return BadRequest(new { message = "Address does not exist." });
+            return BadRequest(new { Message = "Address does not exist." });
         }
-        return Ok(new { result = delete });
+        return Ok(new { Result = delete });
     }
 }

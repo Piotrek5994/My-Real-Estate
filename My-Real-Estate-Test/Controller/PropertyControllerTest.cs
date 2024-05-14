@@ -82,13 +82,14 @@ public class PropertyControllerTest
             State = 0,
             UserId = "user123"
         };
-        string expectedUserId = "someUserId";
+        string expectedPropertyId = "someUserId";
 
-        _propertyServiceMock.Setup(s => s.CreatePropertyDto(It.IsAny<CreatePropertyDto>())).ReturnsAsync(expectedUserId);
+        _propertyServiceMock.Setup(s => s.CreatePropertyDto(It.IsAny<CreatePropertyDto>()))
+                            .ReturnsAsync(expectedPropertyId);
         
         //Act
-        var contoller = new PropertyController(_propertyServiceMock.Object);
-        var result = await contoller.CreateProperty(propertyDto);
+        var controller = new PropertyController(_propertyServiceMock.Object);
+        var result = await controller.CreateProperty(propertyDto);
 
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -97,7 +98,7 @@ public class PropertyControllerTest
         var dictionary = JsonSerializer.Deserialize<Dictionary<string,string>>(json);
         Assert.NotNull(dictionary);
         Assert.True(dictionary.ContainsKey("PropertyId"));
-        Assert.Equal(expectedUserId,dictionary["PropertyId"]);
+        Assert.Equal(expectedPropertyId, dictionary["PropertyId"]);
     }
     [Fact]
     public async Task CreateProperty_ReturnBadRequest_WithErrorMessage()
@@ -152,7 +153,8 @@ public class PropertyControllerTest
         };
         string propertyId = "some-property-Id";
         bool expectedResult = true;
-        _propertyServiceMock.Setup(s => s.UpdateProperty(updateProperty,propertyId)).ReturnsAsync(expectedResult);
+        _propertyServiceMock.Setup(s => s.UpdateProperty(updateProperty,propertyId))
+                                         .ReturnsAsync(expectedResult);
 
         //Act
         var result = await _propertyController.UpdateProperty(updateProperty, propertyId);
