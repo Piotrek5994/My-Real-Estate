@@ -82,8 +82,8 @@ public class PhotoControllerTest
                                 .ReturnsAsync(collectionId);
 
         //Act
-        var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
         var okReslt = Assert.IsType<OkObjectResult>(result);
@@ -117,8 +117,8 @@ public class PhotoControllerTest
                                 .ReturnsAsync(errorMessage);
 
         //Act
-        var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
         var badRequestReslt = Assert.IsType<BadRequestObjectResult>(result);
@@ -153,8 +153,8 @@ public class PhotoControllerTest
                                 .ReturnsAsync(resultValue);
 
         //Act
-        var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.UploadAvatarPhoto(formFile.Object, userId);
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UploadAvatarPhoto(formFile.Object, userId);
 
         //Assert
         var badRequestReslt = Assert.IsType<BadRequestObjectResult>(result);
@@ -188,8 +188,8 @@ public class PhotoControllerTest
                                 .ReturnsAsync(response);
 
         //Act
-        var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.UpdateAvatarPhoto(formFile.Object, userId);
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UpdateAvatarPhoto(formFile.Object, userId);
 
         //Assert
         var okReslt = Assert.IsType<OkObjectResult>(result);
@@ -210,8 +210,8 @@ public class PhotoControllerTest
         _photoServiceMock.Setup(s => s.DeleteAvatar(userId));
 
         //Act
-        var collection = new PhotoController(_photoServiceMock.Object);
-        var result = await collection.DeleteAvatarPhoto(userId);
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.DeleteAvatarPhoto(userId);
 
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -292,39 +292,113 @@ public class PhotoControllerTest
         var result = await controller.UploadPropertyPhotos(formFiles, propertyId);
 
         //Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        Assert.Equal(200, okResult.StatusCode);
     }
     [Fact]
     public async Task CreatePropertyPhoto_ReturnBadRequestResult_WithMessage()
     {
         //Arrange
+        string propertyId = "Property-Id";
+        var memoryStream1 = new MemoryStream(Encoding.UTF8.GetBytes(""));
+        var memoryStream2 = new MemoryStream(Encoding.UTF8.GetBytes(""));
+        var formFile1 = new FormFile(memoryStream1, 0, memoryStream1.Length, "file1", "test.pdf");
+        var formFile2 = new FormFile(memoryStream2, 0, memoryStream2.Length, "file2", "test2.pdf");
 
-
+        var formFiles = new FormFileCollection { formFile1, formFile2 };
+        var photoIds = new List<string>();
+        _photoServiceMock.Setup(s => s.UploadsPropertyPhotos(It.IsAny<IFormFileCollection>(), propertyId))
+                         .ReturnsAsync(photoIds);
         //Act
-
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UploadPropertyPhotos(formFiles, propertyId);
 
         //Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.NotNull(badRequestResult);
+        var json = JsonSerializer.Serialize(badRequestResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        Assert.NotNull(dictionary.Values);
+        Assert.True(dictionary.ContainsKey("Message"));
+        string message;
+        dictionary.TryGetValue("Message", out message);
+        Assert.Equal("Create photo for property fail", message);
+        Assert.Equal(400, badRequestResult.StatusCode);
     }
     [Fact]
     public async Task UpdatePropertyPhoto_ReturnOkResult()
     {
-        //Arrange
+        // Arrange
+        string photoId = "Photo-Id";
+        string propertyId = "Property-Id";
+        var fakeFileContents = Encoding.UTF8.GetBytes("Fake file content");
+        var memoryStream = new MemoryStream(fakeFileContents);
+        var formFile = new FormFile(memoryStream, 0, memoryStream.Length, "file1", "test.pdf");
 
+        var response = new List<string> { "Change propery photo success" };
 
-        //Act
+        _photoServiceMock.Setup(s => s.ChangePropertyPhoto(It.IsAny<IFormFile>(), photoId, propertyId))
+                         .ReturnsAsync(response);
 
+        // Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.UpdatePropertyPhotos(formFile, photoId, propertyId);
 
-        //Assert
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+        Assert.True(dictionary.ContainsKey("ChangePropertyPhoto"));
+        var messages = dictionary["ChangePropertyPhoto"];
+        Assert.NotNull(messages);
+        Assert.Single(messages);
+        Assert.Equal("Change propery photo success", messages[0]);
     }
     [Fact]
     public async Task DeletePropertyPhoto_ReturnOkResult()
     {
         //Arrange
-
+        List<string> photoIds = new List<string> { "First-Photo-Id", "Secound-Photo-Id" };
+        string propertyId = "Some-Property-Id";
+        _photoServiceMock.Setup(s => s.DeletePropertyPhotos(photoIds, propertyId))
+                         .ReturnsAsync(true);
 
         //Act
-
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.DeletePropertyPhotos(photoIds,propertyId);
 
         //Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string,bool>>(json);
+        Assert.True(dictionary.ContainsKey("Success"));
+        bool message = dictionary["Success"];
+        Assert.True(message);
+    }
+    [Fact]
+    public async Task DeletePropertyPhoto_ReturnOkResult_WithFalse()
+    {
+        //Arrange
+        List<string> photoIds = new List<string> { "First-Photo-Id", "Secound-Photo-Id" };
+        string propertyId = "Some-Property-Id";
+        _photoServiceMock.Setup(s => s.DeletePropertyPhotos(photoIds, propertyId))
+                         .ReturnsAsync(false);
+
+        //Act
+        var controller = new PhotoController(_photoServiceMock.Object);
+        var result = await controller.DeletePropertyPhotos(photoIds, propertyId);
+
+        //Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var json = JsonSerializer.Serialize(okResult.Value);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+        Assert.True(dictionary.ContainsKey("Success"));
+        bool message = dictionary["Success"];
+        Assert.False(message);
     }
 }
 
