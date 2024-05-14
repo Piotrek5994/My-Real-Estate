@@ -19,13 +19,7 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] CreateLogin login)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         string token = await _authService.Login(login);
-
         if (token == "Authentication failed. User not found.")
         {
             return BadRequest(new { Message = token });
@@ -34,7 +28,6 @@ public class AuthController : Controller
         {
             return BadRequest(new { Message = token });
         }
-
         return Ok(new { Token = token });
     }
     [HttpPut]
